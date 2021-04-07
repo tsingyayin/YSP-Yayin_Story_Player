@@ -24,7 +24,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="2N.sdaa" />
-    <Content Include="2N1.txt" />
+    <Content Include="AASD0.2标准.txt" />
+    <Content Include="Limited_remember.sdaa" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
