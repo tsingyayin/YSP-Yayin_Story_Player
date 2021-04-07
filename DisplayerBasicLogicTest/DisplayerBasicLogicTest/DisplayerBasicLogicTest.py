@@ -1,11 +1,9 @@
 #在我把窗体里面，尤其是PyQt下的编写整明白之前，
 #先用这个工程完成基本的标准化剧情文件处理测试。
-#commonedit用于分离人名和表情编号
 #time 用于调整出字时序
-import commonedit as comet
 import time as tm
 
-Storyname=input("请输入剧情文件名称")
+#Storyname=input("请输入剧情文件名称")
 Storyname="2N.sdaa"
 files=open(Storyname,"r")
 
@@ -50,20 +48,9 @@ if Ver=="AASD0.1":                                                         #遵�
     #提取背景控制器，不标准的输入用默认值填充
     #背景控制器的几个数值是场景名称、显示模式、特效、淡入、淡出
     elif line[0]=="[":
-        charcount=len(line[1:-2].split(","))
-        bgsetlst=["","","","",""]                            
-        if charcount == 0:
-            bgsetlst=[黑场,"0","0","0.5","0.5"]
-        elif charcount==1:
-            bgsetlst=[line[1:-2].split(",")[0],"0","0","0.5","0.5"]
-        elif charcount==2:
-            bgsetlst=[line[1:-2].split(",")[0],line[1:-2].split(",")[1],"0","0.5","0.5"]
-        elif charcount==3:
-            bgsetlst=[line[1:-2].split(",")[0],line[1:-2].split(",")[1],line[1:-2].split(",")[2],"0.5","0.5"]
-        elif charcount==4:
-            bgsetlst=[line[1:-2].split(",")[0],line[1:-2].split(",")[1],line[1:-2].split(",")[2],line[1:-2].split(",")[3],"0.5"]
-        elif charcount==5:
-            bgsetlst=[line[1:-2].split(",")[0],line[1:-2].split(",")[1],line[1:-2].split(",")[2],line[1:-2].split(",")[3],line[1:-2].split(",")[4]]
+        bgsetlstcount=len(line[1:-2].split(","))               
+        bgsetlst=line[1:-2].split(",")+[""]*(5-bgsetlstcount)
+        print(bgsetlst)
         #填充空位
         if bgsetlst[0]=="":bgsetlst[0]="黑场"
         if bgsetlst[1]=="":bgsetlst[1]="0"
@@ -83,7 +70,7 @@ if Ver=="AASD0.1":                                                         #遵�
                 wordset=[line[line.rindex("(")+1:-2],"1.5"]
             else:
                 wordset=[line[line.rindex("(")+1:-2].split(",")[0],line[line.rindex("(")+1:-2].split(",")[1]]
-            line=line[0:line.rindex("(")]       #方便下面处理，将文本控制器从字符串中删去
+            line=line[0:line.rindex("(")+1]       #方便下面处理，将文本控制器从字符串中删去
         #填充文本控制器空位
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
@@ -100,16 +87,8 @@ if Ver=="AASD0.1":                                                         #遵�
         charapic=[]
         for i in inforaw:
             charapicsetcount=len(i.split(":")[0].split("/"))
-            if charapicsetcount==1:
-                charapic+=[[i.split(":")[0].split("/")[0],"","0","0.5","0.5",""]]
-            elif charapicsetcount==2:
-                charapic+=[[i.split(":")[0].split("/")[0],i.split(":")[0].split("/")[1],"0","0.5","0.5",""]]
-            elif charapicsetcount==3:
-                charapic+=[[i.split(":")[0].split("/")[0],i.split(":")[0].split("/")[1],i.split(":")[0].split("/")[2],"0.5","0.5",""]]
-            elif charapicsetcount==4:
-                charapic+=[[i.split(":")[0].split("/")[0],i.split(":")[0].split("/")[1],i.split(":")[0].split("/")[2],i.split(":")[0].split("/")[3],"0.5",""]]
-            elif charapicsetcount==5:
-                charapic+=[[i.split(":")[0].split("/")[0],i.split(":")[0].split("/")[1],i.split(":")[0].split("/")[2],i.split(":")[0].split("/")[3],i.split(":")[0].split("/")[4],""]]
+            charapic+=[i.split(":")[0].split("/")+[""]*(6-charapicsetcount)]
+            if charapic[-1][1]=="":charapic[-1][1]=""
             if charapic[-1][2]=="":charapic[-1][2]="0"
             if charapic[-1][3]=="":charapic[-1][3]="0.5"
             if charapic[-1][4]=="":charapic[-1][4]="0.5"
