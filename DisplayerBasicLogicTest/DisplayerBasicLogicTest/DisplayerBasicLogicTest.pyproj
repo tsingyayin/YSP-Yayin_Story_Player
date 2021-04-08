@@ -20,6 +20,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="core.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DisplayerBasicLogicTest.py" />
   </ItemGroup>
   <ItemGroup>
