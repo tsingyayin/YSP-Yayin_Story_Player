@@ -1,6 +1,6 @@
 import time as tm
 
-def AASP0_2_1(files):
+def SPOL0_2_1(files):
   #用来确认一次性要素是否读取完毕
   TitleSure=0
   SubtitleSure=0
@@ -157,7 +157,7 @@ def AASP0_2_1(files):
 
 
 
-def AASP0_2(files):
+def SPOL0_2(files):
   #用来确认一次性要素是否读取完毕
   TitleSure=0
   SubtitleSure=0
@@ -298,7 +298,7 @@ def AASP0_2(files):
 
 
 
-def AASP0_1(files):
+def SPOL0_1(files):
   #用来确认一次性要素是否读取完毕
   TitleSure=0
   SubtitleSure=0

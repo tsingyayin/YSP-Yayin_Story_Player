@@ -6,8 +6,8 @@ import core
 
 programme_end=0
 while programme_end==0 :
-    Storyname=input("请输入剧情文件名称（直接回车，现在固定测试N2.sdaa这个文件）")
-    Storyname="N2.sdaa"
+    Storyname=input("请输入剧情文件名称（直接回车，现在固定测试N2.spol这个文件）")
+    Storyname="N2.spol"
     files=open(Storyname,"r")
     Ver=""
 
@@ -24,14 +24,14 @@ while programme_end==0 :
 #重新打开文件，从头开始处理
     files=open(Storyname,"r")
 
-    if Ver=="AASP0.2":                                                         #遵循AASD0.2标准的读取
-        core.AASP0_2(files)
+    if Ver=="SPOL0.2":                                                         #遵循AASD0.2标准的读取
+        core.SPOL0_2(files)
   
-    elif Ver=="AASP0.1":  
-        core.AASP0_1(files)                                                     #遵循AASD0.1标准的读取
+    elif Ver=="SPOL0.1":  
+        core.SPOL0_1(files)                                                     #遵循AASD0.1标准的读取
 
-    elif Ver=="AASP0.2.1":                                                    #遵循AASD0.2.1标准的读取
-        core.AASP0_2_1(files)
+    elif Ver=="SPOL0.2.1":                                                    #遵循AASD0.2.1标准的读取
+        core.SPOL0_2_1(files)
 
 
 
