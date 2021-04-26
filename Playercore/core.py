@@ -7,7 +7,7 @@ def SPOL0_2_5(files):
 
     #跨行注释状态确认
   textend=0
-    #行计数和错误计数、错误行存储
+    #行计数和警告计数、被警告行存储等
   linecount=0
   warn=0
   warnline=[]

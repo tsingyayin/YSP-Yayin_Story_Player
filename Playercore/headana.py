@@ -14,7 +14,7 @@ while programme_end==0 :
         print("""help\t用来查询支持的指令列表
 spawn\t进入文件解释模式
 line\t进入剧情文本单行测试模式
-exit\t退出程序""")
+exit\t退出程序（或程序的任一一级）""")
     elif Usript=="":
         continue
     elif Usript=="spawn":

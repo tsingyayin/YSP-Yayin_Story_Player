@@ -31,7 +31,7 @@ def spawn():
 
 
     files.close()
-    print("剧情文件读取完毕,按下回车键回到首页面")
+    print("读取完毕,按下回车键回到首页面")
     input()
 
 def singletext():
