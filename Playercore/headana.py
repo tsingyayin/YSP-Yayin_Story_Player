@@ -26,9 +26,6 @@ while programme_end==0 :
 
     if Ver=="SPOL0.2":                                                         #遵循SPOL0.2标准的读取
         core.SPOL0_2(files)
-  
-    elif Ver=="SPOL0.1":  
-        core.SPOL0_1(files)                                                     #遵循SPOL0.1标准的读取
 
     elif Ver=="SPOL0.2.5":                                                    #遵循SPOL0.2.5标准的读取
         core.SPOL0_2_5(files)
