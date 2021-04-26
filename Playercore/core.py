@@ -1,17 +1,22 @@
 import time as tm
 
-def SPOL0_2_1(files):
+def SPOL0_2_5(files):
   #用来确认一次性要素是否读取完毕
   TitleSure=0
   SubtitleSure=0
 
   #跨行注释状态确认
   textend=0
+  #行计数和错误计数、错误行存储
+  linecount=0
+  error=0
+  errorline=[]
 
   bgdisplaymode={"0":"正常","1":"黑白","2":"褪色"}
   bgeffectmode={"0":"无","1":"场景抖动","2":"一次白闪","3":"两次白闪"}
 
   for line in files.readlines():
+    linecount+=1
     #不予判定的情况——其实这意味着一行注释也可以用/甚至是空格打头，但不推荐这么做。
     if (line[0]=="#" and line[0:3]!="###") or line[0]=="/" or line[0]=="\n" or line[0]==" ":continue
 
@@ -49,6 +54,18 @@ def SPOL0_2_1(files):
         if bgsetlst[3]=="":bgsetlst[3]="0.5"    
         print(round(tm.time()-timestart,2),"秒")
         print("#################\n当前背景是{},显示模式为{},特效为{},淡入时间{}".format(bgsetlst[0],bgdisplaymode[bgsetlst[1]],bgeffectmode[bgsetlst[2]],bgsetlst[3]))
+        print("#################\n")
+
+    #提取音频控制器，不标准的输入用默认值填充
+    #音频控制器的参数是音频名称和音频音量
+    elif line[0]=="{":
+        musicsetlstcount=len(line[1:-2].split(","))               
+        musicsetlst=line[1:-2].split(",")+[""]*(4-musicsetlstcount)
+        #填充空位
+        if musicsetlst[0]=="":musicsetlst[0]="静音"
+        if musicsetlst[1]=="":musicsetlst[1]="50"
+        print(round(tm.time()-timestart,2),"秒")
+        print("#################\n当前BGM是{},音量是{}".format(musicsetlst[0],musicsetlst[1]))
         print("#################\n")
 
     #剧情文本输出的解释器
@@ -153,7 +170,17 @@ def SPOL0_2_1(files):
         print("\n")
         tm.sleep(eval(wordset[1]))
         print("\n")
-    else : print(line)
+    else : 
+        #把未能按类型识别的内容放入错误传递列表
+        error+=1
+        errorline+=[[linecount,line[:-1]]]
+
+  #在循环穷尽之后指出错误内容和行号
+  if error!=0 :
+      print("读取完毕，但是出现了{}个警告".format(error))
+      for singleerrorline in errorline:
+          print('未能识别行{}的内容"{}"'.format(singleerrorline[0],singleerrorline[1]))
+      print("\n")
 
 
 
