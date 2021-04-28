@@ -105,7 +105,15 @@ def SPOL0_3(files,timestart):
         #填充文本控制器空位
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
-
+        try:
+            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
+            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[0])<0:raise Exception
+        except Exception:
+            numseterror+=1
+            numseterrorline+=[[linecount,line[:-1]]]
+            continue
+        else:
+            None
         #按下划线分割说话人和对应语句
         #下一句split从1开始是因为前面有一个空字符需要舍去
         inforaw=line[0:-1].split(">>>")[1:]      
@@ -223,8 +231,10 @@ def SPOL0_3(files,timestart):
         #填充文本控制器空位
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
-        #提取文本内容
         try:
+            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
+            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[0])<0:raise Exception
+            #提取文本内容
             inforaw=[line[3:line.index(":")],line[line.index(":")+1:-1]]
             textsetcount=len(inforaw[0].split("/"))
             if textsetcount>3:raise Exception
@@ -300,6 +310,14 @@ def SPOL_s_0_3(line):
         #填充文本控制器空位
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
+        try:
+            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
+            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[0])<0:raise Exception
+        except Exception:
+            print("sysinfo→解释器遇到了参数错误。")
+            return
+        else:
+            None
 
         #按下划线分割说话人和对应语句
         #下一句split从1开始是因为前面有一个空字符需要舍去
@@ -413,6 +431,14 @@ def SPOL_s_0_3(line):
         #填充文本控制器空位
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
+        try:
+            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
+            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[0])<0:raise Exception
+        except Exception:
+            print("sysinfo→解释器遇到了参数错误。")
+            return
+        else:
+            None
         try:
             inforaw=[line[3:line.index(":")],line[line.index(":")+1:-1]]
             textsetcount=len(inforaw[0].split("/"))
