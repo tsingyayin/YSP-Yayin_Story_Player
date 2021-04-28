@@ -14,7 +14,7 @@ while programme_end==0 :
         print("""help\t用来查询支持的指令列表
 spawn\t进入文件解释模式
 line\t进入剧情文本单行测试模式
-exit\t退出程序（或程序的任一一级）""")
+exit\t退出程序（或程序的任意一级）""")
     elif Usript=="":
         continue
     elif Usript=="spawn":
@@ -24,4 +24,4 @@ exit\t退出程序（或程序的任一一级）""")
     elif Usript=="exit":
         break
     else:
-        print("sysinfo→未知的指令{}，请重试。".format(Usript))
+        print("sysinfo→不能将文本“{}”识别为任何现有指令。".format(Usript))
