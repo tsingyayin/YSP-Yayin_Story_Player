@@ -3,6 +3,19 @@
 
 先讲一个特别丢人的事情，我把player播放器和display显示器这两个词搞混了，现在正在努力重命名中。。。。。。
 
+# Interpreter_Ver0.3.1;SPOL0.3
+spawn mode:
+
+修复了文本行进驻留控制器遇到不合法数值会引起解释器崩溃的bug
+
+修复了文本行进驻留控制器能够接受不合法数值的bug
+
+line mode：
+
+修复了文本行进驻留控制器遇到不合法数值会引起解释器崩溃的bug
+
+修复了文本行进驻留控制器能够接受不合法数值的bug
+
 # Interpreter_Ver0.3.0;SPOL0.3
 spawn mode：
 
