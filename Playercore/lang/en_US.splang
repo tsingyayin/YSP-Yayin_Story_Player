@@ -1,0 +1,68 @@
+About_Info_Version:Version now is Interpreter_Ver0.3.5;SPOL0.3
+About_Info_Developers:Developer: Yayin Tsing
+About_Info_Environment:IDE£∫Visual Studio 2019
+About_Info_Support:Support£∫Ayano Aishi Story Creation Group
+About_Info_Help:Help£∫Go to www.github.com/tsingyayin/AAplayer to ask for help
+
+Bgm_Setting_Info:BGM is {},Volume is {}
+
+Bgp_Display_Mode_Normal:Normal
+Bgp_Display_Mode_Fade:Fade
+Bgp_Display_Mode_B&W:Black&White
+Bgp_Effect_Mode_Normal:No effect
+Bgp_Effect_Mode_Shake:Shake
+Bgp_Effect_Mode_W1:Flash 1
+Bgp_Effect_Mode_W2:Flash 2
+Bgp_Setting_Info:BGP is {},display mode is {},effect mode is {},fade in time is{}
+
+Branch_Info_Msg:Branch {}£∫°∞{}°±£®The file is {}£©
+Branch_Info_Input:Please input the branch you want
+
+Chara_Pic_Setting_Info:{} illustration {}(fade in {}s & fade out {}s)
+Chara_Pic_Setting_Info_R:{} inverse illustration {}(fade in {}s & fade out {}s)
+
+Command_Error:Can not distinguishi °∞{}°± as any legal command
+
+First_Print:AASP Command-like mode,use help to search command list
+
+Freedom_Text_Mode_L:align left
+Freedom_Text_Mode_M:align center
+Freedom_Text_Mode_R:align right
+Freedom_Text_Setting_Info:£®coordinate is ({},{}),and {}£©
+
+Help_In_Main_Page_about_:Show infomation about the programme
+Help_In_Main_Page_help:Searching command list
+Help_In_Main_Page_spawn:Entering interpreter mode
+Help_In_Main_Page_line:Entering Single-line mode
+Help_In_Main_Page_exit:Exiting the programme,or any level in the programme
+Help_In_Main_Page_lang:Changing the language of the programme
+
+Lang_Input_Msg:Please input the file name of the language
+Lang_Set_Success:Successfully set {} as your language
+Lang_Not_In_Support:Can not find °∞{}°±,maybe not support yet
+
+Second:√Î
+
+Single_Mode_Syntax_Error:Syntax Error
+Single_Mode_Num_Error:Parameter Error
+Single_Mode_Interpreter_Error:Can not distinguishi °∞{}°± as any controller
+Single_Mode_Input_Version:Input the Version you want to use.Type "help" for help
+Single_Mode_Version_List:The Version we support£∫
+Single_Mode_Version_Error:Can not distinguishi °∞{}°± as any version or command
+
+Spawn_Mode_Name_Of_File:Input the name of the story or type "exit" to exit
+Spawn_Mode_Not_Found:Can not find the file °∞{}°±£¨check your input and be care the programme NOT case sensitive
+Spawn_Mode_Get_Version:The version of the story is :
+Spawn_Mode_Get_Title:The title of the story is:
+Spawn_Mode_Get_Subtitle:The subtitle of the story is:
+Spawn_Mode_Version_Error:Can not find the version {},check your input.
+Spawn_Mode_End:Interpreted,press Enter to return to the home page
+
+Warning_Warn_Count:{} warning during interpreting£∫
+Warning_Warn_Info:Can not interprete line {} in the file {}:°∞{}°±£¨please add character"#" if it is a comment
+Warning_Texterror_Count:{} errors during interpreting£∫
+Warning_Texterror_Info:Can not interprete line {} in the file {} :°∞{}°±,dose not meet the definition
+Warning_Formatwarn_Count:{} format warning during interpreting£∫
+Warning_Formatwarn_Info:line {} in the file {} :°∞{}°±,the end is not "Enter"
+Warning_Numseterror_Count:{} parameter errors during interpreting£∫
+Warning_Numseterror_Info:line {} in the file {} :°∞{}°±meets parameters out of range or number
