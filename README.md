@@ -3,6 +3,15 @@
 
 先讲一个特别丢人的事情，我把player播放器和display显示器这两个词搞混了，现在正在努力重命名中。。。。。。
 
+# Interpreter_Ver0.3.5_Pre1;SPOL0.3.5
+spawn mode:
+
+支持设置剧情分支选项
+
+修复了若干可能引起解释器崩溃的bug
+
+*由于剧情分支是新增的复杂系统之一，所以会有很多可能引起崩溃的bug，会陆续修复。
+
 # Interpreter_Ver0.3.1;SPOL0.3
 spawn mode:
 
