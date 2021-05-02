@@ -16,7 +16,10 @@ def spawn():
         try:
             print("sysinfo→"+msg("Spawn_Mode_Name_Of_File"))
             Storyname=input(r"Userinput\spawn→")
-            files=open("story\\"+Storyname,"r")
+            if Storyname=="exit":
+                return
+            else:
+                files=open("story\\"+Storyname,"r")
         except IOError:
             print("sysinfo→"+msg("Spawn_Mode_Not_Found").format(Storyname))
         else:
@@ -52,8 +55,7 @@ def spawn():
     if Ver=="SPOL0.3.5":                                                         #遵循SPOL0.3标准的读取
         run=1
         while run!=0:
-            timestart=tm.time()
-            run=core0_3_5.SPOL(files,timestart,Storyname)
+            run=core0_3_5.SPOL(files,Storyname)
             try:
                 files=open("story\\"+run+".spol","r")
                 Storyname=run+".spol"
@@ -61,11 +63,11 @@ def spawn():
                 run=0
             else:
                 None
+        files.close()
 
     else:
         print(msg("Spawn_Mode_Version_Error").format(Ver))
         
-    files.close()
       #错误警示
     if warnline!=[]:
       print(msg("Warning_Warn_Count").format(len(warnline)))
