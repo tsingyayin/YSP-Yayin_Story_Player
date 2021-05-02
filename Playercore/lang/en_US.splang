@@ -41,7 +41,7 @@ Lang_Input_Msg:Please input the file name of the language
 Lang_Set_Success:Successfully set {} as your language
 Lang_Not_In_Support:Can not find °∞{}°±,maybe not support yet
 
-Second:√Î
+Second:Sec
 
 Single_Mode_Syntax_Error:Syntax Error
 Single_Mode_Num_Error:Parameter Error
