@@ -3,7 +3,7 @@ import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline
 
-def SPOL(files,timestart,Storyname):
+def SPOL(files,Storyname):
   global warnline,texterrorline,numseterrorline,formatwarnline
     #跨行注释状态确认
   textend=0
@@ -15,7 +15,8 @@ def SPOL(files,timestart,Storyname):
 
   bgdisplaymode={"0":msg("Bgp_Display_Mode_Normal"),"1":msg("Bgp_Display_Mode_Fade"),"2":msg("Bgp_Display_Mode_B&W")}
   bgeffectmode={"0":msg("Bgp_Effect_Mode_Normal"),"1":"Bgp_Effect_Mode_Shake","2":"Bgp_Effect_Mode_W1","3":"Bgp_Effect_Mode_W2"}
-  textmode={"L":msg("Freedom_Text_Mode_L"),"M":msg("Freedom_Text_Mode_L"),"R":msg("Freedom_Text_Mode_L")}
+  textmode={"L":msg("Freedom_Text_Mode_L"),"M":msg("Freedom_Text_Mode_M"),"R":msg("Freedom_Text_Mode_R")}
+  timestart=tm.time()
   for line in files.readlines(): 
     linecount+=1
     #先看有没有回车，没有就给它加上，但是要提出警告
@@ -48,7 +49,7 @@ def SPOL(files,timestart,Storyname):
             if type(eval(bgsetlst[1]))!=int or (not 0<=eval(bgsetlst[1])<=2):raise Exception
             if type(eval(bgsetlst[2]))!=int or (not 0<=eval(bgsetlst[2])<=3):raise Exception
             if (type(eval(bgsetlst[3]))!=int and type(eval(bgsetlst[3]))!=float) or 0>eval(bgsetlst[3]):raise Exception
-            print(round(tm.time()-timestart,2)+msg("Second"))
+            print(round(tm.time()-timestart,2),msg("Second"))
             print("#################\n"+msg("Bgp_Setting_Info").format(bgsetlst[0],bgdisplaymode[bgsetlst[1]],bgeffectmode[bgsetlst[2]],bgsetlst[3]))
             print("#################\n")
         except Exception:
@@ -245,16 +246,19 @@ def SPOL(files,timestart,Storyname):
             print(i,end="")
             tm.sleep(eval(wordset[0]))
         tm.sleep(eval(wordset[1]))
-        print()
-    #分支选项解释器
+        print("\n")
+       
 
+    #分支选项解释器
     elif line[0:3]=="-->":
+        #判断是否符合语法定义
         if (":" not in line) or line.count("-->")>4:
             texterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
         inforaw=line[:-1].split("-->")[1:]
         branchinfo=[]
         branchname=[]
+        #提取行的内容
         for i in inforaw:
             try:
                 if i.count(":")!=2: raise Exception
@@ -268,6 +272,7 @@ def SPOL(files,timestart,Storyname):
             print(msg("Branch_Info_Msg").format(i[0],i[1],i[2]))
         print("sysinfo→"+msg("Branch_Info_Input"))
         inputend=0
+        #要求用户选择
         while inputend==0:
             Usrbranchinput=input()
             if Usrbranchinput in branchname:
