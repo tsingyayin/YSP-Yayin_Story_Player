@@ -6,10 +6,11 @@
 实时更新的代码一定是当前最新版。
 
 
-# Interpreter_Ver0.4.0_Pre3;SPOL0.3.5&！0.3
+# Interpreter_Ver0.4.0_Pre3;SPOL0.3.5
 
 优化了多分支情况下的内存占用。现在最大占用取决于读取过程中遇到的最大的那个文件。
 
+*开玩笑，怎么可能支持0.3？这个不测也应该知道。启动0.3内核需要的参数是files和timestart，启动0.3.5内核需要的参数是files和storyname（再次犯傻.jpg）
 # Interpreter_Ver0.4.0_Pre2;SPOL0.3.5&！0.3
 
 修复了会一股脑把所有剧情控制器均当成参数错误的控制器的bug
