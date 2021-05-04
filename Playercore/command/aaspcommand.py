@@ -56,6 +56,7 @@ def spawn():
         run=1
         while run!=0:
             run=core0_3_5.SPOL(files,Storyname)
+            files.close()
             try:
                 files=open("story\\"+run+".spol","r")
                 Storyname=run+".spol"
@@ -63,7 +64,7 @@ def spawn():
                 run=0
             else:
                 None
-        files.close()
+        
 
     else:
         print(msg("Spawn_Mode_Version_Error").format(Ver))
