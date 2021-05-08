@@ -1,4 +1,4 @@
-About_Info_Version:当前版本是：Interpreter_Ver0.3.5;SPOL0.3
+About_Info_Version:当前版本是：
 About_Info_Developers:开发者：青雅音
 About_Info_Environment:开发环境：Visual Studio 2019
 About_Info_Support:开发支持：爱诗绫里同人剧情组
@@ -23,6 +23,7 @@ Chara_Pic_Setting_Info_R:{}翻转立绘{}(淡入{}秒淡出{}秒)
 
 Command_Error:不能将文本“{}”识别为任何现有指令。
 
+First_Print_Load_Lang_End:语言文件加载结束，耗时{}毫秒
 First_Print:AASP命令提示符(伪)模式,用help查询现有命令。
 
 Freedom_Text_Mode_L:左对齐

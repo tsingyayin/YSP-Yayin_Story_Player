@@ -1,4 +1,4 @@
-About_Info_Version:Version now is Interpreter_Ver0.3.5;SPOL0.3
+About_Info_Version:Version now is
 About_Info_Developers:Developer: Yayin Tsing
 About_Info_Environment:IDE£ºVisual Studio 2019
 About_Info_Support:Support£ºAyano Aishi Story Creation Group
@@ -23,6 +23,7 @@ Chara_Pic_Setting_Info_R:{} inverse illustration {}(fade in {}s & fade out {}s)
 
 Command_Error:Can not distinguishi ¡°{}¡± as any legal command
 
+First_Print_Load_Lang_End:Language loaded , loading in {} ms
 First_Print:AASP Command-like mode,use help to search command list
 
 Freedom_Text_Mode_L:align left
