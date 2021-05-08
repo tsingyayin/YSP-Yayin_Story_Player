@@ -8,31 +8,14 @@ import  core.core0_3_5_U as core0_3_5_U
 import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline
-from PyQt5.QtCore import *
 
-
-class SPAWN(QThread):
- can_update_chara=pyqtSignal(list,list,list,int,int) 
- can_update_bg=pyqtSignal(list)
- def __init__(self):
-     super(SPAWN,self).__init__()
-     self.mutex=QMutex()
-     self.mutex.lock()
-     self.cond=QWaitCondition()
-
- def pause(self):
-     self.cond.wait(self.mutex)
- 
- def wake(self):
-     self.cond.wakeAll()
- def run(self):
-    
+def spawn():
     Open=False
     global warnline,texterrorline,numseterrorline,formatwarnline
     while Open==False:
         try:
             print("sysinfo→"+msg("Spawn_Mode_Name_Of_File"))
-            Storyname="N2U.spol"
+            Storyname="N2.spol"
             if Storyname=="exit":
                 return
             else:
@@ -72,7 +55,7 @@ class SPAWN(QThread):
     if Ver=="SPOL0.3.5":                                                         #遵循SPOL0.3.5标准的读取
         run=1
         while run!=0:
-            run=core0_3_5_U.SPOL(self,files,Storyname)
+            run=core0_3_5_U.SPOL(files,Storyname)
             files.close()
             try:
                 files=open("story\\"+run+".spol","r")
@@ -82,7 +65,7 @@ class SPAWN(QThread):
             else:
                 None
         
-    elif Ver=="SPOL0.3":                                                         #遵循SPOL0.3标准的读取
+    if Ver=="SPOL0.3":                                                         #遵循SPOL0.3标准的读取
         core0_3_5.SPOL(files,Storyname)
 
     else:
@@ -111,8 +94,6 @@ class SPAWN(QThread):
       print()
     print("sysinfo→"+msg("Spawn_Mode_End"))
     input()
-    self.mutex.unlock()
-    return
 
 def singletext():
     while True:
