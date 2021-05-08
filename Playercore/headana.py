@@ -1,14 +1,22 @@
-#这个文件构成最顶层交互
+#这个文件构成命令页交互
 import sys
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\command")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\core")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\lang")
-from core.core0_3 import *
+sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\Visual")
 from command.aaspcommand import *
 from langcontrol import *
+from Visual.ArtificialUI import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+#初始化语言
 langset(0)
-print(msg("First_Print"))
+#第一指引
+print("sysinfo→"+msg("First_Print"))
+
+#主识别循环
 programme_end=0
 while programme_end==0 :
     Usript=input("Userinput→")
@@ -23,13 +31,20 @@ while programme_end==0 :
     elif Usript=="":
         continue
     elif Usript=="spawn":
-        spawn()
+        spa=SPAWN()
+        spa.run()
     elif Usript=="line":
         singletext()
     elif Usript=="lang":
         langinput()
     elif Usript=="about":
         about()
+    elif Usript=="UI":
+        if __name__=="__main__":
+            app=QApplication(sys.argv)
+            Mainwindow=ArtificialUI()
+            Mainwindow.showFullScreen()
+            sys.exit(app.exec_())
     elif Usript=="exit":
         break
     

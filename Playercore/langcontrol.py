@@ -1,6 +1,11 @@
 #这个文件负责解决语言问题
 import sys
 import os
+import time
+sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore")
+sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\command")
+sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\core")
+sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\lang")
 def langset(langname):
     langnameraw=langname
     #如果是初始化，就调用初始化
@@ -37,6 +42,7 @@ def langset(langname):
     msglist={}
     languse=langname
     readlang=open("lang\\"+languse+".splang","r")
+    loadlangtime=time.time()
     for line in readlang.readlines():
         try:
             if line[0]!="#" or line[0]!="\n" :
@@ -48,6 +54,7 @@ def langset(langname):
             msglist["UNKNOWNLIST"]="UNKNOWNMSG_IN_FILE"
         else:
             None
+    print("sysinfo→"+msg("First_Print_Load_Lang_End").format(round(1000*(time.time()-loadlangtime),2)))
     #成功返回
     return 1
         
