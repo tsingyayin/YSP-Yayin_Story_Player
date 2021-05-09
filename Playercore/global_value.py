@@ -5,3 +5,5 @@ texterrorline=[]
 numseterrorline=[]
 
 formatwarnline=[]
+
+nameerrorline=[]
