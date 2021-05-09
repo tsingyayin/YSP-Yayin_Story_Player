@@ -1,6 +1,6 @@
 # AAPlayer
 
-从Interpreter_Ver0.4.0开始为了节省版本号，引入pre后缀与pub后缀。pre后缀是浏览版，pub是公开版。pre版一定是源码版本，pub版可能是编译版本，也可能是源码版本。
+从Interpreter_Ver0.4.0开始为了节省版本号，引入pre后缀与pub后缀。pre后缀是浏览版，pub是公开版。
 
 实时更新的代码一定是当前最新版。
 
