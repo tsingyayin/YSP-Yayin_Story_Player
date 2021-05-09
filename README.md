@@ -14,7 +14,7 @@
 
 新增了文件选择功能，现在可以自由选择剧情文件
 
-改变了文件相互调用逻辑。上一个版本中，aaspcommand里面的spawn函数被改做QThread对象的run函数，这就导致无法使用spawn命令正常进入命令行的解释模式。现在这个部分已经独立成成文件UICoreLauncher了，原来的spawn函数已经恢复。
+改变了文件相互调用逻辑。上一个版本中，aaspcommand里面的spawn函数被改做QThread对象的run函数，这就导致无法使用spawn命令正常进入命令行的解释模式。现在这个部分已经独立成文件UICoreLauncher了，原来的spawn函数已经恢复。
 
 *如果不想看范例文件N2U.spol，您大可自己编写，但是别忘了在Visual/source文件夹下面的对应位置添加对应素材。
 
