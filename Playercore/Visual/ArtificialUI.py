@@ -4,24 +4,27 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from global_value import warnline,texterrorline,numseterrorline,formatwarnline
-from command.aaspcommand import *
+from command.UICoreLauncher import *
+from langcontrol import *
 import time as tm
 import sys
 from Visual.effect import *
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\Visual")
 
-class ContinueInfo(QObject):
-    Continue=pyqtSignal(int)
+class STORYNAME(QObject):
+        StoryNameEmit=pyqtSignal(str)
+        def __init__(self):
+            super(STORYNAME,self).__init__()
 
 class ArtificialUI(QWidget):
     def __init__(self):
-        self.Spawn=SPAWN()
-        self.Wake=ContinueInfo()
-        self.Wake.Continue.connect(self.Spawn.wake)
-        
         super().__init__()
+
+        self.Spawn=SPAWN()
+        self.StoryName=STORYNAME()
+        self.StoryNameRecive=STORYNAMERECIVE()
+
         #背景定义为黑色
         BackC=QPalette()
         BackC.setColor(BackC.Background,QColor(0,0,0))
@@ -53,6 +56,7 @@ class ArtificialUI(QWidget):
         #self.TestButtonIN=QPushButton(self)#测试背景淡入按钮
         #self.TestButtonOut=QPushButton(self)#测试背景淡出按钮
         self.Run=QPushButton(self)#核心启动按钮
+        self.Run.setObjectName("Run")
 
         #姓名和讲述内容文本框的样式定义
         self.Name_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:30px}")
@@ -71,9 +75,22 @@ class ArtificialUI(QWidget):
         #self.TestButtonOut.setText("隐藏图片")
 
         #启动核心的按钮的位置和文本信息
-        self.Run.setGeometry(QRect(10,10,93,28))
-        self.Run.setText("启动核心")
-  
+        self.Run.setGeometry(QRect(600,400,260,260))
+        self.QSSRun="""
+            #Run{
+                    background-color:rgba(0,0,0,0);
+                    background-image:url('./Visual/source/BaseUI/Button/StartButton_N.png');
+            }
+            #Run:hover{
+                    background-color:rgba(0,0,0,0);
+                    background-image:url('./Visual/source/BaseUI/Button/StartButton_P.png');
+            }
+            #Run:Pressed{
+                    background-color:rgba(0,0,0,0);
+                    background-image:url('./Visual/source/BaseUI/Button/StartButton_C.png');
+            }
+            """
+        self.Run.setStyleSheet(self.QSSRun)
         #基本框架
         self.Frame.setPixmap(QPixmap("./Visual/source/BaseUI/Frame/frame.png"))
 
@@ -96,6 +113,12 @@ class ArtificialUI(QWidget):
         #self.TestButtonOut.raise_()
         #self.TestButtonIN.raise_()
         self.Run.raise_()
+
+        #按钮透明度初始化
+        self.ButtonOPAll=QGraphicsOpacityEffect()
+        self.ButtonOPAll.setOpacity(1)
+        self.Run.setGraphicsEffect(self.ButtonOPAll)
+
         #按钮信号和槽函数连接
         self.Run.clicked.connect(self.RUNCORE)
         
@@ -107,6 +130,7 @@ class ArtificialUI(QWidget):
         self.OPBG2=QGraphicsOpacityEffect()
         self.OPBG2.setOpacity(0)
         self.BG2.setGraphicsEffect(self.OPBG2)
+
         #框架透明度初始化
         self.OPFrame=QGraphicsOpacityEffect()
         self.OPFrame.setOpacity(0)
@@ -117,13 +141,47 @@ class ArtificialUI(QWidget):
         #self.Dark.setColor(QColor(0,0,0,10))
         #self.AVG_R.setGraphicsEffect(self.Dark)
 
-        #启动核心的函数
+        #核心启动函数
     def RUNCORE(self):
+        self.ChooseStory = QFileDialog.getOpenFileName(self,msg("Choose_File"), "./Story","StoryFile(*.spol)")
+        Storyname=self.ChooseStory[0]
+        
         self.Interpreter=SPAWN()
         self.Interpreter.can_update_chara.connect(self.setprintchara)
         self.Interpreter.can_update_bg.connect(self.setprintbg)
+        self.Interpreter.can_hide_hello.connect(self.hidehello)
+        self.Interpreter.can_reprint_hello.connect(self.reprinthello)
+        self.StoryName.StoryNameEmit.connect(self.StoryNameRecive.get)
+        self.StoryName.StoryNameEmit.emit(Storyname)
         self.Interpreter.start()
 
+    def hidehello(self,num):
+        if num==1:
+            #所有初始用窗口透明
+            for i in range(1,100):
+                self.ButtonOPAll=QGraphicsOpacityEffect()
+                self.ButtonOPAll.setOpacity(1-i/100)
+                self.Run.setGraphicsEffect(self.ButtonOPAll)
+                self.Run.repaint()
+                tm.sleep(0.01)
+            #断开事件
+            self.Run.clicked.disconnect(self.RUNCORE)
+
+    def reprinthello(self,num):
+        if num==1:
+            #所有初始用窗口浮现
+            for i in range(1,100):
+                self.ButtonOPAll=QGraphicsOpacityEffect()
+                self.ButtonOPAll.setOpacity(i/100)
+                self.Run.setGraphicsEffect(self.ButtonOPAll)
+                self.Run.repaint()
+                tm.sleep(0.01)
+            #重新连接事件
+            self.Run.clicked.connect(self.RUNCORE)
+            self.Name_Label.setText("")
+            self.Word_Label.setText("")
+
+        #背景控制器-屏幕更新承接函数
     def setprintbg(self,bgsetlst):
        self.BGR.load("./Visual/source/BGP/"+bgsetlst[0]+".png")
        self.BGR=self.BGR.scaled(1920,1080,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
@@ -181,8 +239,8 @@ class ArtificialUI(QWidget):
             self.changeBG=1
             self.BG1.setPixmap(QPixmap(""))
        self.Interpreter.wake()
-        #讲述控制器-屏幕更新承接函数
 
+        #讲述控制器-屏幕更新承接函数
     def setprintchara(self,charapic,charawords,wordset,charanum,BGblack):
       class SetPrintChara(QThread):
         FUNC=Function()
