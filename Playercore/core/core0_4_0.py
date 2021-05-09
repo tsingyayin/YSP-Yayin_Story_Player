@@ -1,15 +1,18 @@
 #这个文件是解释器核心
 import time as tm
 from langcontrol import *
-from global_value import warnline,texterrorline,numseterrorline,formatwarnline
+from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
 
 def SPOL(files,Storyname):
-  global warnline,texterrorline,numseterrorline,formatwarnline
+  global warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
     #跨行注释状态确认
   textend=0
     #行计数
   linecount=0
-  
+    #对话分支状态确认
+  conver=0
+  convertag=0
+  converjump=1
   #判断解释器是自行终止还是分支需要终止
   Needjump=0
 
@@ -17,23 +20,82 @@ def SPOL(files,Storyname):
   bgeffectmode={"0":msg("Bgp_Effect_Mode_Normal"),"1":msg("Bgp_Effect_Mode_Shake"),"2":msg("Bgp_Effect_Mode_W1"),"3":msg("Bgp_Effect_Mode_W2")}
   textmode={"L":msg("Freedom_Text_Mode_L"),"M":msg("Freedom_Text_Mode_M"),"R":msg("Freedom_Text_Mode_R")}
   timestart=tm.time()
-  for line in files.readlines(): 
+  for lineraw in files.readlines(): 
+
     linecount+=1
     #先看有没有回车，没有就给它加上，但是要提出警告
-    if line[-1]!="\n":
-        line+="\n"
-        formatwarnline+=[[linecount,Storyname,line[:-1]]]
+    if lineraw[-1]!="\n":
+        lineraw+="\n"
+        formatwarnline+=[[linecount,Storyname,lineraw[:-1]]]
     #不予判定的情况
-    if (line[0]=="#" and line[0:3]!="###") or line[0]=="/" or line[0]=="\n" or line[0]==" " or line[0]==":":None
+    if (lineraw[0]=="#" and lineraw[0:3]!="###") or lineraw[0]=="/" or lineraw[0]==" " or lineraw[0]==":":continue
+
+    #先来看看这一行是不是对话分支的一部分
+    #这一部分思路是这样的
+    #首先|||是开头结尾没啥好说的
+    #剩下的话，对比||行是否和输入一样
+    #如果一样，那么就确认读到这一个分支convertag=1
+    #那么|后面的就正常读写
+    #遇到下一个||的时候让convertag=0，不再不写
+    #简而言之convertag的1和0是读写准许与跳过
+    #其他情况就正常传入，没啥好说的
+
+    if lineraw[0:3]=="|||" and conver==0 :
+        conver=1
+        convertag=0
+        converlst=lineraw[3:-1].split("|||")
+        try:
+            if len(converlst)>5:raise Exception
+            convernum=[]
+            for k in converlst:
+                i=k.split(":")
+                if len(i)!=2:raise Exception
+                print("{}:{}".format(i[0],i[1]))
+                convernum+=i[0]
+            while True:
+                usript=input()
+                if usript in convernum:
+                    break
+        except Exception:
+            numseterrorline+=[[linecount,Storyname,lineraw[:-1]]]
+            areajump=1
+        else:
+            areajump=0
+            None
+        continue
+
+    elif lineraw[0:2]=="||" and lineraw[0:3]!="|||" and convertag==0 and areajump==0:
+        if lineraw[2:-1] not in convernum:
+            nameerrorline+=[[linecount,Storyname,lineraw[:-1]]]
+        if lineraw[2:-1]==usript:
+            convertag=1
+        continue
+    elif lineraw[0:2]=="||"and lineraw[0:3]!="|||"  and convertag==1 and areajump==0:
+        if lineraw[2:-1] not in convernum:
+            nameerrorline+=[[linecount,Storyname,lineraw[:-1]]]
+        convertag=0
+        continue
+    elif lineraw[0]=="|" and lineraw[0:3]!="|||" and lineraw[0:2]!="||" and convertag==1 and areajump==0:
+        line=lineraw[1:]
+    elif lineraw[0]=="|" and lineraw[0:3]!="|||" and lineraw[0:2]!="||" and convertag==0 and areajump==0:
+        continue
+    elif (lineraw[0:3]=="|||" or lineraw[0]=="\n") and conver==1:
+        conver=0
+        convertag=0
+        continue
+    elif conver==0:
+        line=lineraw[:]
 
     #进行跨行注释的识别
-    elif line[0:3]=="###" and textend==0:
+    if line[0:3]=="###" and textend==0:
         textend=1
     elif line[0:3]=="###" and textend==1:
         textend=0
     elif textend==1:
         continue
 
+    elif lineraw[0]=="\n" :
+        continue
     #提取背景控制器，不标准的输入用默认值填充
     #背景控制器的几个数值是场景名称、显示模式、特效、淡入
     elif line[0]=="[":
