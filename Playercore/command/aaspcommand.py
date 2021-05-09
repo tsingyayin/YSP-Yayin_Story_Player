@@ -4,35 +4,18 @@
 #从现在开始，为了尝试长时间支持老版本的核心
 #我们把每个版本的核心独立成单个文件
 import  core.core0_3_5 as core0_3_5
-import  core.core0_3_5_U as core0_3_5_U
+import  core.core0_4_0 as core0_4_0
 import time as tm
 from langcontrol import *
-from global_value import warnline,texterrorline,numseterrorline,formatwarnline
-from PyQt5.QtCore import *
+from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
 
-
-class SPAWN(QThread):
- can_update_chara=pyqtSignal(list,list,list,int,int) 
- can_update_bg=pyqtSignal(list)
- def __init__(self):
-     super(SPAWN,self).__init__()
-     self.mutex=QMutex()
-     self.mutex.lock()
-     self.cond=QWaitCondition()
-
- def pause(self):
-     self.cond.wait(self.mutex)
- 
- def wake(self):
-     self.cond.wakeAll()
- def run(self):
-    
+def spawn():
     Open=False
-    global warnline,texterrorline,numseterrorline,formatwarnline
+    global warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
     while Open==False:
         try:
             print("sysinfo→"+msg("Spawn_Mode_Name_Of_File"))
-            Storyname="N2U.spol"
+            Storyname=input()
             if Storyname=="exit":
                 return
             else:
@@ -72,7 +55,7 @@ class SPAWN(QThread):
     if Ver=="SPOL0.3.5":                                                         #遵循SPOL0.3.5标准的读取
         run=1
         while run!=0:
-            run=core0_3_5_U.SPOL(self,files,Storyname)
+            run=core0_3_5.SPOL(files,Storyname)
             files.close()
             try:
                 files=open("story\\"+run+".spol","r")
@@ -81,9 +64,20 @@ class SPAWN(QThread):
                 run=0
             else:
                 None
-        
-    elif Ver=="SPOL0.3":                                                         #遵循SPOL0.3标准的读取
-        core0_3_5.SPOL(files,Storyname)
+
+    if Ver=="SPOL0.4.0":                                                         #遵循SPOL0.4.0标准的读取
+        run=1
+        while run!=0:
+            run=core0_4_0.SPOL(files,Storyname)
+            files.close()
+            try:
+                files=open("story\\"+run+".spol","r")
+                Storyname=run+".spol"
+            except Exception:
+                run=0
+            else:
+                None
+
 
     else:
         print(msg("Spawn_Mode_Version_Error").format(Ver))
@@ -109,10 +103,13 @@ class SPAWN(QThread):
       for i in numseterrorline:
           print(msg("Warning_Numseterror_Info").format(i[0],i[1],i[2]))
       print()
+    if nameerrorline!=[]:
+      print(msg("Warning_Nameerror_Count").format(len(nameerrorline)))
+      for i in nameerrorline:
+          print(msg("Warning_Nameerror_Info").format(i[0],i[1],i[2]))
+      print()
     print("sysinfo→"+msg("Spawn_Mode_End"))
     input()
-    self.mutex.unlock()
-    return
 
 def singletext():
     while True:
@@ -139,7 +136,6 @@ def singletext():
         else:
             print("sysinfo→"+msg("Single_Mode_Version_Error").format(linestandard))
       
-
 def langinput():
     print("sysinfo→"+msg("Lang_Input_Msg"))
     while True:
@@ -157,7 +153,7 @@ def langinput():
     print("sysinfo→"+msg("Lang_Set_Success").format(usrinput))
     
 def about():
-    print(msg("About_Info_Version")+" Int_0.4.0_Pre3;S_0.3.5;UI_T_0.0.1")
+    print(msg("About_Info_Version")+" Interpreter_Ver0.4.0_Pre5;SPOL_0.3.5;UI0_0.1.0")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
