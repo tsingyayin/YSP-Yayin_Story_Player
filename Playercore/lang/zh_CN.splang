@@ -22,6 +22,7 @@ Chara_Pic_Setting_Info:{}立绘{}(淡入{}秒淡出{}秒)
 Chara_Pic_Setting_Info_R:{}翻转立绘{}(淡入{}秒淡出{}秒)
 
 Command_Error:不能将文本“{}”识别为任何现有指令。
+Choose_File:打开剧情文件
 
 First_Print_Load_Lang_End:语言文件加载结束，耗时{}毫秒
 First_Print:AASP命令提示符(伪)模式,用help查询现有命令。
@@ -37,6 +38,7 @@ Help_In_Main_Page_spawn:进入文件解释模式
 Help_In_Main_Page_line:进入剧情文本单行测试模式
 Help_In_Main_Page_exit:退出程序（或程序的任意一级）
 Help_In_Main_Page_lang:调整程序语言
+Help_In_Main_Page_ui:启动UI页面
 
 Lang_Input_Msg:请键入您需要的语言的文件名
 Lang_Set_Success:设置语言{}成功

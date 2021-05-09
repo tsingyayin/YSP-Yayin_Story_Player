@@ -22,6 +22,7 @@ Chara_Pic_Setting_Info:{} illustration {}(fade in {}s & fade out {}s)
 Chara_Pic_Setting_Info_R:{} inverse illustration {}(fade in {}s & fade out {}s)
 
 Command_Error:Can not distinguishi ¡°{}¡± as any legal command
+Choose_File:Open story file
 
 First_Print_Load_Lang_End:Language loaded , loading in {} ms
 First_Print:AASP Command-like mode,use help to search command list
@@ -37,6 +38,7 @@ Help_In_Main_Page_spawn:Entering interpreter mode
 Help_In_Main_Page_line:Entering Single-line mode
 Help_In_Main_Page_exit:Exiting the programme,or any level in the programme
 Help_In_Main_Page_lang:Changing the language of the programme
+Help_In_Main_Page_ui:Launch UI
 
 Lang_Input_Msg:Please input the file name of the language
 Lang_Set_Success:Successfully set {} as your language
