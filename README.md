@@ -10,7 +10,7 @@
 
 编译过的包可以直接运行，不需要安装任何东西。
 
-# Interpreter_Ver0.4.0_Pre7;SPOL_0.4.1;UI0_0.2.0
+# Interpreter_Ver0.4.0_Pre7;SPOL_0.4.1;UI0_0.2.0（已编译）
 
 最新内核升级到0.4.1版本
 
