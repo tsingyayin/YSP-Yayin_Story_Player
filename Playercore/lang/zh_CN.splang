@@ -15,7 +15,7 @@ Bgp_Effect_Mode_W1:一次白闪
 Bgp_Effect_Mode_W2:两次白闪
 Bgp_Setting_Info:当前背景是{},显示模式为{},特效为{},淡入时间{}
 
-Branch_Info_Msg:选项{}：“{}”（文件是{}）
+Branch_Info_Msg:选项“{}”（文件是{}）
 Branch_Info_Input:请输入您的选择
 
 Chara_Pic_Setting_Info:{}立绘{}(淡入{}秒淡出{}秒)
@@ -61,6 +61,8 @@ Spawn_Mode_Get_Subtitle:剧情副标题是:
 Spawn_Mode_Version_Error:没有在解释器中找到{}这个版本，请检查拼写，或者检查本版程序是否支持这个版本
 Spawn_Mode_End:读取完毕,按下回车键回到首页面
 
+Ui_Mode_End:UI已经播放完当前剧情
+
 Warning_Warn_Count:读取过程共出现了{}个警告：
 Warning_Warn_Info:未能识别行{}在文件{}中的内容:“{}”，如果是注释请添加字符#
 Warning_Texterror_Count:读取过程共出现了{}个错误：
@@ -69,3 +71,6 @@ Warning_Formatwarn_Count:读取过程共出现了{}个格式警告：
 Warning_Formatwarn_Info:行{}在文件{}中的内容:“{}”没有以回车（换行符）结尾
 Warning_Numseterror_Count:读取过程共发现了{}个参数设置错误：
 Warning_Numseterror_Info:行{}在文件{}中的控制器“{}”遇到了参数错误：超出范围或超出参数个数上限
+Warning_Nameerror_Count:读取过程中共发现了{}个标签（名称）设置错误：
+Warning_Nameerror_Info:行{}在文件{}中的控制器“{}”遇到了标签（名称）设置错误：该标签（名称）与相关设置不匹配
+

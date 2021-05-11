@@ -15,7 +15,7 @@ Bgp_Effect_Mode_W1:Flash 1
 Bgp_Effect_Mode_W2:Flash 2
 Bgp_Setting_Info:BGP is {},display mode is {},effect mode is {},fade in time is{}
 
-Branch_Info_Msg:Branch {}£º¡°{}¡±£¨The file is {}£©
+Branch_Info_Msg:Branch¡°{}¡±£¨The file is {}£©
 Branch_Info_Input:Please input the branch you want
 
 Chara_Pic_Setting_Info:{} illustration {}(fade in {}s & fade out {}s)
@@ -61,6 +61,8 @@ Spawn_Mode_Get_Subtitle:The subtitle of the story is:
 Spawn_Mode_Version_Error:Can not find the version {},check your input.
 Spawn_Mode_End:Interpreted,press Enter to return to the home page
 
+Ui_Mode_End:Story have Played
+
 Warning_Warn_Count:{} warning during interpreting£º
 Warning_Warn_Info:Can not interprete line {} in the file {}:¡°{}¡±£¬please add character"#" if it is a comment
 Warning_Texterror_Count:{} errors during interpreting£º
@@ -69,3 +71,5 @@ Warning_Formatwarn_Count:{} format warning during interpreting£º
 Warning_Formatwarn_Info:line {} in the file {} :¡°{}¡±,the end is not "Enter"
 Warning_Numseterror_Count:{} parameter errors during interpreting£º
 Warning_Numseterror_Info:line {} in the file {} :¡°{}¡±meets parameters out of range or number
+Warning_Nameerror_Count:{} Label(Name) errors during interpreting£º
+Warning_Nameerror_Info:line {} in the file {} :¡°{}¡±meets Label(Name) different from related controllers
