@@ -4,7 +4,7 @@
 #从现在开始，为了尝试长时间支持老版本的核心
 #我们把每个版本的核心独立成单个文件
 import  core.core0_3_5 as core0_3_5
-import  core.core0_4_0 as core0_4_0
+import  core.core0_4_1 as core0_4_1
 import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
@@ -24,28 +24,36 @@ def spawn():
             print("sysinfo→"+msg("Spawn_Mode_Not_Found").format(Storyname))
         else:
             Open=True
+
     Ver=""
-    #用来确标题是否读取完毕
-    TitleSure=0
-    SubtitleSure=0
-    timestart=0
+    linecount=0
 
     for line in files.readlines():
-        if (line[0]=="#" and line[0:3]!="###") or line[0]=="\n" or line[0]==" ":continue
-        #用来确认遵循版本号
-        elif line[0]=="/": 
+        linecount+=1
+        #先看有没有回车，没有就给它加上，但是要提出警告
+        if line[-1]!="\n":
+            line+="\n"
+            formatwarnline+=[[linecount,Storyname,line[:-1]]]
+
+        #查找版本号
+        if line[0]=="/": 
             Ver=line[1:-1]
             print(msg("Spawn_Mode_Get_Version"),Ver)
-        #标题和副标题，获取完毕后就用Sure锁死这两个elif
-        elif line[0]==":"and TitleSure==0:
-            Title=line[1:-1]
-            print(msg("Spawn_Mode_Get_Title"),Title)
-            TitleSure=1
-        elif line[0]==":"and SubtitleSure==0:
-            Subtitle=line[1:-1]
-            print(msg("Spawn_Mode_Get_Subtitle"),Subtitle)
-            TitleSure=1
-            print("\n")
+
+        #获取标题控制器
+        elif line[0]==":":
+            if line.count(":")!=4:
+                texterrorline+=[[linecount,Storyname,line[:-1]]]
+                break
+            try:
+                Titlesetlst=line[1:-1].split(":")
+                if len(Titlesetlst)!=4:raise Exception
+            except Exception:
+                numseterrorline+=[[linecount,Storyname,line[:-1]]]
+                Ver="TitleERROR"
+            else:
+                print(msg("Spawn_Mode_Get_Title"),Titlesetlst[0])
+                print(msg("Spawn_Mode_Get_Subtitle"),Titlesetlst[1])
             break
 
 
@@ -65,10 +73,10 @@ def spawn():
             else:
                 None
 
-    if Ver=="SPOL0.4.0":                                                         #遵循SPOL0.4.0标准的读取
+    if Ver=="SPOL0.4.1":                                                         #遵循SPOL0.4.1标准的读取
         run=1
         while run!=0:
-            run=core0_4_0.SPOL(files,Storyname)
+            run=core0_4_1.SPOL(files,Storyname)
             files.close()
             try:
                 files=open("story\\"+run+".spol","r")
