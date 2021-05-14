@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from command.UICoreLauncher import *
-from core.core0_4_1_U import *
+from core.core0_4_1_U_R import *
 from langcontrol import *
 import time as tm
 import sys
@@ -23,15 +23,15 @@ class USERCHOOSEBRANCH(QObject):
     def __init__(self):
         super(USERCHOOSEBRANCH,self).__init__()
 
-class ArtificialUI(QWidget):
-    def __init__(self):
-        super().__init__()
+class UiMainWindow(QWidget):
+    def setupUi(self):
 
         self.Spawn=SPAWN()
         self.StoryName=STORYNAME()
         self.StoryNameRecive=STORYNAMERECIVE()
         self.UserChooseBranch=USERCHOOSEBRANCH()
         self.UserChooseBranchRecive=USERCHOOSEBRANCHRECIVE()
+        
         #背景定义为黑色
         BackC=QPalette()
         BackC.setColor(BackC.Background,QColor(0,0,0))
@@ -76,6 +76,7 @@ class ArtificialUI(QWidget):
         self.Hellotext=QLabel(self)
         self.Run=QPushButton(self)#核心启动按钮
         self.Run.setObjectName("Run")
+        
 
         #姓名和讲述内容文本框的样式定义
         self.Name_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:30px;}")
@@ -90,20 +91,67 @@ class ArtificialUI(QWidget):
         self.SubTitle.setStyleSheet("QLabel{color:#FFFFFF;font-size:60px;font-family:'Microsoft YaHei'}")
         self.SubTitle.setAlignment(Qt.AlignCenter)
 
-        #标题和副标题测试
-        #self.MainTitle.setText("AA-TS-07-4R")
-        #self.SubTitle.setText("副标题测试")
-        #self.BG1.setPixmap(QPixmap("./Visual/source/BGP/洛天依家走廊.png"))
+        #退出按钮
+        self.ExitButton=QPushButton(self)
+        self.ExitButton.setObjectName("ExitButton")
+        self.ExitButton.setGeometry(QRect(925,925,70,69))
+
+        self.OPExitButton=QGraphicsOpacityEffect()
+        self.OPExitButton.setOpacity(1)
+        self.ExitButton.setGraphicsEffect(self.OPExitButton)
+
+        self.QSSExitButton="""
+           #ExitButton{
+                    background-color:rgba(0,0,0,0);
+                    background-image:url('./Visual/source/BaseUI/Button/ExitButton_N.png');
+            }
+            #ExitButton:hover{
+                    background-color:rgba(0,0,0,0);
+                    background-image:url('./Visual/source/BaseUI/Button/ExitButton_P.png');
+            }
+            #ExitButton:Pressed{
+                    background-color:rgba(0,0,0,0);
+                    background-image:url('./Visual/source/BaseUI/Button/ExitButton_C.png');
+            }
+        """
+        self.ExitButton.setStyleSheet(self.QSSExitButton)
+        self.ExitButton.clicked.connect(self.ExitProgram)
 
         #背景控件位置设置
         self.BG1.setGeometry(QRect(0,0,1920,1080))
         self.BG2.setGeometry(QRect(0,0,1920,1080))
 
-        #测试背景变化的两个按钮的位置和文本信息
-        #self.TestButtonIN.setGeometry(QRect(120,10,93,28))
-        #self.TestButtonOut.setGeometry(QRect(230,10,93,28))
-        #self.TestButtonIN.setText("显示图片")
-        #self.TestButtonOut.setText("隐藏图片")
+        #播放控制按钮
+        self.AutoButton=QPushButton(self)
+        self.AutoButton.setObjectName("AutoButton")
+        self.AutoButton.setGeometry(QRect(1600,40,150,50))
+        self.NextButton=QPushButton(self)
+        self.NextButton.setObjectName("NextButton")
+        self.NextButton.setGeometry(QRect(1600,970,150,50))
+
+        self.OPAutoButton=QGraphicsOpacityEffect()
+        self.OPAutoButton.setOpacity(0)
+        self.AutoButton.setGraphicsEffect(self.OPAutoButton)
+
+        self.OPNextButton=QGraphicsOpacityEffect()
+        self.OPNextButton.setOpacity(0)
+        self.NextButton.setGraphicsEffect(self.OPNextButton)
+
+        self.QSSAutoButton="""
+        #AutoButton{
+        background-color:rgba(0,0,0,0);
+        background-image:url('./Visual/source/BaseUI/Button/AutoButton_Au.png');
+        }
+        """
+        self.AutoButton.setStyleSheet(self.QSSAutoButton)
+
+        self.QSSNextButton="""
+        #NextButton{
+        background-color:rgba(0,0,0,0);
+        background-image:url('./Visual/source/BaseUI/Button/NextButton_N.png');
+        }
+        """
+        self.NextButton.setStyleSheet(self.QSSNextButton)
 
         #启动核心的按钮的位置和文本信息
         self.Run.setGeometry(QRect(400,400,260,260))
@@ -191,6 +239,9 @@ class ArtificialUI(QWidget):
         self.SubTitle.raise_()
         self.Run.raise_()
         self.Hellotext.raise_()
+        self.AutoButton.raise_()
+        self.NextButton.raise_()
+        self.ExitButton.raise_()
 
         #开始页面透明度初始化
         self.OPRun=QGraphicsOpacityEffect()
@@ -203,6 +254,7 @@ class ArtificialUI(QWidget):
 
         #按钮信号和槽函数连接
         self.Run.clicked.connect(self.RUNCORE)
+        self.AutoButton.clicked.connect(self.AutoChange)
         
         #背景透明度初始化
         self.OPBG1=QGraphicsOpacityEffect()
@@ -230,29 +282,76 @@ class ArtificialUI(QWidget):
         self.OPLogo=QGraphicsOpacityEffect()
         self.OPLogo.setOpacity(0)
         self.Logo.setGraphicsEffect(self.OPLogo)
-        #测试灰暗效果
-        #self.Dark=QGraphicsColorizeEffect()
-        #self.Dark.setColor(QColor(0,0,0,10))
-        #self.AVG_R.setGraphicsEffect(self.Dark)
+
+        self.DirectOpen=0
+        #直接打开的情况下的参数设置
+        if sys.argv.__len__() >=2:
+            if os.path.exists(sys.argv[1]):
+                self.DirectOpen=1
+                self.Storyname=sys.argv[1]
+                self.RUNCORE()
+
+
+class UpdateWindow(QThread):
+    None
+
+class MainWindow(UiMainWindow):
+        #基本初始化
+    def __init__(self,parent = None):
+        super(MainWindow,self).__init__(parent)
+        self.setupUi()
+        
+        #是否自动处理函数
+    def AutoChange(self):
+        if self.Auto==1: 
+            self.Auto=0
+            self.QSSAutoButton="""
+        #AutoButton{
+        background-color:rgba(0,0,0,0);
+        background-image:url('./Visual/source/BaseUI/Button/AutoButton_Ar.png');
+        }
+        """
+            self.AutoButton.setStyleSheet(self.QSSAutoButton)
+        elif self.Auto==0: 
+            self.Auto=1
+            self.QSSAutoButton="""
+        #AutoButton{
+        background-color:rgba(0,0,0,0);
+        background-image:url('./Visual/source/BaseUI/Button/AutoButton_Au.png');
+        }
+        """
+            self.AutoButton.setStyleSheet(self.QSSAutoButton)
 
         #核心启动函数
     def RUNCORE(self):
-        self.ChooseStory = QFileDialog.getOpenFileName(self,msg("Choose_File"), "./Story","StoryFile(*.spol)")
-        Storyname=self.ChooseStory[0]
         
+        if self.DirectOpen!=1: 
+            self.ChooseStory = QFileDialog.getOpenFileName(self,msg("Choose_File"), "./Story","StoryFile(*.spol)")
+            self.Storyname=self.ChooseStory[0]
+
+        #给定线程
         self.Interpreter=SPAWN()
+
+        #链接信号
         self.Interpreter.can_update_chara.connect(self.setprintchara)
         self.Interpreter.can_update_bg.connect(self.setprintbg)
+        self.Interpreter.update_num_bg.connect(self.UpdateBG)
+        self.Interpreter.update_chara_num.connect(self.UpdateWords)
         self.Interpreter.can_hide_hello.connect(self.hidehello)
         self.Interpreter.can_reprint_hello.connect(self.reprinthello)
         self.Interpreter.can_show_title.connect(self.showtitle)
         self.Interpreter.need_to_choose.connect(self.choosebranch)
+        self.Interpreter.show_next.connect(self.ShowNext)
         self.UserChooseBranch.UserChooseWhich.connect(self.UserChooseBranchRecive.get)
 
+        #准备启动数值
         self.StoryName.StoryNameEmit.connect(self.StoryNameRecive.get)
-        self.StoryName.StoryNameEmit.emit(Storyname)
-        self.Interpreter.start()
+        self.StoryName.StoryNameEmit.emit(self.Storyname)
 
+        #启动
+        self.Auto=1
+        self.Interpreter.start()
+        
         #分支选择函数
     def choosebranch(self,converlst):
         self.converlstlen=len(converlst)
@@ -272,6 +371,7 @@ class ArtificialUI(QWidget):
         self.BranchButton_2.raise_()
         self.BranchButton_3.raise_()
         self.BranchButton_4.raise_()
+        self.AutoButton.raise_()
 
         if self.converlstlen==1:
             self.BranchButton_1.setText(converlst[0].split(":")[1])
@@ -385,6 +485,7 @@ class ArtificialUI(QWidget):
         self.Logo.raise_()
         self.MainTitle.raise_()
         self.SubTitle.raise_()
+        self.AutoButton.raise_()
 
         #断开链接
         if self.converlstlen==1:
@@ -451,6 +552,7 @@ class ArtificialUI(QWidget):
         self.Logo.raise_()
         self.MainTitle.raise_()
         self.SubTitle.raise_()
+        self.AutoButton.raise_()
 
         self.BG1.setPixmap(QPixmap(""))
         self.BG2.setPixmap(QPixmap(""))
@@ -497,6 +599,8 @@ class ArtificialUI(QWidget):
         self.Logo.raise_()
         self.MainTitle.raise_()
         self.SubTitle.raise_()
+        self.AutoButton.raise_()
+        self.NextButton.raise_()
 
         self.BG2.setPixmap(QPixmap("./Visual/source/BaseUI/Picture/黑场.png"))
         for i in range(0,21):
@@ -542,6 +646,19 @@ class ArtificialUI(QWidget):
         self.MainTitle.raise_()
         self.SubTitle.raise_()
         self.Interpreter.wake()
+        self.AutoButton.raise_()
+        self.NextButton.raise_()
+
+        self.OPAutoButton=QGraphicsOpacityEffect()
+        self.OPAutoButton.setOpacity(1)
+        self.AutoButton.setGraphicsEffect(self.OPAutoButton)
+
+        self.OPNextButton=QGraphicsOpacityEffect()
+        self.OPNextButton.setOpacity(0)
+        self.NextButton.setGraphicsEffect(self.OPNextButton)
+
+        self.AutoButton.raise_()
+        self.NextButton.raise_()
 
         #初始控件隐藏
     def hidehello(self,num):
@@ -556,13 +673,25 @@ class ArtificialUI(QWidget):
                 self.OPHellotext.setOpacity(1-i/100)
                 self.Hellotext.setGraphicsEffect(self.OPHellotext)
                 self.Hellotext.repaint()
+                self.OPExitButton=QGraphicsOpacityEffect()
+                self.OPExitButton.setOpacity(1-i/100)
+                self.ExitButton.setGraphicsEffect(self.OPExitButton)
+                self.ExitButton.repaint()
                 tm.sleep(0.01)
             #断开事件
             self.Run.clicked.disconnect(self.RUNCORE)
-
+            self.ExitButton.clicked.disconnect(self.ExitProgram)
         #初始控件复现
     def reprinthello(self,num):
         if num==1:
+            self.OPAutoButton=QGraphicsOpacityEffect()
+            self.OPAutoButton.setOpacity(0)
+            self.AutoButton.setGraphicsEffect(self.OPAutoButton)
+
+            self.OPNextButton=QGraphicsOpacityEffect()
+            self.OPNextButton.setOpacity(0)
+            self.NextButton.setGraphicsEffect(self.OPNextButton)
+
             self.BG2.raise_()
             self.BG1.raise_()
             self.AVG_L.raise_()
@@ -580,6 +709,9 @@ class ArtificialUI(QWidget):
             self.SubTitle.raise_()
             self.Run.raise_()
             self.Hellotext.raise_()
+            self.AutoButton.raise_()
+            self.NextButton.raise_()
+            self.ExitButton.raise_()
 
             self.OPBG1=QGraphicsOpacityEffect()
             self.OPBG1.setOpacity(1)
@@ -611,79 +743,90 @@ class ArtificialUI(QWidget):
                 self.OPHellotext.setOpacity(i/100)
                 self.Hellotext.setGraphicsEffect(self.OPHellotext)
                 self.Hellotext.repaint()
+                self.OPExitButton=QGraphicsOpacityEffect()
+                self.OPExitButton.setOpacity(i/100)
+                self.ExitButton.setGraphicsEffect(self.OPExitButton)
+                self.ExitButton.repaint()
                 tm.sleep(0.01)
+                
+            #关闭直接打开属性
+            self.DirectOpen=0
+
             #重新连接事件
             self.Run.clicked.connect(self.RUNCORE)
-            self.Name_Label.setText("")
-            self.Word_Label.setText("")
-
-        #背景控制器-屏幕更新承接函数
+            self.ExitButton.clicked.connect(self.ExitProgram)
+        
+        #背景控制器-原始图像装载函数
     def setprintbg(self,bgsetlst):
        self.BGR.load("./Visual/source/BGP/"+bgsetlst[0]+".png")
        self.BGR=self.BGR.scaled(1920,1080,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
-       if self.changeBG==1:
-            self.BG1.setPixmap(QPixmap(self.BGR))
-            #控件遮挡关系-BG1有用情况
-            self.BG2.raise_()
-            self.BG1.raise_()
-            self.AVG_L.raise_()
-            self.AVG_M.raise_()
-            self.AVG_R.raise_()
-            self.Frame.raise_()
-            self.Name_Label.raise_()
-            self.Word_Label.raise_()
-            #self.TestButtonOut.raise_()
-            #self.TestButtonIN.raise_()
-            self.Run.raise_()
+
+        #背景控制器-屏幕刷新函数
+    def UpdateBG(self,i,bgsetlst):
+        if self.changeBG==1:
+            if i==0:
+                self.BG1.setPixmap(QPixmap(self.BGR))
+                self.BG2.raise_()
+                self.BG1.raise_()
+                self.AVG_L.raise_()
+                self.AVG_M.raise_()
+                self.AVG_R.raise_()
+                self.Frame.raise_()
+                self.Name_Label.raise_()
+                self.Word_Label.raise_()
+                self.AutoButton.raise_()
+                self.NextButton.raise_()
             if eval(bgsetlst[3])!=0:
-                for i in range (0,20):
-                    self.OPBG1=QGraphicsOpacityEffect()
-                    self.OPBG1.setOpacity(i/20)
-                    self.BG1.setGraphicsEffect(self.OPBG1)
-                    self.BG1.repaint()
-                    tm.sleep(eval(bgsetlst[3])/20)
+                self.OPBG1=QGraphicsOpacityEffect()
+                self.OPBG1.setOpacity(i/20)
+                self.BG1.setGraphicsEffect(self.OPBG1)
             elif eval(bgsetlst[3])==0:
                 self.OPBG1=QGraphicsOpacityEffect()
                 self.OPBG1.setOpacity(1)
                 self.BG1.setGraphicsEffect(self.OPBG1)
-                self.BG1.repaint()
-            self.changeBG=2
-            self.BG2.setPixmap(QPixmap(""))
-       elif self.changeBG==2:
-            self.BG2.setPixmap(QPixmap(self.BGR))
-            #控件遮挡关系-BG2有用情况
-            self.BG1.raise_()
-            self.BG2.raise_()
-            self.AVG_L.raise_()
-            self.AVG_M.raise_()
-            self.AVG_R.raise_()
-            self.Frame.raise_()
-            self.Name_Label.raise_()
-            self.Word_Label.raise_()
-            #self.TestButtonOut.raise_()
-            #self.TestButtonIN.raise_()
-            self.Run.raise_()
+            if i==20:
+                self.changeBG=2
+                self.BG2.setPixmap(QPixmap(""))
+        elif self.changeBG==2:
+            if i==0:
+                self.BG2.setPixmap(QPixmap(self.BGR))
+                self.BG1.raise_()
+                self.BG2.raise_()
+                self.AVG_L.raise_()
+                self.AVG_M.raise_()
+                self.AVG_R.raise_()
+                self.Frame.raise_()
+                self.Name_Label.raise_()
+                self.Word_Label.raise_()
+                self.AutoButton.raise_()
+                self.NextButton.raise_()
             if eval(bgsetlst[3])!=0:
-                for i in range (0,20):
-                    self.OPBG2=QGraphicsOpacityEffect()
-                    self.OPBG2.setOpacity(i/20)
-                    self.BG2.setGraphicsEffect(self.OPBG2)
-                    self.BG2.repaint()
-                    tm.sleep(eval(bgsetlst[3])/20)
+                self.OPBG2=QGraphicsOpacityEffect()
+                self.OPBG2.setOpacity(i/20)
+                self.BG2.setGraphicsEffect(self.OPBG2)
             elif eval(bgsetlst[3])==0:
                 self.OPBG2=QGraphicsOpacityEffect()
                 self.OPBG2.setOpacity(1)
                 self.BG2.setGraphicsEffect(self.OPBG2)
-                self.BG2.repaint()
-
-            self.changeBG=1
-            self.BG1.setPixmap(QPixmap(""))
-       self.Interpreter.wake()
+            if i==20:
+                self.changeBG=1
+                self.BG1.setPixmap(QPixmap(""))
+        self.Interpreter.wake()
 
         #讲述控制器-屏幕更新承接函数
     def setprintchara(self,charapic,charawords,wordset,charanum,BGblack):
-      class SetPrintChara(QThread):
+        
+
         FUNC=Function()
+        self.AVG_L.raise_()
+        self.AVG_M.raise_()
+        self.AVG_R.raise_()
+        self.Frame.raise_()
+        self.Name_Label.raise_()
+        self.Word_Label.raise_()
+        self.AutoButton.raise_()
+        self.NextButton.raise_()
+
         #确认遮罩状态
         if BGblack==1:
             self.OPFrame.setOpacity(1)
@@ -721,25 +864,40 @@ class ArtificialUI(QWidget):
         self.Name_Label.repaint()
         self.Word_Label.setText("")
         self.Word_Label.repaint()
-        #填充姓名和讲述
-        for i in charawords:
-            if i[0]=="" and charanum==1:#当槽位上没有姓名且场上只有一人，认为是旁白
-                wordsALL=""
-                for words in i[1]:
-                    wordsALL+=words
-                    self.Word_Label.setText(wordsALL)
-                    self.Word_Label.repaint()
-                    tm.sleep(eval(wordset[0]))
-                break#慎防多个台词，直接退出槽位识别循环
-            elif i[0]!="" and i[1]!="":#当槽位上有姓名和讲述内容则填充进对应框
-                self.Name_Label.setText(i[0])
-                self.Name_Label.repaint()     
-                wordsALL=""
-                for words in i[1]: 
-                    wordsALL+=words
-                    self.Word_Label.setText(wordsALL)
-                    self.Word_Label.repaint()
-                    tm.sleep(eval(wordset[0]))
-                break#慎防多个台词，直接退出槽位识别循环
-        tm.sleep(eval(wordset[1]))
+
+        #讲述控制器-讲述刷新函数
+    def UpdateWords(self,i,wordsALL,charanum,wordset):
+        
+
+        if i[0]=="" and charanum==1:#当槽位上没有姓名且场上只有一人，认为是旁白
+            self.Word_Label.setText(wordsALL)
+            self.Word_Label.repaint()
+            
+        elif i[0]!="" and i[1]!="":#当槽位上有姓名和讲述内容则填充进对应框
+            self.Name_Label.setText(i[0])
+            self.Name_Label.repaint()     
+            self.Word_Label.setText(wordsALL)
+            self.Word_Label.repaint()
+
+        #向下一个页面（自动模式）
+    def ShowNext(self):
+        if self.Auto==1:
+            self.Interpreter.wake()
+        if self.Auto==0:
+            self.NextButton.clicked.connect(self.ToNext)
+            self.OPNextButton=QGraphicsOpacityEffect()
+            self.OPNextButton.setOpacity(1)
+            self.NextButton.setGraphicsEffect(self.OPNextButton)
+
+        #向下一个页面（手动模式）
+    def ToNext(self):
         self.Interpreter.wake()
+        self.NextButton.clicked.disconnect(self.ToNext)
+        self.OPNextButton=QGraphicsOpacityEffect()
+        self.OPNextButton.setOpacity(0)
+        self.NextButton.setGraphicsEffect(self.OPNextButton)
+
+        #退出程序
+    def ExitProgram(self):
+        qApp=QApplication.instance()
+        qApp.quit()
