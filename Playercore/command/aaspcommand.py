@@ -161,7 +161,7 @@ def langinput():
     print("sysinfo→"+msg("Lang_Set_Success").format(usrinput))
     
 def about():
-    print(msg("About_Info_Version")+" Interpreter_Ver0.4.0_Pre5;SPOL_0.3.5;UI0_0.1.0")
+    print(msg("About_Info_Version")+" Ver0.4.0.0_Pre9")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))

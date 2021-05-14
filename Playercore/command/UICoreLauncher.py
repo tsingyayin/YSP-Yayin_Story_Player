@@ -1,6 +1,6 @@
 #这个文件用来启动UI版对应核心。
 import core.core0_3_5_U as core0_3_5_U
-import core.core0_4_1_U as core0_4_1_U
+import core.core0_4_1_U_R as core0_4_1_U_R
 import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
@@ -16,11 +16,14 @@ class STORYNAMERECIVE(QObject):
 
 class SPAWN(QThread):
  can_update_chara=pyqtSignal(list,list,list,int,int) 
+ update_chara_num=pyqtSignal(list,str,int,list)
  can_update_bg=pyqtSignal(list)
+ update_num_bg=pyqtSignal(int,list)
  can_hide_hello=pyqtSignal(int)
  can_reprint_hello=pyqtSignal(int)
  can_show_title=pyqtSignal(list)
  need_to_choose=pyqtSignal(list)
+ show_next=pyqtSignal()
  def __init__(self):
      super(SPAWN,self).__init__()
      self.mutex=QMutex()
@@ -81,7 +84,7 @@ class SPAWN(QThread):
     if Ver=="SPOL0.4.1":                                                         #遵循SPOL0.4.1标准的读取
         runing=1
         while runing!=0:
-            runing=core0_4_1_U.SPOL(self,files,Storyname)
+            runing=core0_4_1_U_R.SPOL(self,files,Storyname)
             files.close()
             try:
                 files=open("story\\"+runing+".spol","r")
@@ -91,19 +94,6 @@ class SPAWN(QThread):
             else:
                 None
 
-    elif Ver=="SPOL0.3.5":                                                         #遵循SPOL0.3.5标准的读取
-        runing=1
-        while runing!=0:
-            runing=core0_3_5_U.SPOL(self,files,Storyname)
-            files.close()
-            try:
-                files=open("story\\"+runing+".spol","r")
-                Storyname=runing+".spol"
-            except Exception:
-                runing=0
-            else:
-                None
-    
     else:
         print(msg("Spawn_Mode_Version_Error").format(Ver))
         
@@ -134,5 +124,5 @@ class SPAWN(QThread):
           print(msg("Warning_Nameerror_Info").format(i[0],i[1],i[2]))
       print()
     print("sysinfo→"+msg("Ui_Mode_End"))
-    self.mutex.unlock()
     self.can_reprint_hello.emit(1)
+    self.mutex.unlock()

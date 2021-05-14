@@ -16,10 +16,17 @@ langset(0)
 #第一指引
 print("sysinfo→"+msg("First_Print"))
 
+if __name__=="__main__":
+    DirectOpen=0
+    if sys.argv.__len__() >=2:
+        DirectOpen=1
+        Usript="ui"
+
 #主识别循环
 programme_end=0
 while programme_end==0 :
-    Usript=input("Userinput→")
+    if DirectOpen!=1:
+        Usript=input("Userinput→")
 
     if Usript=="help":
         print("help"+"\t"+msg("Help_In_Main_Page_help"))
@@ -42,7 +49,7 @@ while programme_end==0 :
     elif Usript=="ui":
         if __name__=="__main__":
             app=QApplication(sys.argv)
-            Mainwindow=ArtificialUI()
+            Mainwindow=MainWindow()
             Mainwindow.showFullScreen()
             sys.exit(app.exec_())
     elif Usript=="exit":
@@ -50,3 +57,4 @@ while programme_end==0 :
     
     else:
         print("sysinfo→"+msg("Command_Error").format(Usript))
+
