@@ -1,75 +1,75 @@
-About_Info_Version:Version now is
-About_Info_Developers:Developer: Yayin Tsing
+About_Info_Version:Current version is£º
+About_Info_Developers:Developer£ºYayin Tsing
 About_Info_Environment:IDE£ºVisual Studio 2019
-About_Info_Support:Support£ºAyano Aishi Story Creation Group
-About_Info_Help:Help: View https://github.com/tsingyayin/YSP-Yayin_Story_Player to ask for help
+About_Info_Support:Support£ºAyano Aishi Story Creation Group,Union of YiXu Association
+About_Info_Help:Help:Go to the website https://github.com/tsingyayin/YSP-Yayin_Story_Player for support
 
-Bgm_Setting_Info:BGM is {},Volume is {}
+Bgm_Setting_Info:Current BGM is {},The volume is {}
 
 Bgp_Display_Mode_Normal:Normal
 Bgp_Display_Mode_Fade:Fade
 Bgp_Display_Mode_B&W:Black&White
-Bgp_Effect_Mode_Normal:No effect
+Bgp_Effect_Mode_Normal:None of FX
 Bgp_Effect_Mode_Shake:Shake
 Bgp_Effect_Mode_W1:Flash 1
 Bgp_Effect_Mode_W2:Flash 2
-Bgp_Setting_Info:BGP is {},display mode is {},effect mode is {},fade in time is{}
+Bgp_Setting_Info:Current background is {},Display mode is {},FX is {},Fading-in-time is {}
 
 Branch_Info_Msg:Branch¡°{}¡±£¨The file is {}£©
-Branch_Info_Input:Please input the branch you want
+Branch_Info_Input:Please input your option
 
-Chara_Pic_Setting_Info:{} illustration {}(fade in {}s & fade out {}s)
-Chara_Pic_Setting_Info_R:{} inverse illustration {}(fade in {}s & fade out {}s)
+Chara_Pic_Setting_Info:{} illustration {}(fade in {}Sec & fade out {}Sec)
+Chara_Pic_Setting_Info_R:{} Reverse illustration {}(fade in {}Sec & fade out {}Sec )
 
-Command_Error:Can not distinguishi ¡°{}¡± as any legal command
-Choose_File:Open story file
+Command_Error:Cannot identify your text¡°{}¡±as any current command.
+Choose_File:Open the story file
 
-First_Print_Load_Lang_End:Language loaded , loading in {} ms
-First_Print:AASP Command-like mode,use help to search command list
+First_Print_Load_Lang_End:Language loaded , using {} ms
+First_Print:AASP Command-like mode,enter help to consult current command.
 
-Freedom_Text_Mode_L:align left
-Freedom_Text_Mode_M:align center
-Freedom_Text_Mode_R:align right
-Freedom_Text_Setting_Info:£¨coordinate is ({},{}),and {}£©
+Freedom_Text_Mode_L:Left align
+Freedom_Text_Mode_M:Mid align
+Freedom_Text_Mode_R:Right align
+Freedom_Text_Setting_Info:£¨The location is ({},{}).Apply{}£©
 
 Help_In_Main_Page_about_:Show infomation about the programme
-Help_In_Main_Page_help:Searching command list
-Help_In_Main_Page_spawn:Entering interpreter mode
-Help_In_Main_Page_line:Entering Single-line mode
-Help_In_Main_Page_exit:Exiting the programme,or any level in the programme
-Help_In_Main_Page_lang:Changing the language of the programme
-Help_In_Main_Page_ui:Launch UI
+Help_In_Main_Page_help:To consult the command list supported
+Help_In_Main_Page_spawn:Enter interpreter mode
+Help_In_Main_Page_line:Enter Single-line mode
+Help_In_Main_Page_exit:Exit the programme,or any level of the programme
+Help_In_Main_Page_lang:Change the language of the programme
+Help_In_Main_Page_ui:Launch the UI page
 
-Lang_Input_Msg:Please input the file name of the language
+Lang_Input_Msg:Please enter the name of the language file you reqiure.
 Lang_Set_Success:Successfully set {} as your language
-Lang_Not_In_Support:Can not find ¡°{}¡±,maybe not support yet
+Lang_Not_In_Support:Cannot find the pointed language "{}"£¬maybe not supported temporarily.
 
 Second:Sec
 
 Single_Mode_Syntax_Error:Syntax Error
 Single_Mode_Num_Error:Parameter Error
-Single_Mode_Interpreter_Error:Can not distinguishi ¡°{}¡± as any controller
+Single_Mode_Interpreter_Error:Cannot identify¡°{}¡± as any controller
 Single_Mode_Input_Version:Input the Version you want to use.Type "help" for help
-Single_Mode_Version_List:The Version we support£º
-Single_Mode_Version_Error:Can not distinguishi ¡°{}¡± as any version or command
+Single_Mode_Version_List:Current supported versions are as followed£º
+Single_Mode_Version_Error:Cannot identify ¡°{}¡± as any avaliable version or command
 
-Spawn_Mode_Name_Of_File:Input the name of the story or type "exit" to exit
-Spawn_Mode_Not_Found:Can not find the file ¡°{}¡±£¬check your input and be care the programme NOT case sensitive
+Spawn_Mode_Name_Of_File:Input the name of the story, or exit
+Spawn_Mode_Not_Found:Can not find the file ¡°{}¡±£¬please check if input correctly or if the file do exist.Notice that the file names is case-intensitive. 
 Spawn_Mode_Get_Version:The version of the story is :
 Spawn_Mode_Get_Title:The title of the story is:
 Spawn_Mode_Get_Subtitle:The subtitle of the story is:
-Spawn_Mode_Version_Error:Can not find the version {},check your input.
+Spawn_Mode_Version_Error:Can not find the version {},please check the spelling or confirm if the current program version supports this version. 
 Spawn_Mode_End:Interpreted,press Enter to return to the home page
 
 Ui_Mode_End:Story have Played
 
-Warning_Warn_Count:{} warning during interpreting£º
-Warning_Warn_Info:Can not interprete line {} in the file {}:¡°{}¡±£¬please add character"#" if it is a comment
-Warning_Texterror_Count:{} errors during interpreting£º
-Warning_Texterror_Info:Can not interprete line {} in the file {} :¡°{}¡±,dose not meet the definition
-Warning_Formatwarn_Count:{} format warning during interpreting£º
-Warning_Formatwarn_Info:line {} in the file {} :¡°{}¡±,the end is not "Enter"
-Warning_Numseterror_Count:{} parameter errors during interpreting£º
-Warning_Numseterror_Info:line {} in the file {} :¡°{}¡±meets parameters out of range or number
-Warning_Nameerror_Count:{} Label(Name) errors during interpreting£º
+Warning_Warn_Count:{} warning in the process.£º
+Warning_Warn_Info:Cannot interprete line {} in the file {}:¡°{}¡±£¬please add character"#" if it is a comment
+Warning_Texterror_Count:{} errors in the process.£º
+Warning_Texterror_Info:Cannot interprete line {} in the file {} :¡°{}¡±,does not correspond with the definition of the interpreter.
+Warning_Formatwarn_Count:{} format warning in the process.£º
+Warning_Formatwarn_Info:line {} in the file {} :¡°{}¡±,dose not edng with "Enter"
+Warning_Numseterror_Count:{} parameter errors in the process.£º
+Warning_Numseterror_Info:line {} in the file {} :¡°{}¡±meets wrong parameters :fall outside or exceed the maximum of the number of parameter.
+Warning_Nameerror_Count:{} Label(Name) errors in the process.£º
 Warning_Nameerror_Info:line {} in the file {} :¡°{}¡±meets Label(Name) different from related controllers
