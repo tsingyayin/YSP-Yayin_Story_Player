@@ -124,14 +124,7 @@ def singletext():
         print("sysinfo→"+msg("Single_Mode_Input_Version"))
         linestandard=input(r"Userinput\line→")
         if linestandard=="help":
-            print(msg("Single_Mode_Version_List")+"\n"+"0.3")
-        elif linestandard=="0.3":
-            while True:
-                Usrtextipt=input(r"Userinput\line\SPOL0.3→")
-                if Usrtextipt=="exit":
-                    break
-                else:
-                    core0_3.SPOL_s(Usrtextipt+"\n")
+            print(msg("Single_Mode_Version_List")+"\n"+"0.3.5"+"\n"+"0.4.1")
         elif linestandard=="0.3.5":
             while True:
                 Usrtextipt=input(r"Userinput\line\SPOL0.3.5→")
@@ -139,6 +132,13 @@ def singletext():
                     break
                 else:
                     core0_3_5.SPOL_s(Usrtextipt+"\n")
+        elif linestandard=="0.4.1":
+            while True:
+                Usrtextipt=input(r"Userinput\line\SPOL0.4.1→")
+                if Usrtextipt=="exit":
+                    break
+                else:
+                    core0_4_1.SPOL_s(Usrtextipt+"\n")
         elif linestandard=="exit":
             break
         else:
