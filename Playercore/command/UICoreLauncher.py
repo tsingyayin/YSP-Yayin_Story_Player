@@ -17,13 +17,25 @@ class STORYNAMERECIVE(QObject):
 class SPAWN(QThread):
  can_update_chara=pyqtSignal(list,list,list,int,int) 
  update_chara_num=pyqtSignal(list,str,int,list)
+
  can_update_bg=pyqtSignal(list)
  update_num_bg=pyqtSignal(int,list)
+
+ can_update_bgm=pyqtSignal(str,int)
+
  can_hide_hello=pyqtSignal(int)
  can_reprint_hello=pyqtSignal(int)
+
  can_show_title=pyqtSignal(list)
+
  need_to_choose=pyqtSignal(list)
+
  show_next=pyqtSignal()
+
+ can_update_freedom=pyqtSignal(list,list)
+ update_num_freedom=pyqtSignal(str)
+ can_clear_freedom=pyqtSignal(int)
+
  def __init__(self):
      super(SPAWN,self).__init__()
      self.mutex=QMutex()
