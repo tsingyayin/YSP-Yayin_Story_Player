@@ -55,7 +55,7 @@ def SPOL(self,files,Storyname):
         convertag=0
         converlst=lineraw[3:-1].split("|||")
         try:
-            if len(converlst)>5:raise Exception
+            if len(converlst)>4:raise Exception
             convernum=[]
             for k in converlst:
                 i=k.split(":")
@@ -108,6 +108,7 @@ def SPOL(self,files,Storyname):
         continue
     elif line[0]=="\n" :
         continue
+
     #提取背景控制器，不标准的输入用默认值填充
     #背景控制器的几个数值是场景名称、显示模式、特效、淡入
     elif line[0]=="[":
@@ -135,7 +136,6 @@ def SPOL(self,files,Storyname):
         else:
             None
         
-
     #提取音频控制器，不标准的输入用默认值填充
     #音频控制器的参数是音频名称和音频音量
     elif line[0]=="{":
@@ -150,6 +150,7 @@ def SPOL(self,files,Storyname):
             print(round(tm.time()-timestart,2),msg("Second"))
             print("#################\n"+msg("Bgm_Setting_Info").format(musicsetlst[0],musicsetlst[1]))
             print("#################\n")
+            self.can_update_bgm.emit(musicsetlst[0],eval(musicsetlst[1]))
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
@@ -245,22 +246,40 @@ def SPOL(self,files,Storyname):
         wordsall=""
         for i in charawords:
             if i[0]=="" and charanum==1:
+                alphacount=0
                 for word in i[1]:
                     tm.sleep(eval(wordset[0]))
+                    if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
+                        alphacount+=2
+                    else:
+                        alphacount+=1
+                    if alphacount>=58:
+                        wordsall+="\n"
+                        alphacount=0
                     wordsall+=word
                     self.update_chara_num.emit(i,wordsall,charanum,wordset)
 
                 break
             elif i[0]!="" and i[1]!="":
+                alphacount=0
                 for word in i[1]:
                     tm.sleep(eval(wordset[0]))
+                    if '\u4e00' <= word <= '\u9fff':
+                        alphacount+=2
+                    else:
+                        alphacount+=1
+                    if alphacount>=58:
+                        wordsall+="\n"
+                        alphacount=0
                     wordsall+=word
+                    
                     self.update_chara_num.emit(i,wordsall,charanum,wordset)
 
                 break
         tm.sleep(eval(wordset[1]))
         self.show_next.emit()
         self.pause()
+
     #自由文本控制器
     elif line[0:3]==">^>":
         #首先判断是否符合要求，如若不符合要求则跳过这一行并录入错误传递列表
@@ -288,32 +307,37 @@ def SPOL(self,files,Storyname):
             textsetcount=len(inforaw[0].split("/"))
             if textsetcount>3:raise Exception
             textset=inforaw[0].split("/")+[""]*(3-textsetcount)+[inforaw[1]]
-            if textset[0]=="":textset[0]="960"
-            if textset[1]=="":textset[1]="540"
+            if textset[0]=="":textset[0]="384"
+            if textset[1]=="":textset[1]="480"
             if textset[2]=="":textset[2]="M"
             if textset[3]=="":textset[3]=" "
             if type(eval(textset[0]))!=int or eval(textset[0])<0:raise Exception
             if type(eval(textset[1]))!=int or eval(textset[1])<0:raise Exception
             if textset[2] not in "LMR":raise Exception
+            
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
         else:
-            None
-        print(round(tm.time()-timestart,2),msg("Second"))
-        print(msg("Freedom_Text_Setting_Info").format(textset[0],textset[1],textmode[textset[2]]))
-        print("\t\t\t",end="")
-        if wordset[0]!=0:
-            for i in textset[3]:
-                print(i,end="")
+            self.can_update_freedom.emit(textset,wordset)
+            wordsall=""
+            alphacount=0
+            for word in textset[3]:
                 tm.sleep(eval(wordset[0]))
-        else:
-            print(textset[3],end="")
-        
+                if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
+                    alphacount+=2
+                else:
+                    alphacount+=1
+                if alphacount>=58:
+                    wordsall+="\n"
+                    alphacount=0
+                wordsall+=word
+                self.update_num_freedom.emit(wordsall)
         tm.sleep(eval(wordset[1]))
-        print("\n")
+        self.show_next.emit()
+        self.pause()
+        self.can_clear_freedom.emit(1)
        
-
     #分支选项解释器
     elif line[0:3]=="-->":
         #判断是否符合语法定义
@@ -343,7 +367,8 @@ def SPOL(self,files,Storyname):
             if branchlabel in i.split(":")[1]:
                 Usrbranchinput=branchinfo[branchname.index(i)][1]
                 Needjump=1
-       
+        break
+
     #把未能按类型识别的内容放入警告传递列表
     else :     
         warnline+=[[linecount,Storyname,line[:-1]]]

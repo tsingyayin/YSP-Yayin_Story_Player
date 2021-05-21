@@ -45,7 +45,7 @@ def SPOL(files,Storyname):
         convertag=0
         converlst=lineraw[3:-1].split("|||")
         try:
-            if len(converlst)>5:raise Exception
+            if len(converlst)>4:raise Exception
             convernum=[]
             for k in converlst:
                 i=k.split(":")
@@ -344,7 +344,7 @@ def SPOL(files,Storyname):
                 Usrbranchinput=branchinfo[branchname.index(Usrbranchinput)][2]
                 inputend=1
         Needjump=1
-
+        break
     #把未能按类型识别的内容放入警告传递列表
     else :     
         warnline+=[[linecount,Storyname,line[:-1]]]
@@ -512,8 +512,8 @@ def SPOL_s(line):
             textsetcount=len(inforaw[0].split("/"))
             if textsetcount>3:raise Exception
             textset=inforaw[0].split("/")+[""]*(3-textsetcount)+[inforaw[1]]
-            if textset[0]=="":textset[0]="960"
-            if textset[1]=="":textset[1]="540"
+            if textset[0]=="":textset[0]="384"
+            if textset[1]=="":textset[1]="480"
             if textset[2]=="":textset[2]="M"
             if textset[3]=="":textset[3]=" "
             if type(eval(textset[0]))!=int or eval(textset[0])<0:raise Exception
@@ -533,5 +533,6 @@ def SPOL_s(line):
         else:
             print(textset[3],end="")
         tm.sleep(eval(wordset[1]))
+        print("\n")
     else : 
         print("Sysinfo→"+msg("Single_Mode_Interpreter_Error").format(line[:-1]))
