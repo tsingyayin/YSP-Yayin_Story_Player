@@ -11,8 +11,10 @@ from Visual.ArtificialUI import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
 #初始化语言
 langset(0)
+
 #第一指引
 print("sysinfo→"+msg("First_Print"))
 
