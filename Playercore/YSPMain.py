@@ -13,6 +13,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import platform
 
+
 #初始化语言
 langset(0)
 
