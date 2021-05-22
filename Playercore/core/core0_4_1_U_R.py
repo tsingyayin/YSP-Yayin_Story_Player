@@ -173,7 +173,7 @@ def SPOL(self,files,Storyname):
                 wordset=[line[line.rindex("(")+1:-2].split(",")[0],line[line.rindex("(")+1:-2].split(",")[1]]
             line=line[0:line.rindex("(")+1]       #方便下面处理，将文本控制器从字符串中删去
         #填充文本控制器空位
-        if wordset[0]=="":wordset[0]="0.1"
+        if wordset[0]=="":wordset[0]="0.15"
         if wordset[1]=="":wordset[1]="1.5"
         try:
             if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
@@ -296,7 +296,7 @@ def SPOL(self,files,Storyname):
                 wordset=[line[line.rindex("(")+1:-2].split(",")[0],line[line.rindex("(")+1:-2].split(",")[1]]
             line=line[0:line.rindex("(")+1]       #方便下面处理，将文本控制器从字符串中删去
         #填充文本控制器空位
-        if wordset[0]=="":wordset[0]="0.1"
+        if wordset[0]=="":wordset[0]="0.15"
         if wordset[1]=="":wordset[1]="1.5"
         try:
             if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
