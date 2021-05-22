@@ -3,6 +3,12 @@
 #原来所有的解释器核心文件全部写在core一个核心上
 #从现在开始，为了尝试长时间支持老版本的核心
 #我们把每个版本的核心独立成单个文件
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+import sys
+from Visual.ArtificialUI import *
+
 import  core.core0_3_5 as core0_3_5
 import  core.core0_4_1 as core0_4_1
 import time as tm
@@ -166,3 +172,24 @@ def about():
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
     print(msg("About_Info_Help"))
+
+def ui():
+    global X,Y
+    #先判断屏幕大小是否符合
+    class Monitor(QWidget):
+        def __init__(self):
+            super(Monitor,self).__init__()
+
+        def run(self):
+            global X,Y
+            self.desktop=QDesktopWidget()
+            self.current_monitor=self.desktop.screenNumber(self)
+            self.Display=self.desktop.screenGeometry(self.current_monitor)
+            X=self.Display.width()
+            Y=self.Display.height()
+
+    monitor=Monitor()
+    monitor.run()
+   
+    print("Sysinfo→"+msg("Main_Display_Size").format(X,Y))
+    return [X,Y]

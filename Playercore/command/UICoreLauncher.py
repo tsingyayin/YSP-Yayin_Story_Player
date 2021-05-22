@@ -137,4 +137,4 @@ class SPAWN(QThread):
       print()
     print("sysinfo→"+msg("Ui_Mode_End"))
     self.can_reprint_hello.emit(1)
-    self.mutex.unlock()
+    #self.mutex.unlock()
