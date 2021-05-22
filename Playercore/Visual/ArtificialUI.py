@@ -264,7 +264,7 @@ class UiMainWindow(QWidget):
         self.Frame.setPixmap(QPixmap(self.Frame_R))
 
         #控件位置
-        self.Name_Label.setGeometry(QRect(int(self.X*0.114583),int(self.Y*0.888888),int(self.X*0.15625),int(self.Y*0.277777)))
+        self.Name_Label.setGeometry(QRect(int(self.X*0.137),int(self.Y*0.888888),int(self.X*0.159),int(self.Y*0.277777)))
         self.Word_Label.setGeometry(QRect(int(self.X*0.3229166),int(self.Y*0.888888),int(self.X*0.5625),int(self.Y*0.083333)))
         self.AVG_L.setGeometry(QRect(int(self.X*0.046875),int(self.Y*0.2037037),int(self.X*0.46875),int(self.X*0.46875)))
         self.AVG_M.setGeometry(QRect(int(self.X*0.230729),int(self.Y*0.2037037),int(self.X*0.46875),int(self.X*0.46875)))
@@ -804,6 +804,9 @@ class MainWindow(UiMainWindow):
 
             self.BG1.setPixmap(QPixmap(""))
             self.BG2.setPixmap(QPixmap(""))
+            self.AVG_L.setPixmap(QPixmap(""))
+            self.AVG_M.setPixmap(QPixmap(""))
+            self.AVG_R.setPixmap(QPixmap(""))
 
             self.OPFrame=QGraphicsOpacityEffect()
             self.OPFrame.setOpacity(0)
