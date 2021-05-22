@@ -1,5 +1,4 @@
 #这个文件用来启动UI版对应核心。
-import core.core0_3_5_U as core0_3_5_U
 import core.core0_4_1_U_R as core0_4_1_U_R
 import time as tm
 from langcontrol import *

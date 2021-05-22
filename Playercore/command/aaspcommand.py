@@ -9,7 +9,6 @@ from PyQt5.QtGui import *
 import sys
 from Visual.ArtificialUI import *
 
-import  core.core0_3_5 as core0_3_5
 import  core.core0_4_1 as core0_4_1
 import time as tm
 from langcontrol import *
@@ -66,19 +65,6 @@ def spawn():
 #重新打开文件，从头开始处理
     files=open("story\\"+Storyname,"r")
 
-    if Ver=="SPOL0.3.5":                                                         #遵循SPOL0.3.5标准的读取
-        run=1
-        while run!=0:
-            run=core0_3_5.SPOL(files,Storyname)
-            files.close()
-            try:
-                files=open("story\\"+run+".spol","r")
-                Storyname=run+".spol"
-            except Exception:
-                run=0
-            else:
-                None
-
     if Ver=="SPOL0.4.1":                                                         #遵循SPOL0.4.1标准的读取
         run=1
         while run!=0:
@@ -130,14 +116,8 @@ def singletext():
         print("sysinfo→"+msg("Single_Mode_Input_Version"))
         linestandard=input(r"Userinput\line→")
         if linestandard=="help":
-            print(msg("Single_Mode_Version_List")+"\n"+"0.3.5"+"\n"+"0.4.1")
-        elif linestandard=="0.3.5":
-            while True:
-                Usrtextipt=input(r"Userinput\line\SPOL0.3.5→")
-                if Usrtextipt=="exit":
-                    break
-                else:
-                    core0_3_5.SPOL_s(Usrtextipt+"\n")
+            print(msg("Single_Mode_Version_List")+"\n"+"0.4.1")
+
         elif linestandard=="0.4.1":
             while True:
                 Usrtextipt=input(r"Userinput\line\SPOL0.4.1→")
@@ -167,7 +147,7 @@ def langinput():
     print("sysinfo→"+msg("Lang_Set_Success").format(usrinput))
     
 def about():
-    print(msg("About_Info_Version")+" Ver0.4.0.0_Pre10")
+    print(msg("About_Info_Version")+" Ver0.4.0.0_Pre11.1")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
