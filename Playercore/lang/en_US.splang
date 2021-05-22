@@ -44,6 +44,10 @@ Lang_Input_Msg:Please enter the name of the language file you reqiure.
 Lang_Set_Success:Successfully set {} as your language
 Lang_Not_In_Support:Cannot find the pointed language "{}"£¬maybe not supported temporarily.
 
+Main_Display_Size:Main display resolution {}x{}
+
+Screen_Too_Small:Your main display resolution {} x {} is less than the minimum allowable resolution 1440x900, UI cannot be started
+
 Second:Sec
 
 Single_Mode_Syntax_Error:Syntax Error
@@ -60,6 +64,10 @@ Spawn_Mode_Get_Title:The title of the story is:
 Spawn_Mode_Get_Subtitle:The subtitle of the story is:
 Spawn_Mode_Version_Error:Can not find the version {},please check the spelling or confirm if the current program version supports this version. 
 Spawn_Mode_End:Interpreted,press Enter to return to the home page
+
+System_Info:Your System is £º
+System_Not_Win10:The version of windows {}  you are running has stopped supporting. Please migrate to windows10
+System_Win10_Too_Old:The windows 10 system you are using (build {}) has stopped supporting, which is lower than the autumn 2017 update of windows 10 (build 16299). Please upgrade your Windows 10 to the latest version.
 
 Ui_Mode_End:Story have Played
 

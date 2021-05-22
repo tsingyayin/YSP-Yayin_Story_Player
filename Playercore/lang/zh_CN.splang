@@ -44,6 +44,10 @@ Lang_Input_Msg:请键入您需要的语言的文件名
 Lang_Set_Success:设置语言{}成功
 Lang_Not_In_Support:没有找到您希望的语言{}，可能暂未支持。
 
+Main_Display_Size:主屏幕的分辨率大小为{}x{}
+
+Screen_Too_Small:您的主显示器分辨率{}x{}小于最低容许分辨率1440x900，UI无法启动
+
 Second:秒
 
 Single_Mode_Syntax_Error:有语法错误。
@@ -60,6 +64,10 @@ Spawn_Mode_Get_Title:剧情标题是:
 Spawn_Mode_Get_Subtitle:剧情副标题是:
 Spawn_Mode_Version_Error:没有在解释器中找到{}这个版本，请检查拼写，或者检查本版程序是否支持这个版本
 Spawn_Mode_End:读取完毕,按下回车键回到首页面
+
+System_Info:您的操作系统是：
+System_Not_Win10:已经对您所运行的Windows版本{}停止支持，请迁移到Windows10
+System_Win10_Too_Old:已经停止支持您使用的Windows10系统(内部版本{})，它低于Windows10的2017年秋季更新(内部版本16299)。请将您的Windows10升级到最新版本。
 
 Ui_Mode_End:UI已经播放完当前剧情
 
