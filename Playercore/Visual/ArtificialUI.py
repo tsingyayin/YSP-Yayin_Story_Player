@@ -213,24 +213,25 @@ class UiMainWindow(QWidget):
         self.BranchButton_2.setObjectName("Branchbutton")
         self.BranchButton_3.setObjectName("Branchbutton")
         self.BranchButton_4.setObjectName("Branchbutton")
+
         self.QSSBranchButton="""
         #Branchbutton{
         color:#FFFFFF;
-        font-size:"""+self.Fontsize30+""";
+        font-size:25px;
         font-family:'Microsoft YaHei';
         background-color:rgba(0,0,0,0);
         background-image:url('./Visual/source/BaseUI/Button/BranchButton_N.png');
         }
         #Branchbutton:hover{
         color:#FFFFFF;
-        font-size:"""+self.Fontsize30+""";
+        font-size:25px;
         font-family:'Microsoft YaHei';
         background-color:rgba(0,0,0,0);
         background-image:url('./Visual/source/BaseUI/Button/BranchButton_P.png');
         }
         #Branchbutton:Pressed{
         color:#FFFFFF;
-        font-size:"""+self.Fontsize30+""";
+        font-size:25px;
         font-family:'Microsoft YaHei';
         background-color:rgba(0,0,0,0);
         background-image:url('./Visual/source/BaseUI/Button/BranchButton_C.png');
@@ -371,8 +372,10 @@ class MainWindow(UiMainWindow):
     def __init__(self,parent = None):
         super(MainWindow,self).__init__(parent)
         self.setupUi()
-        
-        #是否自动处理函数
+        self.setWindowIcon(QIcon(".\\Visual\\source\\WinICO\\Story.ico"))
+        self.setWindowTitle("YSP UI Mode")
+
+        #是否自动播放处理函数
     def AutoChange(self):
         if self.Auto==1: 
             self.Auto=0
@@ -427,7 +430,7 @@ class MainWindow(UiMainWindow):
         self.Auto=1
         self.Interpreter.start()
         
-        #分支选择函数
+        #分支设置函数
     def choosebranch(self,converlst):
         self.converlstlen=len(converlst)
         self.BranchButton_1.raise_()
@@ -462,7 +465,7 @@ class MainWindow(UiMainWindow):
             self.BranchButton_4.raise_()
 
         if self.converlstlen==1:
-            self.BranchButton_1.setGeometry(QRect(640,435,635,70))
+            self.BranchButton_1.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.402777),635,70))
             self.OPBranchButton_1=QGraphicsOpacityEffect()
             self.OPBranchButton_1.setOpacity(1)
             self.BranchButton_1.setGraphicsEffect(self.OPBranchButton_1)
@@ -470,13 +473,13 @@ class MainWindow(UiMainWindow):
 
             self.BranchButton_1.repaint()
         if self.converlstlen==2:
-            self.BranchButton_1.setGeometry(QRect(640,365,635,70))
+            self.BranchButton_1.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.337962963),635,70))
             self.OPBranchButton_1=QGraphicsOpacityEffect()
             self.OPBranchButton_1.setOpacity(1)
             self.BranchButton_1.setGraphicsEffect(self.OPBranchButton_1)
             self.BranchButton_1.clicked.connect(self.Chooselabel)
 
-            self.BranchButton_2.setGeometry(QRect(640,470,635,70))
+            self.BranchButton_2.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.435185),635,70))
             self.OPBranchButton_2=QGraphicsOpacityEffect()
             self.OPBranchButton_2.setOpacity(1)
             self.BranchButton_2.setGraphicsEffect(self.OPBranchButton_2)
@@ -485,19 +488,19 @@ class MainWindow(UiMainWindow):
             self.BranchButton_1.repaint()
             self.BranchButton_2.repaint()
         if self.converlstlen==3:
-            self.BranchButton_1.setGeometry(QRect(640,295,635,70))
+            self.BranchButton_1.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.273148),635,70))
             self.OPBranchButton_1=QGraphicsOpacityEffect()
             self.OPBranchButton_1.setOpacity(1)
             self.BranchButton_1.setGraphicsEffect(self.OPBranchButton_1)
             self.BranchButton_1.clicked.connect(self.Chooselabel)
 
-            self.BranchButton_2.setGeometry(QRect(640,400,635,70))
+            self.BranchButton_2.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.37037037),635,70))
             self.OPBranchButton_2=QGraphicsOpacityEffect()
             self.OPBranchButton_2.setOpacity(1)
             self.BranchButton_2.setGraphicsEffect(self.OPBranchButton_2)
             self.BranchButton_2.clicked.connect(self.Chooselabel)
 
-            self.BranchButton_3.setGeometry(QRect(640,505,635,70))
+            self.BranchButton_3.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.46759),635,70))
             self.OPBranchButton_3=QGraphicsOpacityEffect()
             self.OPBranchButton_3.setOpacity(1)
             self.BranchButton_3.setGraphicsEffect(self.OPBranchButton_3)
@@ -507,25 +510,25 @@ class MainWindow(UiMainWindow):
             self.BranchButton_2.repaint()
             self.BranchButton_3.repaint()
         if self.converlstlen==4:
-            self.BranchButton_1.setGeometry(QRect(640,278,635,70))
+            self.BranchButton_1.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.2574074),635,70))
             self.OPBranchButton_1=QGraphicsOpacityEffect()
             self.OPBranchButton_1.setOpacity(1)
             self.BranchButton_1.setGraphicsEffect(self.OPBranchButton_1)
             self.BranchButton_1.clicked.connect(self.Chooselabel)
 
-            self.BranchButton_2.setGeometry(QRect(640,383,635,70))
+            self.BranchButton_2.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.3546296),635,70))
             self.OPBranchButton_2=QGraphicsOpacityEffect()
             self.OPBranchButton_2.setOpacity(1)
             self.BranchButton_2.setGraphicsEffect(self.OPBranchButton_2)
             self.BranchButton_2.clicked.connect(self.Chooselabel)
 
-            self.BranchButton_3.setGeometry(QRect(640,488,635,70))
+            self.BranchButton_3.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.45185185),635,70))
             self.OPBranchButton_3=QGraphicsOpacityEffect()
             self.OPBranchButton_3.setOpacity(1)
             self.BranchButton_3.setGraphicsEffect(self.OPBranchButton_3)
             self.BranchButton_3.clicked.connect(self.Chooselabel)
 
-            self.BranchButton_4.setGeometry(QRect(640,593,635,70))
+            self.BranchButton_4.setGeometry(QRect(int(self.X/2-317.5),int(self.Y*0.549074),635,70))
             self.OPBranchButton_4=QGraphicsOpacityEffect()
             self.OPBranchButton_4.setOpacity(1)
             self.BranchButton_4.setGraphicsEffect(self.OPBranchButton_4)
@@ -1004,7 +1007,7 @@ class MainWindow(UiMainWindow):
         self.OPFree_Label.setOpacity(0)
         self.Free_Label.setGraphicsEffect(self.OPFree_Label)
 
-        self.Free_Label.setGeometry(QRect(eval(textsetlst[0]),eval(textsetlst[1]),1152,30))
+        self.Free_Label.setGeometry(QRect(int(self.X*eval(textsetlst[0])),int(self.Y*eval(textsetlst[1])),int(self.X*0.6),30))
         if textsetlst[2]=="L":
             self.Free_Label.setAlignment(Qt.AlignLeft)
         elif textsetlst[2]=="M":
