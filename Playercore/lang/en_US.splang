@@ -46,7 +46,7 @@ Lang_Not_In_Support:Cannot find the pointed language "{}"£¬maybe not supported t
 
 Main_Display_Size:Main display resolution {}x{}
 
-Screen_Too_Small:Your main display resolution {} x {} is less than the minimum allowable resolution 1440x900, UI cannot be started
+Screen_Too_Small:Your main display resolution {} x {} is less than the minimum allowable resolution 1366x768, UI cannot be started
 
 Second:Sec
 

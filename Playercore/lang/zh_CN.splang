@@ -46,7 +46,7 @@ Lang_Not_In_Support:没有找到您希望的语言{}，可能暂未支持。
 
 Main_Display_Size:主屏幕的分辨率大小为{}x{}
 
-Screen_Too_Small:您的主显示器分辨率{}x{}小于最低容许分辨率1440x900，UI无法启动
+Screen_Too_Small:您的主显示器分辨率{}x{}小于最低容许分辨率1366x768，UI无法启动
 
 Second:秒
 
