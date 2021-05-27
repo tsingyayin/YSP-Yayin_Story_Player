@@ -7,7 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtMultimedia import *
 
 from command.UICoreLauncher import *
-from core.core0_4_1_U_R import *
+from core.core0_4_1_R import *
 from langcontrol import *
 import time as tm
 import sys
@@ -681,7 +681,10 @@ class MainWindow(UiMainWindow):
         self.AutoButton.raise_()
         self.NextButton.raise_()
 
-        self.BG2.setPixmap(QPixmap("./Visual/source/BaseUI/Picture/黑场.png"))
+        self.BG2_R=QImage(self.X,self.Y,QImage.Format_ARGB32)
+        self.BG2_R.fill(QColor(0,0,0,255))
+        self.BG2.setPixmap(QPixmap(self.BG2_R))
+
         for i in range(0,21):
             self.OPBG2=QGraphicsOpacityEffect()
             self.OPBG2.setOpacity(i/20)
@@ -950,49 +953,58 @@ class MainWindow(UiMainWindow):
             self.OPFrame.setOpacity(0)
             self.Frame.setGraphicsEffect(self.OPFrame)
             self.Frame.repaint()
-        #初始化立绘
-        self.AVG_L.setPixmap(QPixmap(""))
-        self.AVG_M.setPixmap(QPixmap(""))
-        self.AVG_R.setPixmap(QPixmap(""))
+
+            self.Name_Label.setText("")
+            self.Word_Label.setText("")
+            self.Name_Label.repaint()
+            self.Word_Label.repaint()
         #填充立绘
         if charanum==1:
             for i in charapic:
                 if i[0]!="":
+                    self.AVG_L.setPixmap(QPixmap(""))
+                    self.AVG_R.setPixmap(QPixmap(""))
                     self.AVG_M_R.load("./Visual/source/Chara/"+i[0]+"_"+i[1]+".png")
                     self.AVG_M_R=self.AVG_M_R.scaled(int(self.X*0.46875),int(self.X*0.46875),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
-                    if i[2]=="0":self.AVG_M.setPixmap(QPixmap(self.AVG_M_R))
-                    elif i[2]=="1":self.AVG_M.setPixmap(QPixmap(self.AVG_M_R.mirrored(True,False)))
-                    self.AVG_M.repaint()
+                    if self.AVG_M.pixmap()!=self.AVG_M_R:
+                        if i[2]=="0":self.AVG_M.setPixmap(QPixmap(self.AVG_M_R))
+                        elif i[2]=="1":self.AVG_M.setPixmap(QPixmap(self.AVG_M_R.mirrored(True,False)))
+                        self.AVG_M.repaint()
+                    self.AVG_L.repaint()
+                    self.AVG_R.repaint()
         elif charanum==2:
+            self.AVG_M.setPixmap(QPixmap(""))
+            self.AVG_M.repaint()
             if charapic[0][0]!="":
                 self.AVG_L_R.load("./Visual/source/Chara/"+charapic[0][0]+"_"+charapic[0][1]+".png")
                 self.AVG_L_R=self.AVG_L_R.scaled(int(self.X*0.46875),int(self.X*0.46875),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
-                if charapic[0][2]=="0":self.AVG_L.setPixmap(QPixmap(self.AVG_L_R))
-                elif charapic[0][2]=="1":self.AVG_L.setPixmap(QPixmap(self.AVG_L_R.mirrored(True,False)))
-                self.AVG_L.repaint()
+                if self.AVG_L.pixmap()!=self.AVG_L_R:
+                    if charapic[0][2]=="0":self.AVG_L.setPixmap(QPixmap(self.AVG_L_R))
+                    elif charapic[0][2]=="1":self.AVG_L.setPixmap(QPixmap(self.AVG_L_R.mirrored(True,False)))
+                    self.AVG_L.repaint()
             if charapic[1][0]!="":
                 self.AVG_R_R.load("./Visual/source/Chara/"+charapic[1][0]+"_"+charapic[1][1]+".png")
                 self.AVG_R_R=self.AVG_R_R.scaled(int(self.X*0.46875),int(self.X*0.46875),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
-                if charapic[1][2]=="0":self.AVG_R.setPixmap(QPixmap(self.AVG_R_R))
-                elif charapic[1][2]=="1":self.AVG_R.setPixmap(QPixmap(self.AVG_R_R.mirrored(True,False)))
-                self.AVG_R.repaint()     
-        #初始化姓名和讲述
-        self.Name_Label.setText("")
-        self.Name_Label.repaint()
-        self.Word_Label.setText("")
-        self.Word_Label.repaint()
-
+                if self.AVG_R.pixmap()!=self.AVG_R_R:
+                    if charapic[1][2]=="0":self.AVG_R.setPixmap(QPixmap(self.AVG_R_R))
+                    elif charapic[1][2]=="1":self.AVG_R.setPixmap(QPixmap(self.AVG_R_R.mirrored(True,False)))
+                    self.AVG_R.repaint()     
+            
         #讲述控制器-讲述刷新函数
     def UpdateWords(self,i,wordsALL,charanum,wordset):
         
 
         if i[0]=="" and charanum==1:#当槽位上没有姓名且场上只有一人，认为是旁白
+            self.Name_Label.setText("")
+            self.Name_Label.repaint()
             self.Word_Label.setText(wordsALL)
             self.Word_Label.repaint()
             
         elif i[0]!="" and i[1]!="":#当槽位上有姓名和讲述内容则填充进对应框
-            self.Name_Label.setText(i[0])
-            self.Name_Label.repaint()
+            self.Name_Last=self.Name_Label.text()
+            if self.Name_Last!= i[0]:
+                self.Name_Label.setText(i[0])
+                self.Name_Label.repaint()
             self.Word_Label.setText(wordsALL)
             self.Word_Label.repaint()
 
