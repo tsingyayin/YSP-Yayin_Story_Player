@@ -1,5 +1,5 @@
 #这个文件用来启动UI版对应核心。
-import core.core0_4_1_U_R as core0_4_1_U_R
+import core.core0_4_1_R as core0_4_1_R
 import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
@@ -95,7 +95,7 @@ class SPAWN(QThread):
     if Ver=="SPOL0.4.1":                                                         #遵循SPOL0.4.1标准的读取
         runing=1
         while runing!=0:
-            runing=core0_4_1_U_R.SPOL(self,files,Storyname)
+            runing=core0_4_1_R.SPOL(self,files,Storyname)
             files.close()
             try:
                 files=open("story\\"+runing+".spol","r")

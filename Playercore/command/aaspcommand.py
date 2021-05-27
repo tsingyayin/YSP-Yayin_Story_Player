@@ -147,11 +147,12 @@ def langinput():
     print("sysinfo→"+msg("Lang_Set_Success").format(usrinput))
     
 def about():
-    print(msg("About_Info_Version")+" Ver0.4.0.0_Pre11.1")
+    print(msg("About_Info_Version")+" Ver0.5.0_Pre1")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
     print(msg("About_Info_Help"))
+    print("\n这个版本仅限开发者本人和Ayano_Aishi对测试人员发布。禁止测试人员将本版传播给他人")
 
 def ui():
     global X,Y
