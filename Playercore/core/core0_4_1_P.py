@@ -1,16 +1,10 @@
 #这个文件是解释器核心
-#这个文件用来揪出所有需要预处理的图像
-#我们心意已决不用任何GPU加速，所以我们要用CPU强算
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+#这个是给UI用的版本
 import time as tm
 import sys
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
 from PyQt5.QtCore import *
-import numpy
-import cv2
 
 class USERCHOOSEBRANCHRECIVE(QObject):
     def __init__(self):
@@ -20,57 +14,8 @@ class USERCHOOSEBRANCHRECIVE(QObject):
         branchlabel=BranchLabel
         return
 
-class FILEANDITSNAMERECIVE(QObject):
-    def __init__(self):
-        super(FILEANDITSNAMERECIVE,self).__init__()
-        
-    def get(self,filesIN,StorynameIN):
-        global files,Storyname
-        files=filesIN
-        Storyname=StorynameIN
-        return
-
-class Current(QObject):
-    def __init__(self):
-        super(Current,self).__init__()
-
-    def get(self,pic):
-        global CurrentPicture
-        CurrentPicture=pic
-        return
-
-class AvgDark(QThread):
-    def __init__(self):
-        super(AvgDark,self).__init__()
-
-    def run(self):
-        global CurrentPicture
-        self.Picturename=CurrentPicture
-        self.Picture=QImage(self.Picturename)
-        X=self.Picture.width()
-        Y=self.Picture.height()
-        self.QIMAGE_N=QImage(X,Y,QImage.Format_ARGB32)
-        for x in range(0,X):
-            for y in range(0,Y):
-                oldcolor=QColor(self.Picture.pixelColor(x,y))
-                r=oldcolor.red()-50
-                g=oldcolor.green()-50
-                b=oldcolor.blue()-50
-                a=oldcolor.alpha()
-                if r<0:r=0
-                if g<0:g=0
-                if b<0:b=0
-                #print(a)
-                QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
-        self.Outputname=self.Picturename.split("/")[-1]
-        self.QIMAGE_N.save(".\\Visual\\cache\\Chara\\"+self.Outputname+".png","PNG",100)
-        
-class FindNewEffect(QThread):
- def __init__(self):
-  super(FindNewEffect,self).__init__()
-
- def run(self):
-  global warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline,branchlabel,files,Storyname
+def SPOL(self,files,Storyname):
+  global warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline,branchlabel
     #跨行注释状态确认
   textend=0
     #行计数
@@ -85,6 +30,7 @@ class FindNewEffect(QThread):
   bgdisplaymode={"0":msg("Bgp_Display_Mode_Normal"),"1":msg("Bgp_Display_Mode_Fade"),"2":msg("Bgp_Display_Mode_B&W")}
   bgeffectmode={"0":msg("Bgp_Effect_Mode_Normal"),"1":msg("Bgp_Effect_Mode_Shake"),"2":msg("Bgp_Effect_Mode_W1"),"3":msg("Bgp_Effect_Mode_W2")}
   textmode={"L":msg("Freedom_Text_Mode_L"),"M":msg("Freedom_Text_Mode_M"),"R":msg("Freedom_Text_Mode_R")}
+  timestart=tm.time()
   for lineraw in files.readlines(): 
     linecount+=1
     #先看有没有回车，没有就给它加上，但是要提出警告
@@ -92,16 +38,80 @@ class FindNewEffect(QThread):
         lineraw+="\n"
         formatwarnline+=[[linecount,Storyname,lineraw[:-1]]]
     #不予判定的情况
-    if lineraw[0]=="#" or lineraw[0]=="/" or lineraw[0]==" " or lineraw[0]==":" or lineraw[0]=="{" or lineraw[0:2]=="||":continue
+    if (lineraw[0]=="#" and lineraw[0:3]!="###") or lineraw[0]=="/" or lineraw[0]==" " or lineraw[0]==":":continue
 
-    #在遍历所需文件的这个核心，对于小分支控制器直接去掉首字符“|”就行
+    #先来看看这一行是不是对话分支的一部分
+    #这一部分思路是这样的
+    #首先|||是开头结尾没啥好说的
+    #剩下的话，对比||行是否和输入一样
+    #如果一样，那么就确认读到这一个分支convertag=1
+    #那么|后面的就正常读写
+    #遇到下一个||的时候让convertag=0，不再不写
+    #简而言之convertag的1和0是读写准许与跳过
+    #其他情况就正常传入，没啥好说的
 
-    if lineraw[0:3]=="|":
+    if lineraw[0:3]=="|||" and conver==0 :
+        conver=1
+        convertag=0
+        converlst=lineraw[3:-1].split("|||")
+        try:
+            if len(converlst)>4:raise Exception
+            convernum=[]
+            for k in converlst:
+                i=k.split(":")
+                if len(i)!=2:raise Exception
+                print("{}:{}".format(i[0],i[1]))
+                convernum+=i[0]       
+        except Exception:
+            numseterrorline+=[[linecount,Storyname,lineraw[:-1]]]
+            areajump=1
+        else:
+            areajump=0
+            self.need_to_choose.emit(converlst)
+            self.pause()
+            self.usript=""
+            for i in converlst:
+                if branchlabel==i.split(":")[1]:
+                    self.usript=i.split(":")[0]
+            None
+        continue
+
+    elif lineraw[0:2]=="||" and lineraw[0:3]!="|||" and convertag==0 and areajump==0:
+        if lineraw[2:-1] not in convernum:
+            nameerrorline+=[[linecount,Storyname,lineraw[:-1]]]
+        if lineraw[2:-1]==self.usript:
+            convertag=1
+        continue
+    elif lineraw[0:2]=="||"and lineraw[0:3]!="|||"  and convertag==1 and areajump==0:
+        if lineraw[2:-1] not in convernum:
+            nameerrorline+=[[linecount,Storyname,lineraw[:-1]]]
+        convertag=0
+        continue
+    elif lineraw[0]=="|" and lineraw[0:3]!="|||" and lineraw[0:2]!="||" and convertag==1 and areajump==0:
         line=lineraw[1:]
+    elif lineraw[0]=="|" and lineraw[0:3]!="|||" and lineraw[0:2]!="||" and convertag==0 and areajump==0:
+        continue
+    elif (lineraw[0:3]=="|||" or lineraw[0]=="\n") and conver==1:
+        conver=0
+        convertag=0
+        continue
+    elif conver==0:
+        line=lineraw[:]
+
+
+    #进行跨行注释的识别
+    if line[0:3]=="###" and textend==0:
+        textend=1
+    elif line[0:3]=="###" and textend==1:
+        textend=0
+    elif textend==1:
+        continue
+    elif line[0]=="\n" :
+        continue
 
     #提取背景控制器，不标准的输入用默认值填充
     #背景控制器的几个数值是场景名称、显示模式、特效、淡入
-    if line[0]=="[":
+    elif line[0]=="[":
         try:
             bgsetlstcount=len(line[1:-2].split(","))
             if bgsetlstcount>4:raise Exception
@@ -126,7 +136,26 @@ class FindNewEffect(QThread):
         else:
             None
         
-            #音频控制器无图形处理，直接略过
+    #提取音频控制器，不标准的输入用默认值填充
+    #音频控制器的参数是音频名称和音频音量
+    elif line[0]=="{":
+        try:
+            musicsetlstcount=len(line[1:-2].split(",")) 
+            if musicsetlstcount>2:raise Exception              
+            musicsetlst=line[1:-2].split(",")+[""]*(2-musicsetlstcount)
+            #填充空位
+            if musicsetlst[0]=="":musicsetlst[0]="静音"
+            if musicsetlst[1]=="":musicsetlst[1]="50"
+            if (type(eval(musicsetlst[1]))!=int and type(eval(musicsetlst[1]))!=float) or not 0<=eval(musicsetlst[1])<=100:raise Exception
+            print(round(tm.time()-timestart,2),msg("Second"))
+            print("#################\n"+msg("Bgm_Setting_Info").format(musicsetlst[0],musicsetlst[1]))
+            print("#################\n")
+            self.can_update_bgm.emit(musicsetlst[0],eval(musicsetlst[1]))
+        except Exception:
+            numseterrorline+=[[linecount,Storyname,line[:-1]]]
+            continue
+        else:
+            None
 
     #讲述控制器
     elif line[0:3]==">>>":
@@ -134,9 +163,26 @@ class FindNewEffect(QThread):
         if (":" not in line) or line.count(">>>")>2 :
             texterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
+        #首先提取文本控制器，若未发现则按默认值填充
+        wordset=["",""]
         if line[-2]==")":
-            line=line[0:line.rindex("(")+1]       #方便下面处理，将文本控制器（若有）从字符串中删去
-
+            wordsetcount=len(line[line.rindex("(")+1:-2].split(","))
+            if wordsetcount ==1:
+                wordset=[line[line.rindex("(")+1:-2],"1.5"]
+            else:
+                wordset=[line[line.rindex("(")+1:-2].split(",")[0],line[line.rindex("(")+1:-2].split(",")[1]]
+            line=line[0:line.rindex("(")+1]       #方便下面处理，将文本控制器从字符串中删去
+        #填充文本控制器空位
+        if wordset[0]=="":wordset[0]="0.1"
+        if wordset[1]=="":wordset[1]="1.5"
+        try:
+            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
+            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[0])<0:raise Exception
+        except Exception:
+            numseterrorline+=[[linecount,Storyname,line[:-1]]]
+            continue
+        else:
+            None
         #按下划线分割说话人和对应语句
         #下一句split从1开始是因为前面有一个空字符需要舍去
         inforaw=line[0:-1].split(">>>")[1:]      
@@ -196,10 +242,137 @@ class FindNewEffect(QThread):
             elif charawords[0][1]=="" and charawords[1][1]!="":
                 charapic[0][5]="(暗，沉默)"
                 charapic[1][5]="(亮，讲述)"
-    
+        self.can_update_chara.emit(charapic,charawords,wordset,charanum,BGblack)
+        wordsall=""
+        for i in charawords:
+            if i[0]=="" and charanum==1:
+                alphacount=0
+                for word in i[1]:
+                    tm.sleep(eval(wordset[0]))
+                    if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
+                        alphacount+=2
+                    else:
+                        alphacount+=1
+                    if alphacount>=58:
+                        wordsall+="\n"
+                        alphacount=0
+                    wordsall+=word
+                    self.update_chara_num.emit(i,wordsall,charanum,wordset)
+
+                break
+            elif i[0]!="" and i[1]!="":
+                alphacount=0
+                for word in i[1]:
+                    tm.sleep(eval(wordset[0]))
+                    if '\u4e00' <= word <= '\u9fff':
+                        alphacount+=2
+                    else:
+                        alphacount+=1
+                    if alphacount>=58:
+                        wordsall+="\n"
+                        alphacount=0
+                    wordsall+=word
+                    
+                    self.update_chara_num.emit(i,wordsall,charanum,wordset)
+
+                break
+        tm.sleep(eval(wordset[1]))
+        self.show_next.emit()
+        self.pause()
+
+    #自由文本控制器
+    elif line[0:3]==">^>":
+        #首先判断是否符合要求，如若不符合要求则跳过这一行并录入错误传递列表
+        if (":" not in line) or line.count(">^>")>1 :
+            texterrorline+=[[linecount,Storyname,line[:-1]]]
+            continue
+        #首先提取文本控制器，若未发现则按默认值填充
+        wordset=["",""]
+        if line[-2]==")":
+            wordsetcount=len(line[line.rindex("(")+1:-2].split(","))
+            if wordsetcount ==1:
+                wordset=[line[line.rindex("(")+1:-2],"1.5"]
+            else:
+                wordset=[line[line.rindex("(")+1:-2].split(",")[0],line[line.rindex("(")+1:-2].split(",")[1]]
+            line=line[0:line.rindex("(")+1]       #方便下面处理，将文本控制器从字符串中删去
+        #填充文本控制器空位
+        if wordset[0]=="":wordset[0]="0.1"
+        if wordset[1]=="":wordset[1]="1.5"
+        try:
+            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
+            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[1])<0:raise Exception
+            testset=[]
+            #提取文本内容
+            inforaw=[line[3:line.index(":")],line[line.index(":")+1:-1]]
+            textsetcount=len(inforaw[0].split("/"))
+            if textsetcount>3:raise Exception
+            textset=inforaw[0].split("/")+[""]*(3-textsetcount)+[inforaw[1]]
+            if textset[0]=="":textset[0]="0.2"
+            if textset[1]=="":textset[1]="0.444"
+            if textset[2]=="":textset[2]="M"
+            if textset[3]=="":textset[3]=" "
+            if type(eval(textset[0]))!=int or eval(textset[0])<0:raise Exception
+            if type(eval(textset[1]))!=int or eval(textset[1])<0:raise Exception
+            if textset[2] not in "LMR":raise Exception
+            
+        except Exception:
+            numseterrorline+=[[linecount,Storyname,line[:-1]]]
+            continue
+        else:
+            self.can_update_freedom.emit(textset,wordset)
+            wordsall=""
+            alphacount=0
+            for word in textset[3]:
+                tm.sleep(eval(wordset[0]))
+                if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
+                    alphacount+=2
+                else:
+                    alphacount+=1
+                if alphacount>=58:
+                    wordsall+="\n"
+                    alphacount=0
+                wordsall+=word
+                self.update_num_freedom.emit(wordsall)
+        tm.sleep(eval(wordset[1]))
+        self.show_next.emit()
+        self.pause()
+        self.can_clear_freedom.emit(1)
+       
+    #分支选项解释器
+    elif line[0:3]=="-->":
+        #判断是否符合语法定义
+        if (":" not in line) or line.count("-->")>4:
+            texterrorline+=[[linecount,Storyname,line[:-1]]]
+            continue
+        inforaw=line[:-1].split("-->")[1:]
+        branchinfo=[]
+        branchname=[]
+        #提取行的内容
+        for i in inforaw:
+            try:
+                if i.count(":")!=2: raise Exception
+            except Exception:
+                numseterror+=[[linecount,Storyname,line[:-1]]]
+                continue
+            else:
+                branchinfo+=[[i.split(":")[0]+":"+i.split(":")[1],i.split(":")[2]]]
+                branchname+=[i.split(":")[0]+":"+i.split(":")[1]]
+        for i in branchinfo:
+            print(msg("Branch_Info_Msg").format(i[0],i[1]))
+        
+        self.need_to_choose.emit(branchname)
+        self.pause()
+
+        for i in branchname:
+            if branchlabel in i.split(":")[1]:
+                Usrbranchinput=branchinfo[branchname.index(i)][1]
+                Needjump=1
+        break
+
     #把未能按类型识别的内容放入警告传递列表
     else :     
-        None
+        warnline+=[[linecount,Storyname,line[:-1]]]
+
   if Needjump==1:
       return Usrbranchinput
   else:
