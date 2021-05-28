@@ -7,7 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtMultimedia import *
 
 from command.UICoreLauncher import *
-from core.core0_4_1_R import *
+from core.core0_5_0_U import *
 from langcontrol import *
 import time as tm
 import sys
@@ -414,6 +414,7 @@ class MainWindow(UiMainWindow):
         self.Interpreter.can_hide_hello.connect(self.hidehello)
         self.Interpreter.can_reprint_hello.connect(self.reprinthello)
         self.Interpreter.can_show_title.connect(self.showtitle)
+        self.Interpreter.can_hide_title.connect(self.hidetitle)
         self.Interpreter.need_to_choose.connect(self.choosebranch)
         self.Interpreter.show_next.connect(self.ShowNext)
         self.Interpreter.can_update_bgm.connect(self.Playsound)
@@ -602,7 +603,7 @@ class MainWindow(UiMainWindow):
         self.BranchButton_3.setText("")
         self.BranchButton_4.setText("")
 
-        #标题展示函数
+        #标题展示函数-前半段
     def showtitle(self,titlesetlst):
         #背景透明度初始化
         self.OPBG1=QGraphicsOpacityEffect()
@@ -665,8 +666,8 @@ class MainWindow(UiMainWindow):
         self.MainTitle.repaint()
         self.BG1.repaint()
 
-        tm.sleep(3)
-
+        #标题显示函数-后半段
+    def hidetitle(self):
         self.BG1.raise_()
         self.BG2.raise_()
         self.AVG_L.raise_()
@@ -701,7 +702,7 @@ class MainWindow(UiMainWindow):
         self.OPBG2.setOpacity(0)
         self.BG2.setGraphicsEffect(self.OPBG2)
 
-        tm.sleep(1)
+        tm.sleep(2)
         self.OPMainTitle.setOpacity(0)
         self.MainTitle.setGraphicsEffect(self.OPMainTitle)
         
@@ -727,7 +728,7 @@ class MainWindow(UiMainWindow):
         self.Logo.raise_()
         self.MainTitle.raise_()
         self.SubTitle.raise_()
-        self.Interpreter.wake()
+
         self.AutoButton.raise_()
         self.NextButton.raise_()
 
@@ -961,10 +962,23 @@ class MainWindow(UiMainWindow):
         #填充立绘
         if charanum==1:
             for i in charapic:
+                if i[0]=="":
+                    self.AVG_L.setPixmap(QPixmap(""))
+                    self.AVG_R.setPixmap(QPixmap(""))
+                    self.AVG_M.setPixmap(QPixmap(""))
+                    self.AVG_L.repaint()
+                    self.AVG_R.repaint()
+                    self.AVG_M.repaint()
+                    
                 if i[0]!="":
                     self.AVG_L.setPixmap(QPixmap(""))
                     self.AVG_R.setPixmap(QPixmap(""))
-                    self.AVG_M_R.load("./Visual/source/Chara/"+i[0]+"_"+i[1]+".png")
+                    if i[5]=="(暗，沉默)":
+                        self.AVG_M_R.load("./Visual/cache/Chara/"+i[0]+"_"+i[1]+"-Dark.png")
+                    elif i[1]=="0":
+                        self.AVG_M_R.load("./Visual/cache/Chara/"+i[0]+"_"+i[1]+".png")
+                    else:
+                        self.AVG_M_R.load("./Visual/source/Chara/"+i[0]+"_"+i[1]+".png")
                     self.AVG_M_R=self.AVG_M_R.scaled(int(self.X*0.46875),int(self.X*0.46875),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
                     if self.AVG_M.pixmap()!=self.AVG_M_R:
                         if i[2]=="0":self.AVG_M.setPixmap(QPixmap(self.AVG_M_R))
@@ -976,14 +990,24 @@ class MainWindow(UiMainWindow):
             self.AVG_M.setPixmap(QPixmap(""))
             self.AVG_M.repaint()
             if charapic[0][0]!="":
-                self.AVG_L_R.load("./Visual/source/Chara/"+charapic[0][0]+"_"+charapic[0][1]+".png")
+                if charapic[0][5]=="(暗，沉默)":
+                    self.AVG_L_R.load("./Visual/cache/Chara/"+charapic[0][0]+"_"+charapic[0][1]+"-Dark.png")
+                elif charapic[0][1]=="0":
+                    self.AVG_L_R.load("./Visual/cache/Chara/"+charapic[0][0]+"_"+charapic[0][1]+".png")
+                else:
+                    self.AVG_L_R.load("./Visual/source/Chara/"+charapic[0][0]+"_"+charapic[0][1]+".png")
                 self.AVG_L_R=self.AVG_L_R.scaled(int(self.X*0.46875),int(self.X*0.46875),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
                 if self.AVG_L.pixmap()!=self.AVG_L_R:
                     if charapic[0][2]=="0":self.AVG_L.setPixmap(QPixmap(self.AVG_L_R))
                     elif charapic[0][2]=="1":self.AVG_L.setPixmap(QPixmap(self.AVG_L_R.mirrored(True,False)))
                     self.AVG_L.repaint()
             if charapic[1][0]!="":
-                self.AVG_R_R.load("./Visual/source/Chara/"+charapic[1][0]+"_"+charapic[1][1]+".png")
+                if charapic[1][5]=="(暗，沉默)":
+                    self.AVG_R_R.load("./Visual/cache/Chara/"+charapic[1][0]+"_"+charapic[1][1]+"-Dark.png")
+                elif charapic[1][1]=="0":
+                    self.AVG_R_R.load("./Visual/cache/Chara/"+charapic[1][0]+"_"+charapic[1][1]+".png")
+                else:
+                    self.AVG_R_R.load("./Visual/source/Chara/"+charapic[1][0]+"_"+charapic[1][1]+".png")
                 self.AVG_R_R=self.AVG_R_R.scaled(int(self.X*0.46875),int(self.X*0.46875),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
                 if self.AVG_R.pixmap()!=self.AVG_R_R:
                     if charapic[1][2]=="0":self.AVG_R.setPixmap(QPixmap(self.AVG_R_R))
@@ -999,8 +1023,14 @@ class MainWindow(UiMainWindow):
             self.Name_Label.repaint()
             self.Word_Label.setText(wordsALL)
             self.Word_Label.repaint()
-            
-        elif i[0]!="" and i[1]!="":#当槽位上有姓名和讲述内容则填充进对应框
+          
+        elif i[1]=="" and charanum==1:
+            self.Name_Label.setText(i[0])
+            self.Word_Label.setText("")
+            self.Name_Label.repaint()
+            self.Word_Label.repaint()
+
+        elif (i[0]!="" and i[1]!="") or (i[0]!="" and charanum==1):
             self.Name_Last=self.Name_Label.text()
             if self.Name_Last!= i[0]:
                 self.Name_Label.setText(i[0])
