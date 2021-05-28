@@ -1,5 +1,8 @@
 #这个文件用来启动UI版对应核心。
 import core.core0_4_1_R as core0_4_1_R
+import core.core0_5_0_U as core0_5_0_U
+import core.core0_5_0_P as core0_5_0_P
+
 import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
@@ -26,6 +29,7 @@ class SPAWN(QThread):
  can_reprint_hello=pyqtSignal(int)
 
  can_show_title=pyqtSignal(list)
+ can_hide_title=pyqtSignal()
 
  need_to_choose=pyqtSignal(list)
 
@@ -35,6 +39,7 @@ class SPAWN(QThread):
  update_num_freedom=pyqtSignal(str)
  can_clear_freedom=pyqtSignal(int)
 
+ send_file_info=pyqtSignal(str)
  def __init__(self):
      super(SPAWN,self).__init__()
      self.mutex=QMutex()
@@ -51,7 +56,6 @@ class SPAWN(QThread):
     while Open==False:
         try:       
             files=open(Storyname,"r")
-            
         except IOError:
             print("sysinfo→"+msg("Spawn_Mode_Not_Found").format(Storyname))
             return
@@ -85,25 +89,47 @@ class SPAWN(QThread):
                 numseterrorline+=[[linecount,Storyname,line[:-1]]]
                 Ver="TitleERROR"
             else:
-                self.can_show_title.emit(Titlesetlst)
-                self.pause()
-            break
+                if Ver=="SPOL0.5.0":
+                    self.can_show_title.emit(Titlesetlst)
+                    self.giveinfo=core0_5_0_P.LocalInfo()
+                    self.send_file_info.connect(self.giveinfo.get)
+                    self.send_file_info.emit(Storyname)
 
+                    finding=core0_5_0_P.CNewEffect(self)
+                    tm.sleep(5)
+                    self.can_hide_title.emit()
+                    #self.pause()
+            break
+        
 #重新打开文件，从头开始处理
     files=open(Storyname,"r")
     Storyname=Storyname.split(r"/")[-1]
-    if Ver=="SPOL0.4.1":                                                         #遵循SPOL0.4.1标准的读取
+    if Ver=="SPOL0.5.0":                                                         #遵循SPOL0.5.0标准的读取
         runing=1
+        count=0
         while runing!=0:
-            runing=core0_4_1_R.SPOL(self,files,Storyname)
-            files.close()
+            count+=1
+            if count==1:
+                runing=core0_5_0_U.SPOL(self,files,Storyname)
+                files.close()
+            if count!=1:
+                self.giveinfo=core0_5_0_P.LocalInfo()
+                self.send_file_info.connect(self.giveinfo.get)
+                self.send_file_info.emit("story\\"+runing+".spol")
+
+                finding=core0_5_0_P.CNewEffect(self)
+
+                runing=core0_5_0_U.SPOL(self,files,Storyname)
+                files.close()
             try:
                 files=open("story\\"+runing+".spol","r")
                 Storyname=runing+".spol"
             except Exception:
                 runing=0
+                break
             else:
                 None
+
 
     else:
         print(msg("Spawn_Mode_Version_Error").format(Ver))

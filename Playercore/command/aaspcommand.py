@@ -10,6 +10,10 @@ import sys
 from Visual.ArtificialUI import *
 
 import  core.core0_4_1 as core0_4_1
+import core.core0_5_0_U as core0_5_0_U
+import core.core0_5_0_P as core0_5_0_P
+import core.core0_5_0 as core0_5_0
+
 import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
@@ -65,7 +69,20 @@ def spawn():
 #重新打开文件，从头开始处理
     files=open("story\\"+Storyname,"r")
 
-    if Ver=="SPOL0.4.1":                                                         #遵循SPOL0.4.1标准的读取
+    if Ver=="SPOL0.5.0":                                                         #遵循SPOL0.5.0标准的读取
+        run=1
+        while run!=0:
+            run=core0_5_0.SPOL(files,Storyname)
+            files.close()
+            try:
+                files=open("story\\"+run+".spol","r")
+                Storyname=run+".spol"
+            except Exception:
+                run=0
+            else:
+                None
+
+    elif Ver=="SPOL0.4.1":                                                         #遵循SPOL0.4.1标准的读取
         run=1
         while run!=0:
             run=core0_4_1.SPOL(files,Storyname)
@@ -116,7 +133,15 @@ def singletext():
         print("sysinfo→"+msg("Single_Mode_Input_Version"))
         linestandard=input(r"Userinput\line→")
         if linestandard=="help":
-            print(msg("Single_Mode_Version_List")+"\n"+"0.4.1")
+            print(msg("Single_Mode_Version_List")+"\n"+"0.4.1"+"\n"+"0.5.0")
+
+        elif linestandard=="0.5.0":
+            while True:
+                Usrtextipt=input(r"Userinput\line\SPOL0.5.0→")
+                if Usrtextipt=="exit":
+                    break
+                else:
+                    core0_5_0.SPOL_s(Usrtextipt+"\n")
 
         elif linestandard=="0.4.1":
             while True:
@@ -125,6 +150,7 @@ def singletext():
                     break
                 else:
                     core0_4_1.SPOL_s(Usrtextipt+"\n")
+
         elif linestandard=="exit":
             break
         else:
