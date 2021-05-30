@@ -9,8 +9,6 @@ import sys
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
 from PyQt5.QtCore import *
-import numpy
-import cv2
 
 class USERCHOOSEBRANCHRECIVE(QObject):
     def __init__(self):
@@ -84,7 +82,7 @@ class AvgCover(QThread):
                     b=int(oldcolor.blue()*1)
                     a=oldcolor.alpha()
                     self.QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
-        self.QIMAGE_N.save(".\\Visual\\cache\\Chara\\"+self.Currentnow+".png","PNG",100)
+        self.QIMAGE_N.save(".\\Visual\\cache\\Chara\\"+self.Currentnow+".png","PNG",50)
         print("成功建立"+self.Currentnow+".png")
         
       except Exception:
@@ -128,7 +126,7 @@ class AvgDark(QThread):
                 if b<0:b=0
                 #print(a)
                 self.QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
-        self.QIMAGE_N.save(".\\Visual\\cache\\Chara\\"+self.Currentnow+"-Dark.png","PNG",100)
+        self.QIMAGE_N.save(".\\Visual\\cache\\Chara\\"+self.Currentnow+"-Dark.png","PNG",50)
         print("成功建立"+self.Currentnow+"-Dark.png")
         
       except Exception:
@@ -185,7 +183,7 @@ def CNewEffect(self):
         line=lineraw[1:]
     else:
         line=lineraw
-
+    
 
     #提取背景控制器，不标准的输入用默认值填充
     #背景控制器的几个数值是场景名称、显示模式、特效、淡入
@@ -199,9 +197,9 @@ def CNewEffect(self):
             if bgsetlst[1]=="":bgsetlst[1]="0"
             if bgsetlst[2]=="":bgsetlst[2]="0"
             if bgsetlst[3]=="":bgsetlst[3]="0.5"   
-            if type(eval(bgsetlst[1]))!=int or (not 0<=eval(bgsetlst[1])<=2):raise Exception
-            if type(eval(bgsetlst[2]))!=int or (not 0<=eval(bgsetlst[2])<=3):raise Exception
-            if (type(eval(bgsetlst[3]))!=int and type(eval(bgsetlst[3]))!=float) or 0>eval(bgsetlst[3]):raise Exception
+            if not 0<=int(bgsetlst[1])<=2:raise Exception
+            if not 0<=int(bgsetlst[2])<=3:raise Exception
+            if 0>float(bgsetlst[3]):raise Exception
 
         except Exception:
             continue
@@ -243,8 +241,8 @@ def CNewEffect(self):
                     charawords+=[[i.split(":")[1],i.split(":")[2]]]
                 #对于不合要求的设置抛出异常
                 if (charapic[-1][2]!="0" and charapic[-1][2]!="1"):raise Exception
-                if (type(eval(charapic[-1][3]))!=int and type(eval(charapic[-1][3]))!=float) or eval(charapic[-1][3])<0:raise Exception
-                if (type(eval(charapic[-1][4]))!=int and type(eval(charapic[-1][4]))!=float) or eval(charapic[-1][4])<0:raise Exception
+                if float(charapic[-1][3])<0:raise Exception
+                if float(charapic[-1][4])<0:raise Exception
         except Exception:
             continue
         else:
@@ -253,6 +251,7 @@ def CNewEffect(self):
 
         #判定上隐立绘是否需要
         for i in charapic:
+            
             if i[0]!="" and i[1]=="0":
                 try:
                     f=open(".\\Visual\\cache\\Chara\\"+i[0]+"_"+i[1]+".png","r")

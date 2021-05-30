@@ -140,6 +140,25 @@ def SPOL(files,Storyname):
         else:
             None
 
+        #音效控制器
+    elif line[0]=="<":
+        try:
+            soundsetlstcount=len(line[1:-2].split(",")) 
+            if soundsetlstcount>2:raise Exception              
+            soundsetlst=line[1:-2].split(",")+[""]*(2-soundsetlstcount)
+            #填充空位
+            if soundsetlst[0]=="":soundsetlst[0]="静音"
+            if soundsetlst[1]=="":soundsetlst[1]="50"
+            if (type(eval(soundsetlst[1]))!=int and type(eval(soundsetlst[1]))!=float) or not 0<=eval(soundsetlst[1])<=100:raise Exception
+            print(round(tm.time()-timestart,2),msg("Second"))
+            print("#################\n"+msg("Sound_Setting_Info").format(soundsetlst[0],soundsetlst[1]))
+            print("#################\n")
+        except Exception:
+            numseterrorline+=[[linecount,Storyname,line[:-1]]]
+            continue
+        else:
+            None
+
     #讲述控制器
     elif line[0:3]==">>>":
         #首先判断是否符合要求，如若不符合要求则跳过这一行并录入错误传递列表
@@ -512,8 +531,8 @@ def SPOL_s(line):
             textsetcount=len(inforaw[0].split("/"))
             if textsetcount>3:raise Exception
             textset=inforaw[0].split("/")+[""]*(3-textsetcount)+[inforaw[1]]
-            if textset[0]=="":textset[0]="384"
-            if textset[1]=="":textset[1]="480"
+            if textset[0]=="":textset[0]="0.2"
+            if textset[1]=="":textset[1]="0.44"
             if textset[2]=="":textset[2]="M"
             if textset[3]=="":textset[3]=" "
             if type(eval(textset[0]))!=int or eval(textset[0])<0:raise Exception

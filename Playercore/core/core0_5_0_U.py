@@ -68,7 +68,9 @@ def SPOL(self,files,Storyname):
         else:
             areajump=0
             self.need_to_choose.emit(converlst)
+            self.willstop.emit()
             self.pause()
+            self.inrunning.emit()
             self.usript=""
             for i in converlst:
                 if branchlabel==i.split(":")[1]:
@@ -121,15 +123,25 @@ def SPOL(self,files,Storyname):
             if bgsetlst[1]=="":bgsetlst[1]="0"
             if bgsetlst[2]=="":bgsetlst[2]="0"
             if bgsetlst[3]=="":bgsetlst[3]="0.5"   
-            if type(eval(bgsetlst[1]))!=int or (not 0<=eval(bgsetlst[1])<=2):raise Exception
-            if type(eval(bgsetlst[2]))!=int or (not 0<=eval(bgsetlst[2])<=3):raise Exception
-            if (type(eval(bgsetlst[3]))!=int and type(eval(bgsetlst[3]))!=float) or 0>eval(bgsetlst[3]):raise Exception
+            if not 0<=int(bgsetlst[1])<=2:raise Exception
+            if not 0<=int(bgsetlst[2])<=3:raise Exception
+            if 0>float(bgsetlst[3]):raise Exception
             print(round(tm.time()-timestart,2),msg("Second"))
             self.can_update_bg.emit(bgsetlst)
-            for i in range(0,21):
-                tm.sleep(eval(bgsetlst[3])/20)
-                self.update_num_bg.emit(i,bgsetlst)
-            self.pause()
+            if bgsetlst[3]!="0" :
+                for i in range(0,21):
+                    tm.sleep(float(bgsetlst[3])/20)
+                    self.update_num_bg.emit(i,bgsetlst)
+                self.willstop.emit()
+                self.pause()
+                self.inrunning.emit()
+            else :
+                self.update_num_bg.emit(0,bgsetlst)
+                self.update_num_bg.emit(20,bgsetlst)
+                self.willstop.emit()
+                self.pause()
+                self.inrunning.emit()
+
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
@@ -146,11 +158,32 @@ def SPOL(self,files,Storyname):
             #填充空位
             if musicsetlst[0]=="":musicsetlst[0]="静音"
             if musicsetlst[1]=="":musicsetlst[1]="50"
-            if (type(eval(musicsetlst[1]))!=int and type(eval(musicsetlst[1]))!=float) or not 0<=eval(musicsetlst[1])<=100:raise Exception
+            if not 0<=int(musicsetlst[1])<=100:raise Exception
             print(round(tm.time()-timestart,2),msg("Second"))
             print("#################\n"+msg("Bgm_Setting_Info").format(musicsetlst[0],musicsetlst[1]))
             print("#################\n")
-            self.can_update_bgm.emit(musicsetlst[0],eval(musicsetlst[1]))
+            self.can_update_bgm.emit(musicsetlst[0],int(musicsetlst[1]))
+        except Exception:
+            numseterrorline+=[[linecount,Storyname,line[:-1]]]
+            continue
+        else:
+            None
+
+
+    #音效控制器
+    elif line[0]=="<":
+        try:
+            soundsetlstcount=len(line[1:-2].split(",")) 
+            if soundsetlstcount>2:raise Exception              
+            soundsetlst=line[1:-2].split(",")+[""]*(2-soundsetlstcount)
+            #填充空位
+            if soundsetlst[0]=="":soundsetlst[0]="静音"
+            if soundsetlst[1]=="":soundsetlst[1]="50"
+            if not 0<=int(soundsetlst[1])<=100:raise Exception
+            print(round(tm.time()-timestart,2),msg("Second"))
+            print("#################\n"+msg("Sound_Setting_Info").format(soundsetlst[0],soundsetlst[1]))
+            print("#################\n")
+            self.can_update_sound.emit(soundsetlst[0],int(soundsetlst[1]))
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
@@ -176,8 +209,8 @@ def SPOL(self,files,Storyname):
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
         try:
-            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
-            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[0])<0:raise Exception
+            if float(wordset[0])<0:raise Exception
+            if float(wordset[1])<0:raise Exception
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
@@ -208,8 +241,8 @@ def SPOL(self,files,Storyname):
                     charawords+=[[i.split(":")[1],i.split(":")[2]]]
                 #对于不合要求的设置抛出异常
                 if (charapic[-1][2]!="0" and charapic[-1][2]!="1"):raise Exception
-                if (type(eval(charapic[-1][3]))!=int and type(eval(charapic[-1][3]))!=float) or eval(charapic[-1][3])<0:raise Exception
-                if (type(eval(charapic[-1][4]))!=int and type(eval(charapic[-1][4]))!=float) or eval(charapic[-1][4])<0:raise Exception
+                if float(charapic[-1][3])<0:raise Exception
+                if float(charapic[-1][4])<0:raise Exception
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
@@ -251,7 +284,7 @@ def SPOL(self,files,Storyname):
                     self.update_chara_num.emit(i,wordsall,charanum,wordset)
                 elif i[1]!="":
                     for word in i[1]:
-                        tm.sleep(eval(wordset[0]))
+                        tm.sleep(float(wordset[0]))
                         if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
                             alphacount+=2
                         else:
@@ -268,7 +301,7 @@ def SPOL(self,files,Storyname):
             elif (i[0]!="" and i[1]!="") or (i[0]!="" and charanum==1) :
                 alphacount=0
                 for word in i[1]:
-                    tm.sleep(eval(wordset[0]))
+                    tm.sleep(float(wordset[0]))
                     if '\u4e00' <= word <= '\u9fff':
                         alphacount+=2
                     else:
@@ -280,10 +313,12 @@ def SPOL(self,files,Storyname):
                     
                     self.update_chara_num.emit(i,wordsall,charanum,wordset)
 
-                break
-        tm.sleep(eval(wordset[1]))
+                break 
+        self.willstop.emit()
+        tm.sleep(float(wordset[1]))
         self.show_next.emit()
         self.pause()
+        self.inrunning.emit()
 
     #自由文本控制器
     elif line[0:3]==">^>":
@@ -304,8 +339,8 @@ def SPOL(self,files,Storyname):
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
         try:
-            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
-            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[1])<0:raise Exception
+            if float(wordset[0])<0:raise Exception
+            if float(wordset[1])<0:raise Exception
             testset=[]
             #提取文本内容
             inforaw=[line[3:line.index(":")],line[line.index(":")+1:-1]]
@@ -316,8 +351,8 @@ def SPOL(self,files,Storyname):
             if textset[1]=="":textset[1]="0.444"
             if textset[2]=="":textset[2]="M"
             if textset[3]=="":textset[3]=" "
-            if type(eval(textset[0]))!=int or eval(textset[0])<0:raise Exception
-            if type(eval(textset[1]))!=int or eval(textset[1])<0:raise Exception
+            if float(textset[0])<0:raise Exception
+            if float(textset[1])<0:raise Exception
             if textset[2] not in "LMR":raise Exception
             
         except Exception:
@@ -328,7 +363,7 @@ def SPOL(self,files,Storyname):
             wordsall=""
             alphacount=0
             for word in textset[3]:
-                tm.sleep(eval(wordset[0]))
+                tm.sleep(float(wordset[0]))
                 if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
                     alphacount+=2
                 else:
@@ -338,9 +373,11 @@ def SPOL(self,files,Storyname):
                     alphacount=0
                 wordsall+=word
                 self.update_num_freedom.emit(wordsall)
-        tm.sleep(eval(wordset[1]))
+        tm.sleep(float(wordset[1]))
         self.show_next.emit()
+        self.willstop.emit()
         self.pause()
+        self.inrunning.emit()
         self.can_clear_freedom.emit(1)
        
     #分支选项解释器
@@ -366,7 +403,9 @@ def SPOL(self,files,Storyname):
             print(msg("Branch_Info_Msg").format(i[0],i[1]))
         
         self.need_to_choose.emit(branchname)
+        self.willstop.emit()
         self.pause()
+        self.inrunning.emit()
 
         for i in branchname:
             if branchlabel in i.split(":")[1]:
