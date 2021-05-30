@@ -35,6 +35,8 @@ class SPAWN(QThread):
  need_to_choose=pyqtSignal(list)
 
  show_next=pyqtSignal()
+ inrunning=pyqtSignal()
+ willstop=pyqtSignal()
 
  can_update_freedom=pyqtSignal(list,list)
  update_num_freedom=pyqtSignal(str)
@@ -90,14 +92,14 @@ class SPAWN(QThread):
                 numseterrorline+=[[linecount,Storyname,line[:-1]]]
                 Ver="TitleERROR"
             else:
-                if Ver=="SPOL0.5.0":
+                if Ver=="SPOL0.5.0":  
                     self.can_show_title.emit(Titlesetlst)
-                    tm.sleep(5)
+                    tm.sleep(2)
                     self.giveinfo=core0_5_0_P.LocalInfo()
                     self.send_file_info.connect(self.giveinfo.get)
                     self.send_file_info.emit(Storyname)
-
                     finding=core0_5_0_P.CNewEffect(self)
+                    tm.sleep(5)
                     #self.willwake=core0_5_0_P.WillWake()
                     #self.send_will_wake.connect(self.willwake.get)
                     #self.send_will_wake.emit()

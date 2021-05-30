@@ -172,7 +172,7 @@ def langinput():
     print("sysinfo→"+msg("Lang_Set_Success").format(usrinput))
     
 def about():
-    print(msg("About_Info_Version")+" Ver0.5.0_Pre3")
+    print(msg("About_Info_Version")+" Ver0.5.0_Pre4")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
