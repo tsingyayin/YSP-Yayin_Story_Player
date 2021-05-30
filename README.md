@@ -52,9 +52,9 @@
 
 修复了分辨率大于1920x1080的时候，标题无法正确消失的问题
 
-* 子版本 Ver0.4.0.2_Insider_For_YiZhou
+## 子版本 Ver0.4.0.2_Insider_For_YiZhou
   
-* 专门为内测人员YiZhou解除了系统限制和分辨率限制。这个版本不对外公开。
+专门为内测人员YiZhou解除了系统限制和分辨率限制。这个版本不对外公开。
   
 # Ver0.4.0.1_Insider_Ayano_Aishi_Only
 
