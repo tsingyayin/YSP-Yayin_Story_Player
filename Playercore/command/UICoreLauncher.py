@@ -24,6 +24,7 @@ class SPAWN(QThread):
  update_num_bg=pyqtSignal(int,list)
 
  can_update_bgm=pyqtSignal(str,int)
+ can_update_sound=pyqtSignal(str,int)
 
  can_hide_hello=pyqtSignal(int)
  can_reprint_hello=pyqtSignal(int)
@@ -91,12 +92,16 @@ class SPAWN(QThread):
             else:
                 if Ver=="SPOL0.5.0":
                     self.can_show_title.emit(Titlesetlst)
+                    tm.sleep(5)
                     self.giveinfo=core0_5_0_P.LocalInfo()
                     self.send_file_info.connect(self.giveinfo.get)
                     self.send_file_info.emit(Storyname)
 
                     finding=core0_5_0_P.CNewEffect(self)
-                    tm.sleep(5)
+                    #self.willwake=core0_5_0_P.WillWake()
+                    #self.send_will_wake.connect(self.willwake.get)
+                    #self.send_will_wake.emit()
+                    #self.pause()
                     self.can_hide_title.emit()
                     #self.pause()
             break

@@ -13,7 +13,6 @@ import  core.core0_4_1 as core0_4_1
 import core.core0_5_0_U as core0_5_0_U
 import core.core0_5_0_P as core0_5_0_P
 import core.core0_5_0 as core0_5_0
-
 import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
@@ -173,7 +172,7 @@ def langinput():
     print("sysinfo→"+msg("Lang_Set_Success").format(usrinput))
     
 def about():
-    print(msg("About_Info_Version")+" Ver0.5.0_Pre1")
+    print(msg("About_Info_Version")+" Ver0.5.0_Pre3")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
