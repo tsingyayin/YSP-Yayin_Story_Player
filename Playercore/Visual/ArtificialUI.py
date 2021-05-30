@@ -15,6 +15,24 @@ from Visual.effect import *
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\Visual")
 
+
+class WillStop(QObject):
+    def __init__(self):
+        super(WillStop,self).__init__()
+
+    def get(self):
+        global STOPUNLOCK
+        STOPUNLOCK=False
+
+class LastContinue(QObject):
+    def __init__(self):
+        super(LastContinue,self).__init__()
+
+    def get(self):
+        global STOPUNLOCK
+        STOPUNLOCK=True
+
+        
         #传输文件名称
 class STORYNAME(QObject):
     StoryNameEmit=pyqtSignal(str)
@@ -44,6 +62,8 @@ class UiMainWindow(QWidget):
         self.UserChooseBranchRecive=USERCHOOSEBRANCHRECIVE()
         self.PLAYSound=PlaySound()
         self.ShakeFUNC=ShakeFunc()
+        self.StopUnlock=LastContinue()
+        self.WillStop=WillStop()
 
         #背景定义为黑色
         BackC=QPalette()
@@ -443,6 +463,8 @@ class MainWindow(UiMainWindow):
         self.Interpreter.can_update_freedom.connect(self.setfreedom)
         self.Interpreter.update_num_freedom.connect(self.UpdateFreedom)
         self.Interpreter.can_clear_freedom.connect(self.ClearFreedom)
+        self.Interpreter.inrunning.connect(self.StopUnlock.get)
+        self.Interpreter.willstop.connect(self.WillStop.get)
         self.UserChooseBranch.UserChooseWhich.connect(self.UserChooseBranchRecive.get)
 
         #准备启动数值
@@ -787,6 +809,9 @@ class MainWindow(UiMainWindow):
             self.Run.clicked.disconnect(self.RUNCORE)
             self.ExitButton.clicked.disconnect(self.ExitProgram)
 
+            global STOPUNLOCK
+            STOPUNLOCK=True
+
         #初始控件复现
     def reprinthello(self,num):
         if num==1:
@@ -950,7 +975,7 @@ class MainWindow(UiMainWindow):
                     self.ShakeFUNC.start()
                 elif bgsetlst[2]=="0":
                     self.Interpreter.wake()
-
+                    
         #背景晃动处理
     def ShakeRect(self,sX,sY,end):
         if self.changeBG==2:
@@ -962,7 +987,7 @@ class MainWindow(UiMainWindow):
         if end==1:
             self.Interpreter.wake()
 
-       #音乐控制器-音频启动函数
+        #音乐控制器-音频启动函数
     def PlayBGM(self,filename,volume):
         global glo_file,glo_volume
         glo_file=".\\Visual\\source\\BGM\\"+filename+".mp3"
@@ -1141,7 +1166,12 @@ class MainWindow(UiMainWindow):
         #向下一个页面（自动模式）
     def ShowNext(self):
         if self.Auto==1:
-            self.Interpreter.wake()
+            global STOPUNLOCK
+            while True:
+                if STOPUNLOCK==False:
+                    self.Interpreter.wake()
+                    break
+
         if self.Auto==0:
             self.NextButton.clicked.connect(self.ToNext)
             self.OPNextButton=QGraphicsOpacityEffect()
