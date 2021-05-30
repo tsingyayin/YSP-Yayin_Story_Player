@@ -43,6 +43,7 @@ class UiMainWindow(QWidget):
         self.UserChooseBranch=USERCHOOSEBRANCH()
         self.UserChooseBranchRecive=USERCHOOSEBRANCHRECIVE()
         self.PLAYSound=PlaySound()
+        self.ShakeFUNC=ShakeFunc()
 
         #背景定义为黑色
         BackC=QPalette()
@@ -345,7 +346,27 @@ class UiMainWindow(QWidget):
                 self.Storyname=sys.argv[1]
                 self.RUNCORE()
 
-        #音频播放线程
+        #音乐播放线程
+class PlayBgm(QThread):
+    def __init__(self,parent = None):
+        super(PlayBgm,self).__init__(parent)
+        
+    def run(self):
+        global glo_file,glo_volume
+        self.play=QMediaPlayer()
+        self.Filename=QMediaContent(QUrl.fromLocalFile(glo_file))
+        self.play.setMedia(self.Filename)
+        self.volumeself=glo_volume
+        self.play.setVolume(self.volumeself)
+        self.play.play()
+
+    def fade(self):
+        for i in range(self.volumeself,0,-1):
+            self.play.setVolume(i)
+            tm.sleep(0.01)
+        self.play.pause()
+
+        #音效播放线程
 class PlaySound(QThread):
     def __init__(self,parent = None):
         super(PlaySound,self).__init__(parent)
@@ -417,7 +438,8 @@ class MainWindow(UiMainWindow):
         self.Interpreter.can_hide_title.connect(self.hidetitle)
         self.Interpreter.need_to_choose.connect(self.choosebranch)
         self.Interpreter.show_next.connect(self.ShowNext)
-        self.Interpreter.can_update_bgm.connect(self.Playsound)
+        self.Interpreter.can_update_bgm.connect(self.PlayBGM)
+        self.Interpreter.can_update_sound.connect(self.Playsound)
         self.Interpreter.can_update_freedom.connect(self.setfreedom)
         self.Interpreter.update_num_freedom.connect(self.UpdateFreedom)
         self.Interpreter.can_clear_freedom.connect(self.ClearFreedom)
@@ -880,13 +902,22 @@ class MainWindow(UiMainWindow):
                 self.OPBG1=QGraphicsOpacityEffect()
                 self.OPBG1.setOpacity(i/20)
                 self.BG1.setGraphicsEffect(self.OPBG1)
+                self.BG1.repaint()
             elif eval(bgsetlst[3])==0:
                 self.OPBG1=QGraphicsOpacityEffect()
                 self.OPBG1.setOpacity(1)
                 self.BG1.setGraphicsEffect(self.OPBG1)
+                self.BG1.repaint()
             if i==20:
                 self.changeBG=2
                 self.BG2.setPixmap(QPixmap(""))
+                tm.sleep(0.1)
+                if bgsetlst[2]=="1":
+                    self.ShakeFUNC.shakeXY.connect(self.ShakeRect)
+                    self.ShakeFUNC.start()
+                elif bgsetlst[2]=="0":
+                    self.Interpreter.wake()
+
         elif self.changeBG==2:
             if i==0:
                 self.BG2.setPixmap(QPixmap(self.BGR))
@@ -904,35 +935,62 @@ class MainWindow(UiMainWindow):
                 self.OPBG2=QGraphicsOpacityEffect()
                 self.OPBG2.setOpacity(i/20)
                 self.BG2.setGraphicsEffect(self.OPBG2)
+                self.BG2.repaint()
             elif eval(bgsetlst[3])==0:
                 self.OPBG2=QGraphicsOpacityEffect()
                 self.OPBG2.setOpacity(1)
                 self.BG2.setGraphicsEffect(self.OPBG2)
+                self.BG2.repaint()
             if i==20:
                 self.changeBG=1
                 self.BG1.setPixmap(QPixmap(""))
-        self.Interpreter.wake()
+                tm.sleep(0.1)
+                if bgsetlst[2]=="1":
+                    self.ShakeFUNC.shakeXY.connect(self.ShakeRect)
+                    self.ShakeFUNC.start()
+                elif bgsetlst[2]=="0":
+                    self.Interpreter.wake()
 
-        #音频控制器-音频启动函数
-    def Playsound(self,filename,volume):
+        #背景晃动处理
+    def ShakeRect(self,sX,sY,end):
+        if self.changeBG==2:
+            self.BG1.setGeometry(QRect(int((self.Y/1080)*sX),int((self.Y/1080)*sY),self.X,self.Y))
+            self.BG1.repaint()
+        elif self.changeBG==1:
+            self.BG2.setGeometry(QRect(int((self.Y/1080)*sX),int((self.Y/1080)*sY),self.X,self.Y))
+            self.BG2.repaint()
+        if end==1:
+            self.Interpreter.wake()
+
+       #音乐控制器-音频启动函数
+    def PlayBGM(self,filename,volume):
         global glo_file,glo_volume
         glo_file=".\\Visual\\source\\BGM\\"+filename+".mp3"
         glo_volume=volume
         if self.music_thread==0:
-            self.playsound1=PlaySound()
+            self.playsound1=PlayBgm()
             self.playsound1.start()
             self.music_thread=2
         elif self.music_thread==1:
             self.playsound2.fade()
-            self.playsound1=PlaySound()
+            self.playsound1=PlayBgm()
             self.playsound1.start()
             self.music_thread=2
         elif self.music_thread==2:
             self.playsound1.fade()
-            self.playsound2=PlaySound()
+            self.playsound2=PlayBgm()
             self.playsound2.start()
             self.music_thread=1
 
+        #音效控制器-音频启动函数
+    def Playsound(self,filename,volume):
+        global glo_file,glo_volume
+        glo_file=".\\Visual\\source\\Sound\\"+filename+".mp3"
+        print(filename)
+        glo_volume=volume
+        self.playsound=PlaySound()
+        self.playsound.start()
+        
         #讲述控制器-屏幕更新承接函数、立绘刷新函数
     def setprintchara(self,charapic,charawords,wordset,charanum,BGblack):
         
@@ -959,6 +1017,9 @@ class MainWindow(UiMainWindow):
             self.Word_Label.setText("")
             self.Name_Label.repaint()
             self.Word_Label.repaint()
+            self.AVG_L.setPixmap(QPixmap(""))
+            self.AVG_M.setPixmap(QPixmap(""))
+            self.AVG_R.setPixmap(QPixmap(""))
         #填充立绘
         if charanum==1:
             for i in charapic:

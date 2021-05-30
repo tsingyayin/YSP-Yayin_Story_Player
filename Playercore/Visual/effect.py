@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import random as rnd
+import time as tm
 
 class Function():
     def __init__(self):
@@ -40,3 +42,16 @@ class Function():
                 if b<0:b=0
                 QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
         return QIMAGE_N
+
+class ShakeFunc(QThread):
+    shakeXY=pyqtSignal(int,int,int)
+    def __init__(self):
+        super(ShakeFunc,self).__init__()
+
+    def run(self):
+        for i in range(0,10):
+            a=rnd.randint(-10,10)
+            b=rnd.randint(-10,10)
+            self.shakeXY.emit(a,b,0)
+            tm.sleep(0.02)
+        self.shakeXY.emit(0,0,1)
