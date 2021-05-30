@@ -54,7 +54,7 @@
 
 * 子版本 Ver0.4.0.2_Insider_For_YiZhou
   
-**  专门为内测人员YiZhou解除了系统限制和分辨率限制。这个版本不对外公开。
+* 专门为内测人员YiZhou解除了系统限制和分辨率限制。这个版本不对外公开。
   
 # Ver0.4.0.1_Insider_Ayano_Aishi_Only
 
