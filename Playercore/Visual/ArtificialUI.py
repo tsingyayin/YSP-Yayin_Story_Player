@@ -905,8 +905,13 @@ class MainWindow(UiMainWindow):
         
         #背景控制器-原始图像装载函数
     def setprintbg(self,bgsetlst):
-       self.BGR.load("./Visual/source/BGP/"+bgsetlst[0]+".png")
-       self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+        if bgsetlst[0]=="黑场":
+            self.BGR=QImage(self.X,self.Y,QImage.Format_ARGB32)
+            self.BGR.fill(QColor(0,0,0,255))
+        else:
+            self.BGR=QImage()
+            self.BGR.load("./Visual/source/BGP/"+bgsetlst[0]+".png")
+            self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
 
         #背景控制器-屏幕刷新函数
     def UpdateBG(self,i,bgsetlst):
