@@ -17,6 +17,9 @@ import platform
 #初始化语言
 langset(0)
 
+#启动时尝试清理损坏图像
+DeleteEmptyMap(0)
+
 print("sysinfo→"+msg("System_Info"),platform.platform())
 
 
@@ -33,18 +36,18 @@ System_VersionMain=platform.version().split(".")[0]+"."+platform.version().split
 System_VersionNum=platform.version().split(".")[2]
 
 
-if System_VersionMain!="10.0":
-    print(msg("System_Not_Win10").format(platform.version().split(".")[0]))
-    app=QApplication(sys.argv)
+#if System_VersionMain!="10.0":
+    #print(msg("System_Not_Win10").format(platform.version().split(".")[0]))
+    #app=QApplication(sys.argv)
         
-    sys.exit(app.exec_())
+    #sys.exit(app.exec_())
 
 
-if int(System_VersionNum)<16299 and System_VersionMain=="10.0":
-    print(msg("System_Win10_Too_Old").format(System_VersionNum))
-    app=QApplication(sys.argv)
+#if int(System_VersionNum)<16299 and System_VersionMain=="10.0":
+    #print(msg("System_Win10_Too_Old").format(System_VersionNum))
+    #app=QApplication(sys.argv)
         
-    sys.exit(app.exec_())
+    #sys.exit(app.exec_())
 #第一指引
 print("sysinfo→"+msg("First_Print"))
 
@@ -59,36 +62,47 @@ while programme_end==0 :
 
     if Usript=="help":
         print("help"+"\t"+msg("Help_In_Main_Page_help"))
+        print("clear"+"\t"+msg("Help_In_Main_Page_clear"))
         print("spawn"+"\t"+msg("Help_In_Main_Page_spawn"))
         print("line"+"\t"+msg("Help_In_Main_Page_line"))
         print("exit"+"\t"+msg("Help_In_Main_Page_exit"))
         print("lang"+"\t"+msg("Help_In_Main_Page_lang"))
         print("about"+"\t"+msg("Help_In_Main_Page_about_"))
         print("ui"+"\t"+msg("Help_In_Main_Page_ui"))
+
     elif Usript=="":
         continue
+
     elif Usript=="spawn":
         spawn()
+
     elif Usript=="line":
         singletext()
+
     elif Usript=="lang":
         langinput()
+
     elif Usript=="about":
         about()
+
     elif Usript=="ui":
         if __name__=="__main__":
             app=QApplication(sys.argv)
             monitor_range=ui()
-            if monitor_range[0]<1440 or monitor_range[1]<900:
+            if monitor_range[0]<1366 or monitor_range[1]<768:
                 print("sysinfo→"+msg("Screen_Too_Small").format(monitor_range[0],monitor_range[1]))
                 #break
             else:
                 Mainwindow=MainWindow()
                 Mainwindow.showFullScreen()
                 sys.exit(app.exec_())
+
+    elif Usript=="clear":
+        DeleteEmptyMap(1)
+        
     elif Usript=="exit":
         break
-    
+
     else:
         print("sysinfo→"+msg("Command_Error").format(Usript))
 

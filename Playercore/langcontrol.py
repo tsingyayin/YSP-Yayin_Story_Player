@@ -24,8 +24,8 @@ def langset(langname):
             return 0
         #如果是初始化出问题就默认重置为zh_CN
         else:
-            languse=open("lang\\zh_CN.splang","r")
-            langname="zh_CN"
+            languse=open("lang\\zh_SC.splang","r")
+            langname="zh_SC"
             os.remove("lang\\base.ini")
             langlast=open("lang\\base.ini","w+")
             langlast.write(langname)
