@@ -11,8 +11,8 @@ Bgp_Display_Mode_Fade:Fade
 Bgp_Display_Mode_B&W:Black&White
 Bgp_Effect_Mode_Normal:None of FX
 Bgp_Effect_Mode_Shake:Shake
-Bgp_Effect_Mode_W1:Flash 1
-Bgp_Effect_Mode_W2:Flash 2
+Bgp_Effect_Mode_W1:Flash Fast
+Bgp_Effect_Mode_W2:Flash Slow
 Bgp_Setting_Info:Current background is {},Display mode is {},FX is {},Fading-in-time is {}
 
 Branch_Info_Msg:Branch¡°{}¡±£¨The file is {}£©
@@ -34,6 +34,7 @@ Freedom_Text_Setting_Info:£¨The location is ({},{}).Apply{}£©
 
 Help_In_Main_Page_about_:Show infomation about the programme
 Help_In_Main_Page_help:To consult the command list supported
+Help_In_Main_Page_clear:Delete destoryed picture cache
 Help_In_Main_Page_spawn:Enter interpreter mode
 Help_In_Main_Page_line:Enter Single-line mode
 Help_In_Main_Page_exit:Exit the programme,or any level of the programme
@@ -56,6 +57,8 @@ Single_Mode_Interpreter_Error:Cannot identify¡°{}¡± as any controller
 Single_Mode_Input_Version:Input the Version you want to use.Type "help" for help
 Single_Mode_Version_List:Current supported versions are as followed£º
 Single_Mode_Version_Error:Cannot identify ¡°{}¡± as any avaliable version or command
+
+Sound_Setting_Info:Current sound is {},The volume is {}
 
 Spawn_Mode_Name_Of_File:Input the name of the story, or exit
 Spawn_Mode_Not_Found:Can not find the file ¡°{}¡±£¬please check if input correctly or if the file do exist.Notice that the file names is case-intensitive. 
