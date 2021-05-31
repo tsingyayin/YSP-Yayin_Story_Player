@@ -108,9 +108,9 @@ def SPOL(files,Storyname):
             if bgsetlst[1]=="":bgsetlst[1]="0"
             if bgsetlst[2]=="":bgsetlst[2]="0"
             if bgsetlst[3]=="":bgsetlst[3]="0.5"   
-            if type(eval(bgsetlst[1]))!=int or (not 0<=eval(bgsetlst[1])<=2):raise Exception
-            if type(eval(bgsetlst[2]))!=int or (not 0<=eval(bgsetlst[2])<=3):raise Exception
-            if (type(eval(bgsetlst[3]))!=int and type(eval(bgsetlst[3]))!=float) or 0>eval(bgsetlst[3]):raise Exception
+            if not 0<=int(bgsetlst[1])<=2:raise Exception
+            if not 0<=int(bgsetlst[2])<=3:raise Exception
+            if 0>float(bgsetlst[3]):raise Exception
             print(round(tm.time()-timestart,2),msg("Second"))
             print("#################\n"+msg("Bgp_Setting_Info").format(bgsetlst[0],bgdisplaymode[bgsetlst[1]],bgeffectmode[bgsetlst[2]],bgsetlst[3]))
             print("#################\n")
@@ -130,7 +130,7 @@ def SPOL(files,Storyname):
             #填充空位
             if musicsetlst[0]=="":musicsetlst[0]="静音"
             if musicsetlst[1]=="":musicsetlst[1]="50"
-            if (type(eval(musicsetlst[1]))!=int and type(eval(musicsetlst[1]))!=float) or not 0<=eval(musicsetlst[1])<=100:raise Exception
+            if 0<=int(musicsetlst[1])<=100:raise Exception
             print(round(tm.time()-timestart,2),msg("Second"))
             print("#################\n"+msg("Bgm_Setting_Info").format(musicsetlst[0],musicsetlst[1]))
             print("#################\n")
@@ -149,7 +149,7 @@ def SPOL(files,Storyname):
             #填充空位
             if soundsetlst[0]=="":soundsetlst[0]="静音"
             if soundsetlst[1]=="":soundsetlst[1]="50"
-            if (type(eval(soundsetlst[1]))!=int and type(eval(soundsetlst[1]))!=float) or not 0<=eval(soundsetlst[1])<=100:raise Exception
+            if not 0<=int(soundsetlst[1])<=100:raise Exception
             print(round(tm.time()-timestart,2),msg("Second"))
             print("#################\n"+msg("Sound_Setting_Info").format(soundsetlst[0],soundsetlst[1]))
             print("#################\n")
@@ -178,8 +178,8 @@ def SPOL(files,Storyname):
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
         try:
-            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
-            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[0])<0:raise Exception
+            if float(wordset[0])<0:raise Exception
+            if float(wordset[1])<0:raise Exception
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
@@ -211,8 +211,8 @@ def SPOL(files,Storyname):
                     charawords+=[[i.split(":")[1],i.split(":")[2]]]
                 #对于不合要求的设置抛出异常
                 if (charapic[-1][2]!="0" and charapic[-1][2]!="1"):raise Exception
-                if (type(eval(charapic[-1][3]))!=int and type(eval(charapic[-1][3]))!=float) or eval(charapic[-1][3])<0:raise Exception
-                if (type(eval(charapic[-1][4]))!=int and type(eval(charapic[-1][4]))!=float) or eval(charapic[-1][4])<0:raise Exception
+                if int(charapic[-1][3])<0:raise Exception
+                if int(charapic[-1][4])<0:raise Exception
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
@@ -301,19 +301,19 @@ def SPOL(files,Storyname):
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
         try:
-            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
-            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[1])<0:raise Exception
+            if float(wordset[0])<0:raise Exception
+            if float(wordset[1])<0:raise Exception
             #提取文本内容
             inforaw=[line[3:line.index(":")],line[line.index(":")+1:-1]]
             textsetcount=len(inforaw[0].split("/"))
             if textsetcount>3:raise Exception
             textset=inforaw[0].split("/")+[""]*(3-textsetcount)+[inforaw[1]]
-            if textset[0]=="":textset[0]="960"
-            if textset[1]=="":textset[1]="540"
+            if textset[0]=="":textset[0]="0.2"
+            if textset[1]=="":textset[1]="0.44"
             if textset[2]=="":textset[2]="M"
             if textset[3]=="":textset[3]=" "
-            if type(eval(textset[0]))!=int or eval(textset[0])<0:raise Exception
-            if type(eval(textset[1]))!=int or eval(textset[1])<0:raise Exception
+            if float(textset[0])<0:raise Exception
+            if float(textset[1])<0:raise Exception
             if textset[2] not in "LMR":raise Exception
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
@@ -397,8 +397,8 @@ def SPOL_s(line):
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
         try:
-            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
-            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[1])<0:raise Exception
+            if float(wordset[0])<0:raise Exception
+            if float(wordset[1])<0:raise Exception
         except Exception:
             print("sysinfo→"+msg("Single_Mode_Num_Error"))
             return
@@ -431,8 +431,8 @@ def SPOL_s(line):
                     charawords+=[[i.split(":")[1],i.split(":")[2]]]
                 #对于不合要求的设置抛出异常
             if (charapic[-1][2]!="0" and charapic[-1][2]!="1"):raise Exception
-            if (type(eval(charapic[-1][3]))!=int and type(eval(charapic[-1][3]))!=float) or eval(charapic[-1][3])<0:raise Exception
-            if (type(eval(charapic[-1][4]))!=int and type(eval(charapic[-1][4]))!=float) or eval(charapic[-1][4])<0:raise Exception
+            if float(charapic[-1][3])<0:raise Exception
+            if float(charapic[-1][4])<0:raise Exception
         except Exception:
             print("sysinfo→"+msg("Single_Mode_Num_Error"))
             return
@@ -519,8 +519,8 @@ def SPOL_s(line):
         if wordset[0]=="":wordset[0]="0.1"
         if wordset[1]=="":wordset[1]="1.5"
         try:
-            if (type(eval(wordset[0]))!=int and type(eval(wordset[0]))!=float) or eval(wordset[0])<0:raise Exception
-            if (type(eval(wordset[1]))!=int and type(eval(wordset[1]))!=float) or eval(wordset[0])<0:raise Exception
+            if float(wordset[0])<0:raise Exception
+            if float(wordset[1])<0:raise Exception
         except Exception:
             print("sysinfo→"+msg("Single_Mode_Num_Error"))
             return
@@ -535,8 +535,8 @@ def SPOL_s(line):
             if textset[1]=="":textset[1]="0.44"
             if textset[2]=="":textset[2]="M"
             if textset[3]=="":textset[3]=" "
-            if type(eval(textset[0]))!=int or eval(textset[0])<0:raise Exception
-            if type(eval(textset[1]))!=int or eval(textset[1])<0:raise Exception
+            if float(textset[0])<0:raise Exception
+            if float(textset[1])<0:raise Exception
             if textset[2] not in "LMR":raise Exception
         except Exception:
             print("sysinfo→"+msg("Single_Mode_Num_Error"))
