@@ -17,9 +17,11 @@ import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
 
+#全文解释模式启动器
 def spawn():
     Open=False
     global warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
+
     while Open==False:
         try:
             print("sysinfo→"+msg("Spawn_Mode_Name_Of_File"))
@@ -62,6 +64,7 @@ def spawn():
             else:
                 print(msg("Spawn_Mode_Get_Title"),Titlesetlst[0])
                 print(msg("Spawn_Mode_Get_Subtitle"),Titlesetlst[1])
+
             break
 
 
@@ -127,6 +130,7 @@ def spawn():
     print("sysinfo→"+msg("Spawn_Mode_End"))
     input()
 
+#单行解释模式启动器
 def singletext():
     while True:
         print("sysinfo→"+msg("Single_Mode_Input_Version"))
@@ -154,7 +158,8 @@ def singletext():
             break
         else:
             print("sysinfo→"+msg("Single_Mode_Version_Error").format(linestandard))
-      
+
+#语言修改   
 def langinput():
     print("sysinfo→"+msg("Lang_Input_Msg"))
     while True:
@@ -170,15 +175,17 @@ def langinput():
             else :
                 continue
     print("sysinfo→"+msg("Lang_Set_Success").format(usrinput))
-    
+
+#显示程序信息    
 def about():
-    print(msg("About_Info_Version")+" Ver0.5.0_Pre4")
+    print(msg("About_Info_Version")+" Ver0.5.0_Pre5")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
     print(msg("About_Info_Help"))
     print("\n这个版本仅限开发者本人和Ayano_Aishi对测试人员发布。禁止测试人员将本版传播给他人")
 
+#UI启动前屏幕像素判断函数
 def ui():
     global X,Y
     #先判断屏幕大小是否符合
@@ -199,3 +206,16 @@ def ui():
    
     print("Sysinfo→"+msg("Main_Display_Size").format(X,Y))
     return [X,Y]
+
+#空文件清理函数
+def DeleteEmptyMap(num):
+    if num == 0:
+        print("Sysinfo→"+"正在审查是否有损坏的缓存图像")
+    filelst=[]
+    for a,b,filename in os.walk(".\\Visual\\cache\\Chara\\"):
+        for i in filename:
+            filelst+=[".\\Visual\\cache\\Chara\\"+i]
+    for i in filelst:
+        if int(os.path.getsize(i))==0:
+            os.remove(i)
+            print("已经将损坏的缓存图像",i.split("\\")[-1],"删除")

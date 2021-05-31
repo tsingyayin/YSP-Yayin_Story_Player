@@ -55,6 +55,7 @@ class SPAWN(QThread):
      self.cond.wakeAll()
  def run(self):
     global warnline,texterrorline,numseterrorline,formatwarnline,Storyname,nameerrorline
+    
     Open=False
     while Open==False:
         try:       
@@ -105,6 +106,7 @@ class SPAWN(QThread):
                     #self.send_will_wake.emit()
                     #self.pause()
                     self.can_hide_title.emit()
+                    
                     #self.pause()
             break
         
@@ -146,26 +148,31 @@ class SPAWN(QThread):
       print(msg("Warning_Warn_Count").format(len(warnline)))
       for i in warnline:
           print(msg("Warning_Warn_Info").format(i[0],i[1],i[2]))
+      del warnline[:]
       print()
     if texterrorline!=[]:
       print(msg("Warning_Texterror_Count").format(len(texterrorline)))
       for i in texterrorline:
           print(msg("Warning_Texterror_Info").format(i[0],i[1],i[2]))
+      del texterrorline[:]
       print()
     if formatwarnline!=[]:
       print(msg("Warning_Formatwarn_Count").format(len(formatwarnline)))
       for i in formatwarnline:
           print(msg("Warning_Formatwarn_Info").format(i[0],i[1],i[2]))
+      del formatwarnline[:]
       print()
     if numseterrorline!=[]:
       print(msg("Warning_Numseterror_Count").format(len(numseterrorline)))
       for i in numseterrorline:
           print(msg("Warning_Numseterror_Info").format(i[0],i[1],i[2]))
+      del numseterrorline[:]
       print()
     if nameerrorline!=[]:
       print(msg("Warning_Nameerror_Count").format(len(nameerrorline)))
       for i in nameerrorline:
           print(msg("Warning_Nameerror_Info").format(i[0],i[1],i[2]))
+      del nameerrorline[:]
       print()
     print("sysinfo→"+msg("Ui_Mode_End"))
     self.can_reprint_hello.emit(1)
