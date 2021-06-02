@@ -39,9 +39,9 @@ class FlashFuncSlow(QThread):
 
     def run(self):
         self.FlashOPint.emit(0,0)
-        for i in range(0,20):
-            a=round(ma.sin(i*0.157),2)
+        for i in range(0,40):
+            a=round(ma.sin(i*0.0785),2)
             self.FlashOPint.emit(a,1)
-            tm.sleep(0.05)
+            tm.sleep(0.02)
         self.FlashOPint.emit(0,2)
         self.quit()
