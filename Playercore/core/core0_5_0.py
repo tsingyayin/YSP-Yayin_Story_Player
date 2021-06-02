@@ -211,8 +211,8 @@ def SPOL(files,Storyname):
                     charawords+=[[i.split(":")[1],i.split(":")[2]]]
                 #对于不合要求的设置抛出异常
                 if (charapic[-1][2]!="0" and charapic[-1][2]!="1"):raise Exception
-                if int(charapic[-1][3])<0:raise Exception
-                if int(charapic[-1][4])<0:raise Exception
+                if float(charapic[-1][3])<0:raise Exception
+                if float(charapic[-1][4])<0:raise Exception
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue

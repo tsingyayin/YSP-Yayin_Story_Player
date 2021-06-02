@@ -10,6 +10,7 @@ from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
 from PyQt5.QtCore import *
 
+#（不确定这两个RECIVE有没有用）
 class USERCHOOSEBRANCHRECIVE(QObject):
     def __init__(self):
         super(USERCHOOSEBRANCHRECIVE,self).__init__()
@@ -28,6 +29,7 @@ class FILEANDITSNAMERECIVE(QObject):
         Storyname=StorynameIN
         return
 
+#刷新待处理图像名称
 class Current(QObject):
     def __init__(self):
         super(Current,self).__init__()
@@ -37,6 +39,7 @@ class Current(QObject):
         CurrentPicture=pic
         return
 
+#立绘上隐效果
 class AvgCover(QThread):
     def __init__(self):
         super(AvgCover,self).__init__()
@@ -84,9 +87,6 @@ class AvgCover(QThread):
                     self.QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
         self.QIMAGE_N.save(".\\Visual\\cache\\Chara\\"+self.Currentnow+".png","PNG",50)
         print(msg("Effect_Build_Success"),self.Currentnow+".png")
-        if readlinesend==1:
-            unlockwhile=1
-        self.quit()
 
       except Exception:
           print(msg("Effect_Build_Error"),self.Currentnow+".png")
@@ -94,6 +94,11 @@ class AvgCover(QThread):
       else:
           None
 
+      if readlinesend==1:
+          unlockwhile=1
+      self.quit()
+
+#立绘变暗效果
 class AvgDark(QThread):
     def __init__(self):
         super(AvgDark,self).__init__()
@@ -132,9 +137,6 @@ class AvgDark(QThread):
                 self.QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
         self.QIMAGE_N.save(".\\Visual\\cache\\Chara\\"+self.Currentnow+"-Dark.png","PNG",50)
         print(msg("Effect_Build_Success"),self.Currentnow+"-Dark.png")
-        if readlinesend==1:
-            unlockwhile=1
-        self.quit()
 
       except Exception:
           print(msg("Effect_Build_Error"),self.Currentnow+"-Dark.png")
@@ -142,8 +144,117 @@ class AvgDark(QThread):
       else:
           None
 
-      self.wake()
+      if readlinesend==1:
+          unlockwhile=1
+      self.quit()
 
+class BGPFade(QThread):
+    def __init__(self):
+        super(BGPFade,self).__init__()
+
+        self.mutex=QMutex()
+        self.mutex.lock()
+        self.cond=QWaitCondition()
+
+    def pause(self):
+        self.cond.wait(self.mutex)
+
+    def wake(self):
+        self.cond.wakeAll()
+
+    def run(self):
+      global CurrentPicture,readlinesend,unlockwhile
+
+      try:
+        self.Currentnow=CurrentPicture
+        self.Picturename=".\\Visual\\source\\BGP\\"+self.Currentnow+".png"
+        self.Picture=QImage(self.Picturename)
+        X=self.Picture.width()
+        Y=self.Picture.height()
+        self.QIMAGE_N=QImage(X,Y,QImage.Format_ARGB32)
+        for x in range(0,X):
+            for y in range(0,Y):
+                oldcolor=QColor(self.Picture.pixelColor(x,y))
+                r=int(oldcolor.red())
+                g=int(oldcolor.green())
+                b=int(oldcolor.blue())
+                a=oldcolor.alpha()
+
+                rgbMax=max(r,g,b)
+                rgbMin=min(r,g,b)
+                delta=(rgbMax-rgbMin)/255
+                value=(rgbMax+rgbMin)/255
+                L=value/2
+                if L<=0.5 : S=delta/value
+                elif L>0.5 : S=delta/(2-value)
+                if S-1>=1 : alpha=S
+                else : alpha=2
+                alpha=1/alpha-1
+
+                r=int((L*255+(r-L*255)*(1+alpha))*0.75)
+                g=int((L*255+(g-L*255)*(1+alpha))*0.8)
+                b=int((L*255+(b-L*255)*(1+alpha))*0.8)
+                self.QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
+        self.QIMAGE_N.save(".\\Visual\\cache\\BGP\\"+self.Currentnow+"-Fade.png","PNG",50)
+        print(msg("Effect_Build_Success"),self.Currentnow+"-Fade.png")
+
+      except Exception:
+          print(msg("Effect_Build_Error"),self.Currentnow+"-Fade.png")
+          None
+      else:
+          None
+      if readlinesend==1:
+          unlockwhile=1
+      self.quit()
+
+class BGPBAW(QThread):
+    def __init__(self):
+        super(BGPBAW,self).__init__()
+
+        self.mutex=QMutex()
+        self.mutex.lock()
+        self.cond=QWaitCondition()
+
+    def pause(self):
+        self.cond.wait(self.mutex)
+
+    def wake(self):
+        self.cond.wakeAll()
+
+    def run(self):
+      global CurrentPicture,readlinesend,unlockwhile
+
+      try:
+        self.Currentnow=CurrentPicture
+        self.Picturename=".\\Visual\\source\\BGP\\"+self.Currentnow+".png"
+        self.Picture=QImage(self.Picturename)
+        X=self.Picture.width()
+        Y=self.Picture.height()
+        self.QIMAGE_N=QImage(X,Y,QImage.Format_ARGB32)
+        for x in range(0,X):
+            for y in range(0,Y):
+                oldcolor=QColor(self.Picture.pixelColor(x,y))
+                r=int(oldcolor.red())
+                g=int(oldcolor.green())
+                b=int(oldcolor.blue())
+                a=oldcolor.alpha()
+
+                r=g=b=int((r+b+g)/3)
+
+                self.QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
+        self.QIMAGE_N.save(".\\Visual\\cache\\BGP\\"+self.Currentnow+"-BAW.png","PNG",50)
+        print(msg("Effect_Build_Success"),self.Currentnow+"-BAW.png")
+        
+
+      except Exception:
+          print(msg("Effect_Build_Error"),self.Currentnow+"-BAW.png")
+          None
+      else:
+          None
+      if readlinesend==1:
+          unlockwhile=1
+      self.quit()
+#接收目标文件参数
 class LocalInfo(QObject):
     def __init__(self):
         super(LocalInfo,self).__init__()
@@ -154,6 +265,8 @@ class LocalInfo(QObject):
         files=open(storyname,"r")
         Storyname=storyname
 
+
+#备用于线程化的代码
 class NewEffect(QThread):
  def __init__(self):
      super(NewEffect,self).__init__()
@@ -210,11 +323,48 @@ def CNewEffect(self):
             if not 0<=int(bgsetlst[1])<=2:raise Exception
             if not 0<=int(bgsetlst[2])<=3:raise Exception
             if 0>float(bgsetlst[3]):raise Exception
-
         except Exception:
             continue
         else:
             None
+        if bgsetlst[1]=="1":
+                try:
+                    f=open(".\\Visual\\cache\\BGP\\"+bgsetlst[0]+"-Fade.png","r")
+                except IOError:
+                        print(msg("Effect_Info_Found").format(linecount,Storyname.split(r"/")[-1],bgsetlst[0]),".png")
+                        try:
+                            f=open(".\\Visual\\cache\\BGP\\"+bgsetlst[0]+"-Fade.png","w+")
+                            f.close()
+                        except IOError:
+                            print(msg("Effect_Info_Folder_Error"))
+                            return
+                        else:
+                            self.needBgpFade=BGPFade()
+                            CurrentPicture=bgsetlst[0]
+                            self.needBgpFade.start()
+                            threadeffect+=1
+                else:
+                    None
+
+        elif bgsetlst[1]=="2":
+                try:
+                    f=open(".\\Visual\\cache\\BGP\\"+bgsetlst[0]+"-BAW.png","r")
+                except IOError:
+                        print(msg("Effect_Info_Found").format(linecount,Storyname.split(r"/")[-1],bgsetlst[0]),".png")
+                        try:
+                            f=open(".\\Visual\\cache\\BGP\\"+bgsetlst[0]+"-BAW.png","w+")
+                            f.close()
+                        except IOError:
+                            print(msg("Effect_Info_Folder_Error"))
+                            return
+                        else:
+                            self.needBgpBAW=BGPBAW()
+                            CurrentPicture=bgsetlst[0]
+                            self.needBgpBAW.start()
+                            threadeffect+=1
+                else:
+                    None
+        
         
             #音频控制器无图形处理，直接略过
 
