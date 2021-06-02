@@ -24,8 +24,17 @@ Chara_Pic_Setting_Info_R:{}翻轉立繪{}(淡入{}秒淡出{}秒)
 Command_Error:不能將文本“{}”識別為任何現有指令。
 Choose_File:打開劇情檔
 
+Effect_Build_Success:成功建立檔
+Effect_Build_Error:未能建立檔
+Effect_Info_Searching:正在查找需要處理的資源
+Effect_Info_Found:行 {} 在檔 {} 中需要建立 {}
+Effect_Info_Folder_Error:檔目錄可能缺失，無法在正確位置創建檔
+Effect_Info_Searched:查找檔 {} 結束
+
 First_Print_Load_Lang_End:語言檔加載結束，耗時{}毫秒
 First_Print:AASP命令提示符(偽)模式,用help查詢現有命令。
+
+File_Searching_Wrong:正在檢查緩存檔夾是否有損壞的檔
 
 Freedom_Text_Mode_L:左對齊
 Freedom_Text_Mode_M:中對齊

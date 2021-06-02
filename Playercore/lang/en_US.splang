@@ -24,8 +24,17 @@ Chara_Pic_Setting_Info_R:{} Reverse illustration {}(fade in {}Sec & fade out {}S
 Command_Error:Cannot identify your text¡°{}¡±as any current command.
 Choose_File:Open the story file
 
+Effect_Build_Success:Successfully build
+Effect_Build_Error:Cannot build
+Effect_Info_Searching:Now Searching for resources need to be build
+Effect_Info_Found:line {} in file  {} need {}
+Effect_Info_Folder_Error:Cannot build file in folder,maybe it has been missed
+Effect_Info_Searched: {} Searched
+
 First_Print_Load_Lang_End:Language loaded , using {} ms
 First_Print:AASP Command-like mode,enter help to consult current command.
+
+File_Searching_Wrong:Now Checking for whether there are corrupt files in cache folder
 
 Freedom_Text_Mode_L:Left align
 Freedom_Text_Mode_M:Mid align
