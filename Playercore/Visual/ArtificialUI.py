@@ -127,12 +127,12 @@ class UiMainWindow(QWidget):
         
 
         #姓名和讲述内容文本框、自由文本文本框的样式定义
-        self.Name_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize30+";}")
+        self.Name_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize30+";font-family:'SimHei'}")
         self.Name_Label.setAlignment(Qt.AlignRight)
-        self.Word_Label.setStyleSheet("QLabel{color:#AAAAAA;font-size:"+self.Fontsize30+";}")
+        self.Word_Label.setStyleSheet("QLabel{color:#AAAAAA;font-size:"+self.Fontsize30+";font-family:'SimHei'}")
         self.Word_Label.setAlignment(Qt.AlignLeft)
 
-        self.Free_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize30+";}")
+        self.Free_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize30+";font-family:'SimHei'}")
         self.Free_Label.setAlignment(Qt.AlignCenter)
 
         self.OPFree_Label=QGraphicsOpacityEffect()
@@ -250,21 +250,21 @@ class UiMainWindow(QWidget):
         #Branchbutton{
         color:#FFFFFF;
         font-size:25px;
-        font-family:'Microsoft YaHei';
+        font-family:'SimHei';
         background-color:rgba(0,0,0,0);
         background-image:url('./Visual/source/BaseUI/Button/BranchButton_N.png');
         }
         #Branchbutton:hover{
         color:#FFFFFF;
         font-size:25px;
-        font-family:'Microsoft YaHei';
+        font-family:'SimHei';
         background-color:rgba(0,0,0,0);
         background-image:url('./Visual/source/BaseUI/Button/BranchButton_P.png');
         }
         #Branchbutton:Pressed{
         color:#FFFFFF;
         font-size:25px;
-        font-family:'Microsoft YaHei';
+        font-family:'SimHei';
         background-color:rgba(0,0,0,0);
         background-image:url('./Visual/source/BaseUI/Button/BranchButton_C.png');
         }
@@ -935,9 +935,18 @@ class MainWindow(UiMainWindow):
             self.BGR=QImage(self.X,self.Y,QImage.Format_ARGB32)
             self.BGR.fill(QColor(0,0,0,255))
         else:
-            self.BGR=QImage()
-            self.BGR.load("./Visual/source/BGP/"+bgsetlst[0]+".png")
-            self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+            if bgsetlst[1]=="0":
+                self.BGR=QImage()
+                self.BGR.load("./Visual/source/BGP/"+bgsetlst[0]+".png")
+                self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+            elif bgsetlst[1]=="1":
+                self.BGR=QImage()
+                self.BGR.load("./Visual/cache/BGP/"+bgsetlst[0]+"-Fade.png")
+                self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+            elif bgsetlst[1]=="2":
+                self.BGR=QImage()
+                self.BGR.load("./Visual/cache/BGP/"+bgsetlst[0]+"-BAW.png")
+                self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
 
         #背景控制器-屏幕刷新函数
     def UpdateBG(self,i,bgsetlst):
