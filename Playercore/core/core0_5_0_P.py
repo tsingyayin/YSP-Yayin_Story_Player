@@ -9,7 +9,7 @@ import sys
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
 from PyQt5.QtCore import *
-
+import traceback
 #（不确定这两个RECIVE有没有用）
 class USERCHOOSEBRANCHRECIVE(QObject):
     def __init__(self):
@@ -186,7 +186,10 @@ class BGPFade(QThread):
                 value=(rgbMax+rgbMin)/255
                 L=value/2
                 if L<=0.5 : S=delta/value
-                elif L>0.5 : S=delta/(2-value)
+                elif L>0.5 : 
+                    if 2-value!=0:
+                        S=delta/(2-value)
+                    else:S=delta/0.00001
                 if S-1>=1 : alpha=S
                 else : alpha=2
                 alpha=1/alpha-1
