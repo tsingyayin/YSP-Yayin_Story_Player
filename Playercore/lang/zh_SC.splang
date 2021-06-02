@@ -35,6 +35,7 @@ First_Print_Load_Lang_End:语言文件加载结束，耗时{}毫秒
 First_Print:AASP命令提示符(伪)模式,用help查询现有命令。
 
 File_Searching_Wrong:正在检查缓存文件夹是否有损坏的文件
+File_Info_Deleted:已经删除了损坏的文件
 
 Freedom_Text_Mode_L:左对齐
 Freedom_Text_Mode_M:中对齐

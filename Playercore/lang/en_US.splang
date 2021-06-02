@@ -35,6 +35,7 @@ First_Print_Load_Lang_End:Language loaded , using {} ms
 First_Print:AASP Command-like mode,enter help to consult current command.
 
 File_Searching_Wrong:Now Checking for whether there are corrupt files in cache folder
+File_Info_Deleted:Deleted corrupt file 
 
 Freedom_Text_Mode_L:Left align
 Freedom_Text_Mode_M:Mid align
