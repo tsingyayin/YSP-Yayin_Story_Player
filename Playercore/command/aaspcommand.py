@@ -178,7 +178,7 @@ def langinput():
 
 #显示程序信息    
 def about():
-    print(msg("About_Info_Version")+" Ver0.5.0_Pre5")
+    print(msg("About_Info_Version")+" Ver0.5.0_Pre_Texas")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
@@ -210,7 +210,7 @@ def ui():
 #空文件清理函数
 def DeleteEmptyMap(num):
     if num == 0:
-        print("Sysinfo→"+"正在审查是否有损坏的缓存图像")
+        print("Sysinfo→"+msg("File_Searching_Wrong"))
     filelst=[]
     for a,b,filename in os.walk(".\\Visual\\cache\\Chara\\"):
         for i in filename:
