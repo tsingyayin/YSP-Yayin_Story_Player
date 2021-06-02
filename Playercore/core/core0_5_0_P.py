@@ -52,7 +52,7 @@ class AvgCover(QThread):
         self.cond.wakeAll()
 
     def run(self):
-      global CurrentPicture
+      global CurrentPicture,readlinesend,unlockwhile
 
       try:
         self.Currentnow=CurrentPicture
@@ -83,13 +83,17 @@ class AvgCover(QThread):
                     a=oldcolor.alpha()
                     self.QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
         self.QIMAGE_N.save(".\\Visual\\cache\\Chara\\"+self.Currentnow+".png","PNG",50)
-        print("成功建立"+self.Currentnow+".png")
-        
+        print(msg("Effect_Build_Success"),self.Currentnow+".png")
+        if readlinesend==1:
+            unlockwhile=1
+        self.quit()
+
       except Exception:
-          print("未能建立"+self.Currentnow+".png")
+          print(msg("Effect_Build_Error"),self.Currentnow+".png")
           None
       else:
           None
+
 class AvgDark(QThread):
     def __init__(self):
         super(AvgDark,self).__init__()
@@ -105,7 +109,7 @@ class AvgDark(QThread):
         self.cond.wakeAll()
 
     def run(self):
-      global CurrentPicture
+      global CurrentPicture,readlinesend,unlockwhile
 
       try:
         self.Currentnow=CurrentPicture
@@ -127,10 +131,13 @@ class AvgDark(QThread):
                 #print(a)
                 self.QIMAGE_N.setPixel(x,y,qRgba(r,g,b,a))
         self.QIMAGE_N.save(".\\Visual\\cache\\Chara\\"+self.Currentnow+"-Dark.png","PNG",50)
-        print("成功建立"+self.Currentnow+"-Dark.png")
-        
+        print(msg("Effect_Build_Success"),self.Currentnow+"-Dark.png")
+        if readlinesend==1:
+            unlockwhile=1
+        self.quit()
+
       except Exception:
-          print("未能建立"+self.Currentnow+"-Dark.png")
+          print(msg("Effect_Build_Error"),self.Currentnow+"-Dark.png")
           None
       else:
           None
@@ -152,9 +159,12 @@ class NewEffect(QThread):
      super(NewEffect,self).__init__()
 
 def CNewEffect(self):
-  global CurrentPicture,files,Storyname
+  global CurrentPicture,files,Storyname,readlinesend,unlockwhile
+  unlockwhile=0
+  readlinesend=0
+  threadeffect=0
     #跨行注释状态确认
-  print("正在查找需要处理的资源")
+  print(msg("Effect_Info_Searching"))
   textend=0
     #行计数
   linecount=0
@@ -257,17 +267,18 @@ def CNewEffect(self):
                     f=open(".\\Visual\\cache\\Chara\\"+i[0]+"_"+i[1]+".png","r")
                 except IOError:
                     if i[0]!="":
-                        print("行",linecount,"在",Storyname.split(r"/")[-1],"中需要建立"+i[0]+"_"+i[1]+".png")
+                        print(msg("Effect_Info_Found").format(linecount,Storyname.split(r"/")[-1],i[0]+"_"+i[1]),".png")
                         try:
                             f=open(".\\Visual\\cache\\Chara\\"+i[0]+"_"+i[1]+".png","w+")
                             f.close()
                         except IOError:
-                            print(r"文件目录可能缺失，无法在Visual\cache\Chara下创建文件")
+                            print(msg("Effect_Info_Folder_Error"))
                             return
                         else:
                             self.needcover=AvgCover()
                             CurrentPicture=i[0]+"_"+i[1]
                             self.needcover.start()
+                            threadeffect+=1
                 else:
                     None
         #判定立绘明暗状态
@@ -279,17 +290,18 @@ def CNewEffect(self):
                     f=open(".\\Visual\\cache\\Chara\\"+charapic[1][0]+"_"+charapic[1][1]+"-Dark.png","r")
                 except IOError:
                     if charapic[1][0]!="":
-                        print("行",linecount,"在",Storyname.split(r"/")[-1],"中需要建立"+charapic[1][0]+"_"+charapic[1][1]+"-Dark.png")
+                        print(msg("Effect_Info_Found").format(linecount,Storyname.split(r"/")[-1],i[0]+"_"+i[1]),"-Dark.png")
                         try:
                             f=open(".\\Visual\\cache\\Chara\\"+charapic[1][0]+"_"+charapic[1][1]+"-Dark.png","w+")
                             f.close()
                         except IOError:
-                            print(r"文件目录可能缺失，无法在Visual\cache\Chara下创建文件")
+                            print(msg("Effect_Info_Folder_Error"))
                             return
                         else:
                             self.needdark=AvgDark()
                             CurrentPicture=charapic[1][0]+"_"+charapic[1][1]
                             self.needdark.start()
+                            threadeffect+=1
                 else:
                     None
 
@@ -298,17 +310,18 @@ def CNewEffect(self):
                     f=open(".\\Visual\\cache\\Chara\\"+charapic[0][0]+"_"+charapic[0][1]+"-Dark.png","r")
                 except IOError:
                     if charapic[1][0]!="":
-                        print("行",linecount,"在",Storyname.split(r"/")[-1],"中需要建立"+charapic[0][0]+"_"+charapic[0][1]+"-Dark.png")
+                        print(msg("Effect_Info_Found").format(linecount,Storyname.split(r"/")[-1],i[0]+"_"+i[1]),"-Dark.png")
                         try:
                             f=open(".\\Visual\\cache\\Chara\\"+charapic[0][0]+"_"+charapic[0][1]+"-Dark.png","w+")
                             f.close()
                         except IOError:
-                            print(r"文件目录可能缺失，无法在Visual\cache\Chara下创建文件")
+                            print(msg("Effect_Info_Folder_Error"))
                             return
                         else:
                             self.needdark=AvgDark()
                             CurrentPicture=charapic[0][0]+"_"+charapic[0][1]
                             self.needdark.start()
+                            threadeffect+=1
                 else:
                     None
     
@@ -316,5 +329,9 @@ def CNewEffect(self):
     #把未能按类型识别的内容放入警告传递列表
     else :     
         None
-  
-  print("遍历文件"+Storyname.split(r"/")[-1]+"结束")
+  readlinesend=1
+  while True:
+      if unlockwhile==1 or threadeffect == 0:
+          break
+      tm.sleep(0.5)
+  print(msg("Effect_Info_Searched").format(Storyname.split(r"/")[-1]))
