@@ -178,7 +178,7 @@ def langinput():
 
 #显示程序信息    
 def about():
-    print(msg("About_Info_Version")+" Ver0.5.0_Pre_Texas")
+    print(msg("About_Info_Version")+" Ver0.5.0.0_Pre7")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
@@ -215,7 +215,10 @@ def DeleteEmptyMap(num):
     for a,b,filename in os.walk(".\\Visual\\cache\\Chara\\"):
         for i in filename:
             filelst+=[".\\Visual\\cache\\Chara\\"+i]
+    for a,b,filename in os.walk(".\\Visual\\cache\\BGP\\"):
+        for i in filename:
+            filelst+=[".\\Visual\\cache\\BGP\\"+i]
     for i in filelst:
         if int(os.path.getsize(i))==0:
             os.remove(i)
-            print("已经将损坏的缓存图像",i.split("\\")[-1],"删除")
+            print(msg("File_Info_Deleted"),i.split("\\")[-1])
