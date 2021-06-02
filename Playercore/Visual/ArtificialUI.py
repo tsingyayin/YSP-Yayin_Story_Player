@@ -62,6 +62,8 @@ class UiMainWindow(QWidget):
         self.UserChooseBranchRecive=USERCHOOSEBRANCHRECIVE()
         self.PLAYSound=PlaySound()
         self.ShakeFUNC=ShakeFunc()
+        self.FlashFUNCFast=FlashFuncFast()
+        self.FlashFUNCSlow=FlashFuncSlow()
         self.StopUnlock=LastContinue()
         self.WillStop=WillStop()
 
@@ -76,8 +78,7 @@ class UiMainWindow(QWidget):
         self.Fontsize60=str(int(self.Y*0.055555))+"px"
         self.Fontsize30=str(int(self.Y*0.027777))+"px"
 
-        #引入操作
-        self.FUNC=Function()
+
         
         #音频交替计数
         self.music_thread=0
@@ -94,6 +95,7 @@ class UiMainWindow(QWidget):
 
         self.BG1=QLabel(self)#交替第一背景
         self.BG2=QLabel(self)#交替第二背景
+        self.WhiteFlash=QLabel(self)#白色闪烁特效层
 
         self.Logo=QLabel(self)#派别Logo
 
@@ -175,6 +177,15 @@ class UiMainWindow(QWidget):
         self.BG1.setGeometry(QRect(0,0,self.X,self.Y))
         self.BG2.setGeometry(QRect(0,0,self.X,self.Y))
 
+        #白色闪屏定义
+        self.WhiteFlashPixmap=QImage(self.X,self.Y,QImage.Format_ARGB32)
+        self.WhiteFlashPixmap.fill(QColor(255,255,255,255))
+        self.WhiteFlash.setPixmap(QPixmap(self.WhiteFlashPixmap))
+
+        self.OPWhiteFlash=QGraphicsOpacityEffect()
+        self.OPWhiteFlash.setOpacity(0)
+        self.WhiteFlash.setGraphicsEffect(self.OPWhiteFlash)
+        
         #播放控制按钮
         self.AutoButton=QPushButton(self)
         self.AutoButton.setObjectName("AutoButton")
@@ -301,6 +312,7 @@ class UiMainWindow(QWidget):
         self.AVG_L.raise_()
         self.AVG_M.raise_()
         self.AVG_R.raise_()
+        self.WhiteFlash.raise_()
         self.Frame.raise_()
         self.Free_Label.raise_()
         self.BranchButton_1.raise_()
@@ -385,6 +397,7 @@ class PlayBgm(QThread):
             self.play.setVolume(i)
             tm.sleep(0.01)
         self.play.pause()
+        self.quit()
 
         #音效播放线程
 class PlaySound(QThread):
@@ -400,11 +413,13 @@ class PlaySound(QThread):
         self.play.setVolume(self.volumeself)
         self.play.play()
 
+
     def fade(self):
         for i in range(self.volumeself,0,-1):
             self.play.setVolume(i)
             tm.sleep(0.01)
         self.play.pause()
+        self.quit()
 
         #主窗口功能定义
 class MainWindow(UiMainWindow):
@@ -663,6 +678,7 @@ class MainWindow(UiMainWindow):
         self.AVG_L.raise_()
         self.AVG_M.raise_()
         self.AVG_R.raise_()
+        self.WhiteFlash.raise_()
         self.Frame.raise_()
         self.BranchButton_1.raise_()
         self.BranchButton_2.raise_()
@@ -717,6 +733,7 @@ class MainWindow(UiMainWindow):
         self.AVG_L.raise_()
         self.AVG_M.raise_()
         self.AVG_R.raise_()
+        self.WhiteFlash.raise_()
         self.Frame.raise_()
         self.Name_Label.raise_()
         self.Word_Label.raise_()
@@ -819,8 +836,16 @@ class MainWindow(UiMainWindow):
             #初始化音频播放
             if self.music_thread==1:
                 self.playsound2.fade()
+                self.playsound2.wait()
+                del self.playsound2
             elif self.music_thread==2:
                 self.playsound1.fade()
+                self.playsound1.wait()
+                del self.playsound1
+
+            self.Interpreter.wait()
+            del self.Interpreter
+
             self.music_thread=0
 
             self.OPAutoButton=QGraphicsOpacityEffect()
@@ -836,6 +861,7 @@ class MainWindow(UiMainWindow):
             self.AVG_L.raise_()
             self.AVG_M.raise_()
             self.AVG_R.raise_()
+            self.WhiteFlash.raise_()
             self.Frame.raise_()
             self.BranchButton_1.raise_()
             self.BranchButton_2.raise_()
@@ -923,6 +949,7 @@ class MainWindow(UiMainWindow):
                 self.AVG_L.raise_()
                 self.AVG_M.raise_()
                 self.AVG_R.raise_()
+                self.WhiteFlash.raise_()
                 self.Frame.raise_()
                 self.Name_Label.raise_()
                 self.Word_Label.raise_()
@@ -943,8 +970,19 @@ class MainWindow(UiMainWindow):
                 self.BG2.setPixmap(QPixmap(""))
                 tm.sleep(0.1)
                 if bgsetlst[2]=="1":
+                    self.ShakeFUNC=ShakeFunc()
                     self.ShakeFUNC.shakeXY.connect(self.ShakeRect)
                     self.ShakeFUNC.start()
+                elif bgsetlst[2]=="2":
+                    self.effectuse=2
+                    self.FlashFUNCFast=FlashFuncFast()
+                    self.FlashFUNCFast.FlashOPint.connect(self.Flashwhite)
+                    self.FlashFUNCFast.start()
+                elif bgsetlst[2]=="3":
+                    self.effectuse=3
+                    self.FlashFUNCSlow=FlashFuncSlow()
+                    self.FlashFUNCSlow.FlashOPint.connect(self.Flashwhite)
+                    self.FlashFUNCSlow.start()
                 elif bgsetlst[2]=="0":
                     self.Interpreter.wake()
 
@@ -956,6 +994,7 @@ class MainWindow(UiMainWindow):
                 self.AVG_L.raise_()
                 self.AVG_M.raise_()
                 self.AVG_R.raise_()
+                self.WhiteFlash.raise_()
                 self.Frame.raise_()
                 self.Name_Label.raise_()
                 self.Word_Label.raise_()
@@ -976,12 +1015,23 @@ class MainWindow(UiMainWindow):
                 self.BG1.setPixmap(QPixmap(""))
                 tm.sleep(0.1)
                 if bgsetlst[2]=="1":
+                    self.ShakeFUNC=ShakeFunc()
                     self.ShakeFUNC.shakeXY.connect(self.ShakeRect)
                     self.ShakeFUNC.start()
+                elif bgsetlst[2]=="2":
+                    self.effectuse=2
+                    self.FlashFUNCFast=FlashFuncFast()
+                    self.FlashFUNCFast.FlashOPint.connect(self.Flashwhite)
+                    self.FlashFUNCFast.start()
+                elif bgsetlst[2]=="3":
+                    self.effectuse=3
+                    self.FlashFUNCSlow=FlashFuncSlow()
+                    self.FlashFUNCSlow.FlashOPint.connect(self.Flashwhite)
+                    self.FlashFUNCSlow.start()
                 elif bgsetlst[2]=="0":
                     self.Interpreter.wake()
                     
-        #背景晃动处理
+        #背景晃动刷新函数
     def ShakeRect(self,sX,sY,end):
         if self.changeBG==2:
             self.BG1.setGeometry(QRect(int((self.Y/1080)*sX),int((self.Y/1080)*sY),self.X,self.Y))
@@ -990,6 +1040,37 @@ class MainWindow(UiMainWindow):
             self.BG2.setGeometry(QRect(int((self.Y/1080)*sX),int((self.Y/1080)*sY),self.X,self.Y))
             self.BG2.repaint()
         if end==1:
+            self.ShakeFUNC.wait()
+            del self.ShakeFUNC
+            self.Interpreter.wake()
+
+        #闪烁特效刷新函数
+    def Flashwhite(self,i,end):
+        if end == 0:
+            self.OPWhiteFlash=QGraphicsOpacityEffect()
+            self.OPWhiteFlash.setOpacity(0)
+            self.WhiteFlash.setGraphicsEffect(self.OPWhiteFlash)
+            self.WhiteFlash.repaint()
+        elif end==1:
+            self.OPWhiteFlash=QGraphicsOpacityEffect()
+            self.OPWhiteFlash.setOpacity(i)
+            self.WhiteFlash.setGraphicsEffect(self.OPWhiteFlash)
+            self.WhiteFlash.repaint()
+        elif end == 2:
+            self.OPWhiteFlash=QGraphicsOpacityEffect()
+            self.OPWhiteFlash.setOpacity(0)
+            self.WhiteFlash.setGraphicsEffect(self.OPWhiteFlash)
+            self.WhiteFlash.repaint()
+
+            if self.effectuse==2:
+                self.FlashFUNCFast.wait()
+                del self.FlashFUNCFast
+                self.effectuse=0
+            elif self.effectuse==3:
+                self.FlashFUNCSlow.wait()
+                del self.FlashFUNCSlow
+                self.effectuse=0
+
             self.Interpreter.wake()
 
         #音乐控制器-音频启动函数
@@ -1003,11 +1084,15 @@ class MainWindow(UiMainWindow):
             self.music_thread=2
         elif self.music_thread==1:
             self.playsound2.fade()
+            self.playsound2.wait()
+            del self.playsound2
             self.playsound1=PlayBgm()
             self.playsound1.start()
             self.music_thread=2
         elif self.music_thread==2:
             self.playsound1.fade()
+            self.playsound1.wait()
+            del self.playsound1
             self.playsound2=PlayBgm()
             self.playsound2.start()
             self.music_thread=1
@@ -1016,7 +1101,6 @@ class MainWindow(UiMainWindow):
     def Playsound(self,filename,volume):
         global glo_file,glo_volume
         glo_file=".\\Visual\\source\\Sound\\"+filename+".mp3"
-        print(filename)
         glo_volume=volume
         self.playsound=PlaySound()
         self.playsound.start()
