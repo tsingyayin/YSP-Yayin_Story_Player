@@ -64,6 +64,6 @@ def msg(msginfo):
     try:
         return msglist[msginfo]
     except Exception:
-        return "UNKNOWN_MSG"
+        return "UNKNOWN_MSG:"+msginfo
     else:
         None
