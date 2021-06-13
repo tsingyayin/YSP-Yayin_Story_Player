@@ -9,13 +9,26 @@ from PyQt5.QtGui import *
 import sys
 from Visual.ArtificialUI import *
 
-import  core.core0_4_1 as core0_4_1
-import core.core0_5_0_U as core0_5_0_U
-import core.core0_5_0_P as core0_5_0_P
-import core.core0_5_0 as core0_5_0
+import core.core0_6_0_U as core0_6_0_U
+import core.core0_6_0_P as core0_6_0_P
+import core.core0_6_0 as core0_6_0
+
 import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
+
+#帮助
+def aasphelp():
+    print("about"+"\t"+msg("Help_In_Main_Page_about_"))
+    print("clear"+"\t"+msg("Help_In_Main_Page_clear"))
+    print("clrall"+"\t"+msg("Help_In_Main_Page_clearall"))
+    print("exit"+"\t"+msg("Help_In_Main_Page_exit"))
+    print("help"+"\t"+msg("Help_In_Main_Page_help"))
+    print("line"+"\t"+msg("Help_In_Main_Page_line"))
+    print("lang"+"\t"+msg("Help_In_Main_Page_lang"))
+    print("spawn"+"\t"+msg("Help_In_Main_Page_spawn"))
+    print("tospol"+"\t"+msg("Help_In_Main_Page_tospol"))
+    print("ui"+"\t"+msg("Help_In_Main_Page_ui"))
 
 #全文解释模式启动器
 def spawn():
@@ -29,7 +42,7 @@ def spawn():
             if Storyname=="exit":
                 return
             else:
-                files=open("story\\"+Storyname,"r")
+                files=open("story\\"+Storyname,"r",encoding="UTF-8")
         except IOError:
             print("sysinfo→"+msg("Spawn_Mode_Not_Found").format(Storyname))
         else:
@@ -69,39 +82,28 @@ def spawn():
 
 
 #重新打开文件，从头开始处理
-    files=open("story\\"+Storyname,"r")
+    files=open("story\\"+Storyname,"r",encoding="UTF-8")
 
-    if Ver=="SPOL0.5.0":                                                         #遵循SPOL0.5.0标准的读取
+    if Ver=="SPOL0.6.0":                                                         #遵循SPOL0.6.0标准的读取
         run=1
         while run!=0:
-            run=core0_5_0.SPOL(files,Storyname)
+            run=core0_6_0.SPOL(files,Storyname)
             files.close()
             try:
-                files=open("story\\"+run+".spol","r")
+                files=open("story\\"+run+".spol","r",encoding="UTF-8")
                 Storyname=run+".spol"
             except Exception:
                 run=0
             else:
                 None
 
-    elif Ver=="SPOL0.4.1":                                                         #遵循SPOL0.4.1标准的读取
-        run=1
-        while run!=0:
-            run=core0_4_1.SPOL(files,Storyname)
-            files.close()
-            try:
-                files=open("story\\"+run+".spol","r")
-                Storyname=run+".spol"
-            except Exception:
-                run=0
-            else:
-                None
-
+    
 
     else:
         print(msg("Spawn_Mode_Version_Error").format(Ver))
         
       #错误警示
+    print("#####################")
     if warnline!=[]:
       print(msg("Warning_Warn_Count").format(len(warnline)))
       for i in warnline:
@@ -129,6 +131,7 @@ def spawn():
       print()
     print("sysinfo→"+msg("Spawn_Mode_End"))
     input()
+    print("#####################")
 
 #单行解释模式启动器
 def singletext():
@@ -136,23 +139,16 @@ def singletext():
         print("sysinfo→"+msg("Single_Mode_Input_Version"))
         linestandard=input(r"Userinput\line→")
         if linestandard=="help":
-            print(msg("Single_Mode_Version_List")+"\n"+"0.4.1"+"\n"+"0.5.0")
+            print(msg("Single_Mode_Version_List")+"\n"+"0.6.0")
 
-        elif linestandard=="0.5.0":
+        elif linestandard=="0.6.0":
             while True:
-                Usrtextipt=input(r"Userinput\line\SPOL0.5.0→")
+                Usrtextipt=input(r"Userinput\line\SPOL0.6.0→")
                 if Usrtextipt=="exit":
                     break
                 else:
-                    core0_5_0.SPOL_s(Usrtextipt+"\n")
+                    core0_6_0.SPOL_s(Usrtextipt+"\n")
 
-        elif linestandard=="0.4.1":
-            while True:
-                Usrtextipt=input(r"Userinput\line\SPOL0.4.1→")
-                if Usrtextipt=="exit":
-                    break
-                else:
-                    core0_4_1.SPOL_s(Usrtextipt+"\n")
 
         elif linestandard=="exit":
             break
@@ -178,12 +174,12 @@ def langinput():
 
 #显示程序信息    
 def about():
-    print(msg("About_Info_Version")+" Ver0.5.0.0_Pre7")
+    print(msg("About_Info_Version")+" Ver0.6.0.0_Pre2")
     print(msg("About_Info_Developers"))
     print(msg("About_Info_Environment"))
     print(msg("About_Info_Support"))
     print(msg("About_Info_Help"))
-    print("\n这个版本仅限开发者本人和Ayano_Aishi对测试人员发布。禁止测试人员将本版传播给他人")
+    print("\n这个版本仅限测试组内使用，不得传播给他人。")
 
 #UI启动前屏幕像素判断函数
 def ui():
@@ -194,23 +190,23 @@ def ui():
             super(Monitor,self).__init__()
 
         def run(self):
-            global X,Y
+            global X,Y,monitornum
             self.desktop=QDesktopWidget()
             self.current_monitor=self.desktop.screenNumber(self)
             self.Display=self.desktop.screenGeometry(self.current_monitor)
             X=self.Display.width()
             Y=self.Display.height()
+            monitornum=self.current_monitor
 
     monitor=Monitor()
     monitor.run()
-   
+    del monitor
     print("Sysinfo→"+msg("Main_Display_Size").format(X,Y))
     return [X,Y]
 
 #空文件清理函数
 def DeleteEmptyMap(num):
-    if num == 0:
-        print("Sysinfo→"+msg("File_Searching_Wrong"))
+    print("Sysinfo→"+msg("File_Searching_Wrong"))
     filelst=[]
     for a,b,filename in os.walk(".\\Visual\\cache\\Chara\\"):
         for i in filename:
@@ -222,3 +218,47 @@ def DeleteEmptyMap(num):
         if int(os.path.getsize(i))==0:
             os.remove(i)
             print(msg("File_Info_Deleted"),i.split("\\")[-1])
+    print("Sysinfo→"+msg("File_Searching_Wrong_End"))
+
+#清理全部缓存
+def DeleteAllCache(num):
+    print("Sysinfo→"+msg("File_Delete_Cache"))
+    filelst=[]
+    for a,b,filename in os.walk(".\\Visual\\cache\\Chara\\"):
+        for i in filename:
+            filelst+=[".\\Visual\\cache\\Chara\\"+i]
+    for a,b,filename in os.walk(".\\Visual\\cache\\BGP\\"):
+        for i in filename:
+            filelst+=[".\\Visual\\cache\\BGP\\"+i]
+    for i in filelst:
+        os.remove(i)
+    print("Sysinfo→"+msg("File_Cache_Deleted"))
+
+#文件系统保全函数
+def ensuredirs(num):
+    print("sysinfo→Checking the files in the directory")
+    dirslst=[".\\CrashReport",".\\text",".\\story",".\\lang",".\\Visual\\cache\\BGP",".\\Visual\\cache\\Chara"]
+    for i in dirslst:
+        if not os.path.exists(i):
+            print("sysinfo→Directory '"+i+"' missed.Now rebuilding...")
+            os.makedirs(i)
+    print("sysinfo→Checked")
+
+#Splash标语
+splashlst=[]
+def splashes():
+    global splashlst
+    splashlst=[]
+    try:
+        splashfile=open(".\\text\\splashes.txt","r",encoding="UTF-8")
+    except IOError:
+        splashlst+=["您有没有注意到您的标语文件丢失了？"]
+    else:
+        splashlst+=splashfile.readlines()
+        splashfile.close
+    if splashlst==[]:
+        splashlst+=["您有没有注意到您的标语文件里面啥也没写？"]
+    return splashlst
+    #for i in splashlst:
+        #print(i[:-1])
+        

@@ -1,7 +1,6 @@
 #这个文件用来启动UI版对应核心。
-import core.core0_4_1_R as core0_4_1_R
-import core.core0_5_0_U as core0_5_0_U
-import core.core0_5_0_P as core0_5_0_P
+import core.core0_6_0_U as core0_6_0_U
+import core.core0_6_0_P as core0_6_0_P
 
 import time as tm
 from langcontrol import *
@@ -31,6 +30,7 @@ class SPAWN(QThread):
 
  can_show_title=pyqtSignal(list)
  can_hide_title=pyqtSignal()
+ can_prepare_play=pyqtSignal()
 
  need_to_choose=pyqtSignal(list)
 
@@ -50,16 +50,16 @@ class SPAWN(QThread):
      self.cond=QWaitCondition()
  def pause(self):
      self.cond.wait(self.mutex)
-
  def wake(self):
      self.cond.wakeAll()
+
  def run(self):
     global warnline,texterrorline,numseterrorline,formatwarnline,Storyname,nameerrorline
     
     Open=False
     while Open==False:
         try:       
-            files=open(Storyname,"r")
+            files=open(Storyname,"r",encoding="UTF-8")
         except IOError:
             print("sysinfo→"+msg("Spawn_Mode_Not_Found").format(Storyname))
             return
@@ -93,45 +93,44 @@ class SPAWN(QThread):
                 numseterrorline+=[[linecount,Storyname,line[:-1]]]
                 Ver="TitleERROR"
             else:
-                if Ver=="SPOL0.5.0":  
+                if Ver=="SPOL0.6.0":  
                     self.can_show_title.emit(Titlesetlst)
                     tm.sleep(2)
-                    self.giveinfo=core0_5_0_P.LocalInfo()
+                    self.giveinfo=core0_6_0_P.LocalInfo()
                     self.send_file_info.connect(self.giveinfo.get)
                     self.send_file_info.emit(Storyname)
-                    finding=core0_5_0_P.CNewEffect(self)
+                    finding1=core0_6_0_P.CNewEffect()
                     tm.sleep(1)
-                    #self.willwake=core0_5_0_P.WillWake()
-                    #self.send_will_wake.connect(self.willwake.get)
-                    #self.send_will_wake.emit()
-                    #self.pause()
                     self.can_hide_title.emit()
-                    
-                    #self.pause()
+                    finding2=core0_6_0_P.CNewDark()
+                    tm.sleep(1)  
+                    print(msg("Effect_Info_Searched").format(Storyname.split(r"/")[-1]))
+                    self.can_prepare_play.emit()
             break
         
 #重新打开文件，从头开始处理
-    files=open(Storyname,"r")
+    files=open(Storyname,"r",encoding="UTF-8")
     Storyname=Storyname.split(r"/")[-1]
-    if Ver=="SPOL0.5.0":                                                         #遵循SPOL0.5.0标准的读取
+
+    if Ver=="SPOL0.6.0":                                                         #遵循SPOL0.6.0标准的读取
         runing=1
         count=0
         while runing!=0:
             count+=1
             if count==1:
-                runing=core0_5_0_U.SPOL(self,files,Storyname)
+                runing=core0_6_0_U.SPOL(self,files,Storyname)
                 files.close()
             if count!=1:
-                self.giveinfo=core0_5_0_P.LocalInfo()
+                self.giveinfo=core0_6_0_P.LocalInfo()
                 self.send_file_info.connect(self.giveinfo.get)
                 self.send_file_info.emit("story\\"+runing+".spol")
-
-                finding=core0_5_0_P.CNewEffect(self)
-
-                runing=core0_5_0_U.SPOL(self,files,Storyname)
+                finding1=core0_6_0_P.CNewEffect()
+                finding2=core0_6_0_P.CNewDark()
+                print(msg("Effect_Info_Searched").format(Storyname))
+                runing=core0_6_0_U.SPOL(self,files,Storyname)
                 files.close()
             try:
-                files=open("story\\"+runing+".spol","r")
+                files=open("story\\"+runing+".spol","r",encoding="UTF-8")
                 Storyname=runing+".spol"
             except Exception:
                 runing=0
@@ -139,11 +138,11 @@ class SPAWN(QThread):
             else:
                 None
 
-
     else:
         print(msg("Spawn_Mode_Version_Error").format(Ver))
         
       #错误警示
+    print("#####################")
     if warnline!=[]:
       print(msg("Warning_Warn_Count").format(len(warnline)))
       for i in warnline:
@@ -174,7 +173,9 @@ class SPAWN(QThread):
           print(msg("Warning_Nameerror_Info").format(i[0],i[1],i[2]))
       del nameerrorline[:]
       print()
+    print("#####################")
     print("sysinfo→"+msg("Ui_Mode_End"))
-    self.can_reprint_hello.emit(1)
+    
     self.mutex.unlock()
+    self.can_reprint_hello.emit(1)
     self.quit()
