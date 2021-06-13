@@ -237,7 +237,7 @@ def DeleteAllCache(num):
 #文件系统保全函数
 def ensuredirs(num):
     print("sysinfo→Checking the files in the directory")
-    dirslst=[".\\CrashReport",".\\text",".\\story",".\\lang",".\\Visual\\cache\\BGP",".\\Visual\\cache\\Chara"]
+    dirslst=[".\\CrashReport",".\\text",".\\story",".\\lang",".\\Visual\\cache\\BGP",".\\Visual\\cache\\Chara",".\\arknights\\cache"]
     for i in dirslst:
         if not os.path.exists(i):
             print("sysinfo→Directory '"+i+"' missed.Now rebuilding...")
