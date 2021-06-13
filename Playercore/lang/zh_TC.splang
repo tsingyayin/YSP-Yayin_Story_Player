@@ -4,6 +4,17 @@ About_Info_Environment:開發環境：Visual Studio 2019
 About_Info_Support:開發支持：愛詩綾裏同人劇情組、億緒聯合協會
 About_Info_Help:幫助：前往網址https://github.com/tsingyayin/YSP-Yayin_Story_Player尋求支持
 
+Bgp_Display_Mode_Normal:正常
+Bgp_Display_Mode_Dark:變暗
+Bgp_Display_Mode_Fade:褪色
+Bgp_Display_Mode_FadeDark:褪色后變暗
+Bgp_Display_Mode_B&W:黑白
+Bgp_Display_Mode_B&WDark:黑白后變暗
+
+Avg_Effect_Mode_FadeCover:褪色上隱遮罩
+Avg_Effect_Mode_BAW:黑白
+Avg_Effect_Mode_BAWCover:黑白上隱遮罩
+
 Bgm_Setting_Info:當前BGM是{},音量是{}
 
 Bgp_Display_Mode_Normal:正常
@@ -35,7 +46,10 @@ First_Print_Load_Lang_End:語言檔加載結束，耗時{}毫秒
 First_Print:AASP命令提示符(偽)模式,用help查詢現有命令。
 
 File_Searching_Wrong:正在檢查緩存檔夾是否有損壞的檔
+File_Searching_Wrong_End:檢查完毕
 File_Info_Deleted:已經刪除了損壞的檔
+File_Delete_Cache:正在清除緩存檔夾
+File_Cache_Deleted:緩存檔夾清理完畢
 
 Freedom_Text_Mode_L:左對齊
 Freedom_Text_Mode_M:中對齊
@@ -50,6 +64,8 @@ Help_In_Main_Page_line:進入劇情文本單行測試模式
 Help_In_Main_Page_exit:退出程式（或程式的任意一級）
 Help_In_Main_Page_lang:調整程式語言
 Help_In_Main_Page_ui:啟動UI頁面
+Help_In_Main_Page_tospol:將官方儅轉換爲SPOL
+Help_In_Main_Page_clearall:清理所有緩存
 
 Lang_Input_Msg:請鍵入您需要的語言的檔案名
 Lang_Set_Success:設置語言{}成功

@@ -4,7 +4,21 @@ About_Info_Environment:IDE£ºVisual Studio 2019
 About_Info_Support:Support£ºAyano Aishi Story Creation Group,Union of YiXu Association
 About_Info_Help:Help:Go to the website https://github.com/tsingyayin/YSP-Yayin_Story_Player for support
 
+Avg_Effect_Mode_Normal:Normal
+Avg_Effect_Mode_Cover:Cover
+Avg_Effect_Mode_Fade:Fade
+Avg_Effect_Mode_FadeCover:Fade & Cover
+Avg_Effect_Mode_BAW:BW
+Avg_Effect_Mode_BAWCover:BW & Cover
+
 Bgm_Setting_Info:Current BGM is {},The volume is {}
+
+Bgp_Display_Mode_Normal:Normal
+Bgp_Display_Mode_Dark:Dark
+Bgp_Display_Mode_Fade:Fade
+Bgp_Display_Mode_FadeDark:Fade then Dark
+Bgp_Display_Mode_B&W:B&W
+Bgp_Display_Mode_B&WDark:B&W then Dark
 
 Bgp_Display_Mode_Normal:Normal
 Bgp_Display_Mode_Fade:Fade
@@ -35,7 +49,10 @@ First_Print_Load_Lang_End:Language loaded , using {} ms
 First_Print:AASP Command-like mode,enter help to consult current command.
 
 File_Searching_Wrong:Now Checking for whether there are corrupt files in cache folder
+File_Searching_Wrong_End:Checked
 File_Info_Deleted:Deleted corrupt file 
+File_Delete_Cache:Deleting all the cache file
+File_Cache_Deleted:Deleted cache file
 
 Freedom_Text_Mode_L:Left align
 Freedom_Text_Mode_M:Mid align
@@ -50,6 +67,8 @@ Help_In_Main_Page_line:Enter Single-line mode
 Help_In_Main_Page_exit:Exit the programme,or any level of the programme
 Help_In_Main_Page_lang:Change the language of the programme
 Help_In_Main_Page_ui:Launch the UI page
+Help_In_Main_Page_tospol:Translate official language to SPOL
+Help_In_Main_Page_clearall:Delete all the cache files
 
 Lang_Input_Msg:Please enter the name of the language file you reqiure.
 Lang_Set_Success:Successfully set {} as your language
@@ -78,19 +97,19 @@ Spawn_Mode_Get_Subtitle:The subtitle of the story is:
 Spawn_Mode_Version_Error:Can not find the version {},please check the spelling or confirm if the current program version supports this version. 
 Spawn_Mode_End:Interpreted,press Enter to return to the home page
 
-System_Info:Your System is £º
+System_Info:Your System is: 
 System_Not_Win10:The version of windows {}  you are running has stopped supporting. Please migrate to windows10
 System_Win10_Too_Old:The windows 10 system you are using (build {}) has stopped supporting, which is lower than the autumn 2017 update of windows 10 (build 16299). Please upgrade your Windows 10 to the latest version.
 
-Ui_Mode_End:Story have Played
+Ui_Mode_End:Played
 
-Warning_Warn_Count:{} warning in the process.£º
-Warning_Warn_Info:Cannot interprete line {} in the file {}:¡°{}¡±£¬please add character"#" if it is a comment
-Warning_Texterror_Count:{} errors in the process.£º
+Warning_Warn_Count:{} warning in the process£º
+Warning_Warn_Info:Cannot interprete line {} in the file {}:¡°{}¡±£¬please add character "#" if it is a comment
+Warning_Texterror_Count:{} errors in the process£º
 Warning_Texterror_Info:Cannot interprete line {} in the file {} :¡°{}¡±,does not correspond with the definition of the interpreter.
-Warning_Formatwarn_Count:{} format warning in the process.£º
-Warning_Formatwarn_Info:line {} in the file {} :¡°{}¡±,dose not edng with "Enter"
-Warning_Numseterror_Count:{} parameter errors in the process.£º
+Warning_Formatwarn_Count:{} format warning in the process£º
+Warning_Formatwarn_Info:line {} in the file {} :¡°{}¡±,dose not end with "Enter"
+Warning_Numseterror_Count:{} parameter errors in the process£º
 Warning_Numseterror_Info:line {} in the file {} :¡°{}¡±meets wrong parameters :fall outside or exceed the maximum of the number of parameter.
-Warning_Nameerror_Count:{} Label(Name) errors in the process.£º
+Warning_Nameerror_Count:{} Label(Name) errors in the process£º
 Warning_Nameerror_Info:line {} in the file {} :¡°{}¡±meets Label(Name) different from related controllers

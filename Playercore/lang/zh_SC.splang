@@ -4,11 +4,22 @@ About_Info_Environment:开发环境：Visual Studio 2019
 About_Info_Support:开发支持：爱诗绫里同人剧情组、亿绪联合协会
 About_Info_Help:帮助：前往网址https://github.com/tsingyayin/YSP-Yayin_Story_Player寻求支持
 
+Avg_Effect_Mode_Normal:正常
+Avg_Effect_Mode_Cover:上隐遮罩
+Avg_Effect_Mode_Fade:褪色
+Avg_Effect_Mode_FadeCover:褪色上隐遮罩
+Avg_Effect_Mode_BAW:黑白
+Avg_Effect_Mode_BAWCover:黑白上隐遮罩
+
 Bgm_Setting_Info:当前BGM是{},音量是{}
 
 Bgp_Display_Mode_Normal:正常
+Bgp_Display_Mode_Dark:变暗
 Bgp_Display_Mode_Fade:褪色
+Bgp_Display_Mode_FadeDark:褪色后变暗
 Bgp_Display_Mode_B&W:黑白
+Bgp_Display_Mode_B&WDark:黑白后变暗
+
 Bgp_Effect_Mode_Normal:无特效
 Bgp_Effect_Mode_Shake:抖动
 Bgp_Effect_Mode_W1:快速白闪
@@ -35,7 +46,10 @@ First_Print_Load_Lang_End:语言文件加载结束，耗时{}毫秒
 First_Print:AASP命令提示符(伪)模式,用help查询现有命令。
 
 File_Searching_Wrong:正在检查缓存文件夹是否有损坏的文件
+File_Searching_Wrong_End:检查完毕
 File_Info_Deleted:已经删除了损坏的文件
+File_Delete_Cache:正在清除缓存文件夹
+File_Cache_Deleted:缓存文件夹清理完毕
 
 Freedom_Text_Mode_L:左对齐
 Freedom_Text_Mode_M:中对齐
@@ -50,6 +64,8 @@ Help_In_Main_Page_line:进入剧情文本单行测试模式
 Help_In_Main_Page_exit:退出程序（或程序的任意一级）
 Help_In_Main_Page_lang:调整程序语言
 Help_In_Main_Page_ui:启动UI页面
+Help_In_Main_Page_tospol:将官方文档装换为SPOL
+Help_In_Main_Page_clearall:清理全部缓存
 
 Lang_Input_Msg:请键入您需要的语言的文件名
 Lang_Set_Success:设置语言{}成功
