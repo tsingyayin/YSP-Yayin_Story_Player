@@ -7,10 +7,11 @@ from PyQt5.QtGui import *
 from PyQt5.QtMultimedia import *
 
 from command.UICoreLauncher import *
-from core.core0_5_0_U import *
+from core.core0_6_0_U import *
 from langcontrol import *
 import time as tm
 import sys
+import random as rnd
 from Visual.effect import *
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\Visual")
@@ -31,8 +32,7 @@ class LastContinue(QObject):
     def get(self):
         global STOPUNLOCK
         STOPUNLOCK=True
-
-        
+    
         #传输文件名称
 class STORYNAME(QObject):
     StoryNameEmit=pyqtSignal(str)
@@ -45,9 +45,66 @@ class USERCHOOSEBRANCH(QObject):
     def __init__(self):
         super(USERCHOOSEBRANCH,self).__init__()
 
+        #传输速度
+class USERSPEEDEMIT(QObject):
+    UserSpeedSet=pyqtSignal(str)
+    def __init__(self):
+        super(USERSPEEDEMIT,self).__init__()
+
+        #音乐播放线程
+class PlayBgm(QThread):
+    def __init__(self,parent = None):
+        super(PlayBgm,self).__init__(parent)
+        
+    def run(self):
+        global glo_file,glo_volume
+        self.play=QMediaPlayer()
+        self.Filename=QMediaContent(QUrl.fromLocalFile(glo_file))
+        self.play.setMedia(self.Filename)
+        self.volumeself=glo_volume
+        self.play.setVolume(self.volumeself)
+        self.play.play()
+        
+
+    def fade(self):
+        for i in range(self.volumeself,0,-1):
+            self.play.setVolume(i)
+            tm.sleep(0.01)
+        self.play.pause()
+        self.quit()
+
+        #音效播放线程
+class PlaySound(QThread):
+    def __init__(self,parent = None):
+        super(PlaySound,self).__init__(parent)
+        
+    def run(self):
+        global glo_file,glo_volume
+        self.play=QMediaPlayer()
+        self.Filename=QMediaContent(QUrl.fromLocalFile(glo_file))
+        self.play.setMedia(self.Filename)
+        self.volumeself=glo_volume
+        self.play.setVolume(self.volumeself)
+        self.play.play()
+
+    def fade(self):
+        for i in range(self.volumeself,0,-1):
+            self.play.setVolume(i)
+            tm.sleep(0.01)
+        self.play.pause()
+        self.quit()
+
+        #获得Splash内容
+Splashesstr=[]
+def SPLASHES(lst):
+    global Splashesstr
+    Splashesstr=lst
+    return
+
         #窗口内容定义
 class UiMainWindow(QWidget):
     def setupUi(self):
+        global Splashesstr
 
         self.desktop=QDesktopWidget()
         self.current_monitor=self.desktop.screenNumber(self)
@@ -56,14 +113,17 @@ class UiMainWindow(QWidget):
         self.Y=self.Display.height()
 
         self.Spawn=SPAWN()
+
         self.StoryName=STORYNAME()
         self.StoryNameRecive=STORYNAMERECIVE()
+
         self.UserChooseBranch=USERCHOOSEBRANCH()
         self.UserChooseBranchRecive=USERCHOOSEBRANCHRECIVE()
+
+        self.SpeedRecive=USERSPEEDRECIVE()
+        self.SetSpeed=USERSPEEDEMIT()
+
         self.PLAYSound=PlaySound()
-        self.ShakeFUNC=ShakeFunc()
-        self.FlashFUNCFast=FlashFuncFast()
-        self.FlashFUNCSlow=FlashFuncSlow()
         self.StopUnlock=LastContinue()
         self.WillStop=WillStop()
 
@@ -76,12 +136,14 @@ class UiMainWindow(QWidget):
         self.Fontsize90=str(int(self.Y*0.083333))+"px"
         self.Fontsize80=str(int(self.Y*0.074074))+"px"
         self.Fontsize60=str(int(self.Y*0.055555))+"px"
+        self.Fontsize35=str(int(self.Y*0.032407))+"px"
         self.Fontsize30=str(int(self.Y*0.027777))+"px"
 
 
         
         #音频交替计数
         self.music_thread=0
+        self.music_thread_lst=[]
 
         #背景交替计数
         self.changeBG=1
@@ -90,6 +152,9 @@ class UiMainWindow(QWidget):
         self.Name_Label=QLabel(self)#姓名
         self.Word_Label=QLabel(self)#讲述内容
         self.Free_Label=QLabel(self)#自由文本
+
+        self.Splashlst=Splashesstr
+        self.Splashes_Label=QLabel(self)#Splashes文本
         self.MainTitle=QLabel(self)#标题
         self.SubTitle=QLabel(self)#副标题
 
@@ -127,13 +192,15 @@ class UiMainWindow(QWidget):
         
 
         #姓名和讲述内容文本框、自由文本文本框的样式定义
-        self.Name_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize30+";font-family:'SimHei'}")
+        self.Name_Label.setStyleSheet("QLabel{color:#AAAAAA;font-size:"+self.Fontsize35+";font-family:'SimHei';font-weight:bold}")
         self.Name_Label.setAlignment(Qt.AlignRight)
-        self.Word_Label.setStyleSheet("QLabel{color:#AAAAAA;font-size:"+self.Fontsize30+";font-family:'SimHei'}")
+        self.Word_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize35+";font-family:'SimHei';font-weight:bold}")
         self.Word_Label.setAlignment(Qt.AlignLeft)
 
-        self.Free_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize30+";font-family:'SimHei'}")
+        self.Free_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize35+";font-family:'SimHei';font-weight:bold}")
         self.Free_Label.setAlignment(Qt.AlignCenter)
+
+
 
         self.OPFree_Label=QGraphicsOpacityEffect()
         self.OPFree_Label.setOpacity(0)
@@ -146,6 +213,14 @@ class UiMainWindow(QWidget):
 
         self.SubTitle.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize60+";font-family:'Microsoft YaHei'}")
         self.SubTitle.setAlignment(Qt.AlignCenter)
+
+        self.Splashes_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize30+";font-family:'SimHei';font-weight:bold}")
+        self.Splashes_Label.setAlignment(Qt.AlignCenter)
+        self.Splashes_Label.setGeometry(QRect(0,self.Y*0.85,self.X,self.Y*0.02777))
+
+        self.OPSplashes_Label=QGraphicsOpacityEffect()
+        self.OPSplashes_Label.setOpacity(0)
+        self.Splashes_Label.setGraphicsEffect(self.OPSplashes_Label)
 
         #退出按钮
         self.ExitButton=QPushButton(self)
@@ -193,6 +268,14 @@ class UiMainWindow(QWidget):
         self.NextButton=QPushButton(self)
         self.NextButton.setObjectName("NextButton")
         self.NextButton.setGeometry(QRect(int(self.X*0.8333),int(self.Y*0.8981),150,50))
+        self.SpeedButton=QPushButton(self)
+        self.SpeedButton.setObjectName("SpeedButton")
+        self.SpeedButton.setGeometry(QRect(int(self.X*0.729),int(self.Y*0.037),150,50))
+        self.SpeedButton.setText("1.0x")
+
+        self.OPSpeedButton=QGraphicsOpacityEffect()
+        self.OPSpeedButton.setOpacity(0)
+        self.SpeedButton.setGraphicsEffect(self.OPSpeedButton)
 
         self.OPAutoButton=QGraphicsOpacityEffect()
         self.OPAutoButton.setOpacity(0)
@@ -217,6 +300,18 @@ class UiMainWindow(QWidget):
         }
         """
         self.NextButton.setStyleSheet(self.QSSNextButton)
+ 
+        self.QSSSpeedButton="""
+        #SpeedButton{
+        background-color:rgba(0,0,0,0);
+        font-size:30px;
+        font-family:'Microsoft YaHei';
+        color:#CCCCCC;
+        }
+        """
+        self.SpeedButton.setStyleSheet(self.QSSSpeedButton)
+
+        self.SpeedNow=0 #循环取值初始化
 
         #启动核心的按钮的位置和文本信息
         self.Run.setGeometry(QRect(int(self.X*0.2083),int(self.Y*0.3703),260,260))
@@ -297,11 +392,11 @@ class UiMainWindow(QWidget):
         self.Frame.setPixmap(QPixmap(self.Frame_R))
 
         #控件位置
-        self.Name_Label.setGeometry(QRect(int(self.X*0.137),int(self.Y*0.888888),int(self.X*0.159),int(self.Y*0.277777)))
-        self.Word_Label.setGeometry(QRect(int(self.X*0.3229166),int(self.Y*0.888888),int(self.X*0.5625),int(self.Y*0.083333)))
-        self.AVG_L.setGeometry(QRect(int(self.X*0.046875),int(self.Y*0.2037037),int(self.X*0.46875),int(self.X*0.46875)))
-        self.AVG_M.setGeometry(QRect(int(self.X*0.230729),int(self.Y*0.2037037),int(self.X*0.46875),int(self.X*0.46875)))
-        self.AVG_R.setGeometry(QRect(int(self.X*0.414583),int(self.Y*0.2037037),int(self.X*0.46875),int(self.X*0.46875)))
+        self.Name_Label.setGeometry(QRect(int(self.X*0.137),int(self.Y*0.87),int(self.X*0.1302083),int(self.Y*0.277777)))
+        self.Word_Label.setGeometry(QRect(int(self.X*0.2864583),int(self.Y*0.87),int(self.X*0.5625),int(self.Y*0.105)))
+        self.AVG_L.setGeometry(QRect(int(self.X*0),int(self.Y*0.1),int(self.X*0.53333),int(self.X*0.53333)))
+        self.AVG_M.setGeometry(QRect(int(self.X*0.233333),int(self.Y*0.1),int(self.X*0.53333),int(self.X*0.53333)))
+        self.AVG_R.setGeometry(QRect(int(self.X*0.466666),int(self.Y*0.1),int(self.X*0.53333),int(self.X*0.53333)))
         self.MainTitle.setGeometry(QRect(int(self.X*0.333333),int(self.Y*0.333333),int(self.X*0.333333),int(self.Y*0.1666666)))
         self.SubTitle.setGeometry(QRect(int(self.X*0.333333),int(self.Y*0.5),int(self.X*0.333333),int(self.Y*0.1666666)))
         self.Logo.setGeometry(QRect(int(self.X*0.3671875),int(self.Y*0.222222),int(self.Y*0.4722222),int(self.Y*0.4722222)))
@@ -324,10 +419,11 @@ class UiMainWindow(QWidget):
         self.Logo.raise_()
         self.MainTitle.raise_()
         self.SubTitle.raise_()
-        self.Run.raise_()
-        self.Hellotext.raise_()
         self.AutoButton.raise_()
         self.NextButton.raise_()
+        self.SpeedButton.raise_()
+        self.Run.raise_()
+        self.Hellotext.raise_()
         self.ExitButton.raise_()
 
         #开始页面透明度初始化
@@ -341,8 +437,7 @@ class UiMainWindow(QWidget):
 
         #按钮信号和槽函数连接
         self.Run.clicked.connect(self.RUNCORE)
-        self.AutoButton.clicked.connect(self.AutoChange)
-        
+       
         #背景透明度初始化
         self.OPBG1=QGraphicsOpacityEffect()
         self.OPBG1.setOpacity(1)
@@ -377,49 +472,6 @@ class UiMainWindow(QWidget):
                 self.DirectOpen=1
                 self.Storyname=sys.argv[1]
                 self.RUNCORE()
-
-        #音乐播放线程
-class PlayBgm(QThread):
-    def __init__(self,parent = None):
-        super(PlayBgm,self).__init__(parent)
-        
-    def run(self):
-        global glo_file,glo_volume
-        self.play=QMediaPlayer()
-        self.Filename=QMediaContent(QUrl.fromLocalFile(glo_file))
-        self.play.setMedia(self.Filename)
-        self.volumeself=glo_volume
-        self.play.setVolume(self.volumeself)
-        self.play.play()
-
-    def fade(self):
-        for i in range(self.volumeself,0,-1):
-            self.play.setVolume(i)
-            tm.sleep(0.01)
-        self.play.pause()
-        self.quit()
-
-        #音效播放线程
-class PlaySound(QThread):
-    def __init__(self,parent = None):
-        super(PlaySound,self).__init__(parent)
-        
-    def run(self):
-        global glo_file,glo_volume
-        self.play=QMediaPlayer()
-        self.Filename=QMediaContent(QUrl.fromLocalFile(glo_file))
-        self.play.setMedia(self.Filename)
-        self.volumeself=glo_volume
-        self.play.setVolume(self.volumeself)
-        self.play.play()
-
-
-    def fade(self):
-        for i in range(self.volumeself,0,-1):
-            self.play.setVolume(i)
-            tm.sleep(0.01)
-        self.play.pause()
-        self.quit()
 
         #主窗口功能定义
 class MainWindow(UiMainWindow):
@@ -471,6 +523,7 @@ class MainWindow(UiMainWindow):
         self.Interpreter.can_reprint_hello.connect(self.reprinthello)
         self.Interpreter.can_show_title.connect(self.showtitle)
         self.Interpreter.can_hide_title.connect(self.hidetitle)
+        self.Interpreter.can_prepare_play.connect(self.hidetitlelast)
         self.Interpreter.need_to_choose.connect(self.choosebranch)
         self.Interpreter.show_next.connect(self.ShowNext)
         self.Interpreter.can_update_bgm.connect(self.PlayBGM)
@@ -481,7 +534,7 @@ class MainWindow(UiMainWindow):
         self.Interpreter.inrunning.connect(self.StopUnlock.get)
         self.Interpreter.willstop.connect(self.WillStop.get)
         self.UserChooseBranch.UserChooseWhich.connect(self.UserChooseBranchRecive.get)
-
+        self.SetSpeed.UserSpeedSet.connect(self.SpeedRecive.get)
         #准备启动数值
         self.StoryName.StoryNameEmit.connect(self.StoryNameRecive.get)
         self.StoryName.StoryNameEmit.emit(self.Storyname)
@@ -604,7 +657,7 @@ class MainWindow(UiMainWindow):
         sender=self.sender()
         choosewhat=sender.text()
         self.UserChooseBranch.UserChooseWhich.emit(choosewhat)
-        self.Interpreter.wake()
+        
 
         self.BG2.raise_()
         self.BG1.raise_()
@@ -622,6 +675,7 @@ class MainWindow(UiMainWindow):
         self.MainTitle.raise_()
         self.SubTitle.raise_()
         self.AutoButton.raise_()
+        self.SpeedButton.raise_()
 
         #断开链接
         if self.converlstlen==1:
@@ -662,6 +716,8 @@ class MainWindow(UiMainWindow):
         self.BranchButton_3.setText("")
         self.BranchButton_4.setText("")
 
+        self.Interpreter.wake()
+
         #标题展示函数-前半段
     def showtitle(self,titlesetlst):
         #背景透明度初始化
@@ -672,6 +728,8 @@ class MainWindow(UiMainWindow):
         self.OPBG2=QGraphicsOpacityEffect()
         self.OPBG2.setOpacity(0)
         self.BG2.setGraphicsEffect(self.OPBG2)
+
+        self.Splashes_Label.setText("")
 
         self.BG2.raise_()
         self.BG1.raise_()
@@ -689,6 +747,7 @@ class MainWindow(UiMainWindow):
         self.Logo.raise_()
         self.MainTitle.raise_()
         self.SubTitle.raise_()
+        self.Splashes_Label.raise_()
         self.AutoButton.raise_()
 
         self.BG1.setPixmap(QPixmap(""))
@@ -721,12 +780,21 @@ class MainWindow(UiMainWindow):
         self.OPSubTitle.setOpacity(1)
         self.SubTitle.setGraphicsEffect(self.OPSubTitle)
 
+        self.Splashlenth=len(self.Splashlst)
+        self.Splashwhich=rnd.randint(0,self.Splashlenth-1)
+        self.Splashes_Label.setText(self.Splashlst[self.Splashwhich])
+
+        self.OPSplashes_Label=QGraphicsOpacityEffect()
+        self.OPSplashes_Label.setOpacity(1)
+        self.Splashes_Label.setGraphicsEffect(self.OPSplashes_Label)
+        self.Splashes_Label.repaint()
+
         self.Logo.repaint()
         self.SubTitle.repaint()
         self.MainTitle.repaint()
         self.BG1.repaint()
 
-        #标题显示函数-后半段
+        #标题显示函数-中半段
     def hidetitle(self):
         self.BG1.raise_()
         self.BG2.raise_()
@@ -740,8 +808,10 @@ class MainWindow(UiMainWindow):
         self.Logo.raise_()
         self.MainTitle.raise_()
         self.SubTitle.raise_()
+        self.Splashes_Label.raise_()
         self.AutoButton.raise_()
         self.NextButton.raise_()
+        self.SpeedButton.raise_()
 
         self.BG2_R=QImage(self.X,self.Y,QImage.Format_ARGB32)
         self.BG2_R.fill(QColor(0,0,0,255))
@@ -763,13 +833,19 @@ class MainWindow(UiMainWindow):
         self.OPBG2.setOpacity(0)
         self.BG2.setGraphicsEffect(self.OPBG2)
 
-        tm.sleep(2)
+        #标题显示函数-后半段
+    def hidetitlelast(self):
         self.OPMainTitle.setOpacity(0)
         self.MainTitle.setGraphicsEffect(self.OPMainTitle)
         
         self.OPSubTitle.setOpacity(0)
         self.SubTitle.setGraphicsEffect(self.OPSubTitle)
         
+        self.OPSplashes_Label=QGraphicsOpacityEffect()
+        self.OPSplashes_Label.setOpacity(0)
+        self.Splashes_Label.setGraphicsEffect(self.OPSplashes_Label)
+        self.Splashes_Label.repaint()
+
         self.OPLogo=QGraphicsOpacityEffect()
         self.OPLogo.setOpacity(0)
         self.Logo.setGraphicsEffect(self.OPLogo)
@@ -789,13 +865,20 @@ class MainWindow(UiMainWindow):
         self.Logo.raise_()
         self.MainTitle.raise_()
         self.SubTitle.raise_()
+        self.Splashes_Label.raise_()
 
-        self.AutoButton.raise_()
-        self.NextButton.raise_()
+        self.SpeedNow=0
+        self.Speedfloat=1.0
+        self.SetSpeed.UserSpeedSet.emit("1")
+        self.SpeedButton.setText("1.0x")
 
         self.OPAutoButton=QGraphicsOpacityEffect()
         self.OPAutoButton.setOpacity(1)
         self.AutoButton.setGraphicsEffect(self.OPAutoButton)
+
+        self.OPSpeedButton=QGraphicsOpacityEffect()
+        self.OPSpeedButton.setOpacity(1)
+        self.SpeedButton.setGraphicsEffect(self.OPSpeedButton)
 
         self.OPNextButton=QGraphicsOpacityEffect()
         self.OPNextButton.setOpacity(0)
@@ -803,6 +886,7 @@ class MainWindow(UiMainWindow):
 
         self.AutoButton.raise_()
         self.NextButton.raise_()
+        self.SpeedButton.raise_()
 
         #初始控件隐藏
     def hidehello(self,num):
@@ -825,6 +909,10 @@ class MainWindow(UiMainWindow):
             #断开事件
             self.Run.clicked.disconnect(self.RUNCORE)
             self.ExitButton.clicked.disconnect(self.ExitProgram)
+
+            #链接事件
+            self.AutoButton.clicked.connect(self.AutoChange)
+            self.SpeedButton.clicked.connect(self.SpeedChange)
 
             global STOPUNLOCK
             STOPUNLOCK=True
@@ -856,6 +944,10 @@ class MainWindow(UiMainWindow):
             self.OPNextButton.setOpacity(0)
             self.NextButton.setGraphicsEffect(self.OPNextButton)
 
+            self.OPSpeedButton=QGraphicsOpacityEffect()
+            self.OPSpeedButton.setOpacity(0)
+            self.SpeedButton.setGraphicsEffect(self.OPSpeedButton)
+
             self.BG2.raise_()
             self.BG1.raise_()
             self.AVG_L.raise_()
@@ -872,10 +964,11 @@ class MainWindow(UiMainWindow):
             self.Logo.raise_()
             self.MainTitle.raise_()
             self.SubTitle.raise_()
-            self.Run.raise_()
             self.Hellotext.raise_()
             self.AutoButton.raise_()
             self.NextButton.raise_()
+            self.SpeedButton.raise_()
+            self.Run.raise_()
             self.ExitButton.raise_()
 
 
@@ -925,6 +1018,9 @@ class MainWindow(UiMainWindow):
             #关闭直接打开属性
             self.DirectOpen=0
 
+            #断开事件
+            self.AutoButton.clicked.disconnect(self.AutoChange)
+            self.SpeedButton.clicked.disconnect(self.SpeedChange)
             #重新连接事件
             self.Run.clicked.connect(self.RUNCORE)
             self.ExitButton.clicked.connect(self.ExitProgram)
@@ -941,11 +1037,23 @@ class MainWindow(UiMainWindow):
                 self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
             elif bgsetlst[1]=="1":
                 self.BGR=QImage()
-                self.BGR.load("./Visual/cache/BGP/"+bgsetlst[0]+"-Fade.png")
+                self.BGR.load("./Visual/cache/BGP/"+bgsetlst[0]+"-Dark.png")
                 self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
             elif bgsetlst[1]=="2":
                 self.BGR=QImage()
+                self.BGR.load("./Visual/cache/BGP/"+bgsetlst[0]+"-Fade.png")
+                self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+            elif bgsetlst[1]=="3":
+                self.BGR=QImage()
+                self.BGR.load("./Visual/cache/BGP/"+bgsetlst[0]+"-Fade-Dark.png")
+                self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+            elif bgsetlst[1]=="4":
+                self.BGR=QImage()
                 self.BGR.load("./Visual/cache/BGP/"+bgsetlst[0]+"-BAW.png")
+                self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+            elif bgsetlst[1]=="5":
+                self.BGR=QImage()
+                self.BGR.load("./Visual/cache/BGP/"+bgsetlst[0]+"-BAW-Dark.png")
                 self.BGR=self.BGR.scaled(self.X,self.Y,Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
 
         #背景控制器-屏幕刷新函数
@@ -964,6 +1072,7 @@ class MainWindow(UiMainWindow):
                 self.Word_Label.raise_()
                 self.AutoButton.raise_()
                 self.NextButton.raise_()
+                self.SpeedButton.raise_()
             if eval(bgsetlst[3])!=0:
                 self.OPBG1=QGraphicsOpacityEffect()
                 self.OPBG1.setOpacity(i/20)
@@ -979,17 +1088,17 @@ class MainWindow(UiMainWindow):
                 self.BG2.setPixmap(QPixmap(""))
                 tm.sleep(0.1)
                 if bgsetlst[2]=="1":
-                    self.ShakeFUNC=ShakeFunc()
+                    self.ShakeFUNC=ShakeFunc(self.Speedfloat)
                     self.ShakeFUNC.shakeXY.connect(self.ShakeRect)
                     self.ShakeFUNC.start()
                 elif bgsetlst[2]=="2":
                     self.effectuse=2
-                    self.FlashFUNCFast=FlashFuncFast()
+                    self.FlashFUNCFast=FlashFuncFast(self.Speedfloat)
                     self.FlashFUNCFast.FlashOPint.connect(self.Flashwhite)
                     self.FlashFUNCFast.start()
                 elif bgsetlst[2]=="3":
                     self.effectuse=3
-                    self.FlashFUNCSlow=FlashFuncSlow()
+                    self.FlashFUNCSlow=FlashFuncSlow(self.Speedfloat)
                     self.FlashFUNCSlow.FlashOPint.connect(self.Flashwhite)
                     self.FlashFUNCSlow.start()
                 elif bgsetlst[2]=="0":
@@ -1009,6 +1118,7 @@ class MainWindow(UiMainWindow):
                 self.Word_Label.raise_()
                 self.AutoButton.raise_()
                 self.NextButton.raise_()
+                self.SpeedButton.raise_()
             if eval(bgsetlst[3])!=0:
                 self.OPBG2=QGraphicsOpacityEffect()
                 self.OPBG2.setOpacity(i/20)
@@ -1024,17 +1134,17 @@ class MainWindow(UiMainWindow):
                 self.BG1.setPixmap(QPixmap(""))
                 tm.sleep(0.1)
                 if bgsetlst[2]=="1":
-                    self.ShakeFUNC=ShakeFunc()
+                    self.ShakeFUNC=ShakeFunc(self.Speedfloat)
                     self.ShakeFUNC.shakeXY.connect(self.ShakeRect)
                     self.ShakeFUNC.start()
                 elif bgsetlst[2]=="2":
                     self.effectuse=2
-                    self.FlashFUNCFast=FlashFuncFast()
+                    self.FlashFUNCFast=FlashFuncFast(self.Speedfloat)
                     self.FlashFUNCFast.FlashOPint.connect(self.Flashwhite)
                     self.FlashFUNCFast.start()
                 elif bgsetlst[2]=="3":
                     self.effectuse=3
-                    self.FlashFUNCSlow=FlashFuncSlow()
+                    self.FlashFUNCSlow=FlashFuncSlow(self.Speedfloat)
                     self.FlashFUNCSlow.FlashOPint.connect(self.Flashwhite)
                     self.FlashFUNCSlow.start()
                 elif bgsetlst[2]=="0":
@@ -1111,8 +1221,8 @@ class MainWindow(UiMainWindow):
         global glo_file,glo_volume
         glo_file=".\\Visual\\source\\Sound\\"+filename+".mp3"
         glo_volume=volume
-        self.playsound=PlaySound()
-        self.playsound.start()
+        self.music_thread_lst+=[PlaySound()]
+        self.music_thread_lst[-1].start()
         
         #讲述控制器-屏幕更新承接函数、立绘刷新函数
     def setprintchara(self,charapic,charawords,wordset,charanum,BGblack):
@@ -1125,6 +1235,7 @@ class MainWindow(UiMainWindow):
         self.Word_Label.raise_()
         self.AutoButton.raise_()
         self.NextButton.raise_()
+        self.SpeedButton.raise_()
 
         #确认遮罩状态
         if BGblack==1:
@@ -1157,13 +1268,13 @@ class MainWindow(UiMainWindow):
                 if i[0]!="":
                     self.AVG_L.setPixmap(QPixmap(""))
                     self.AVG_R.setPixmap(QPixmap(""))
-                    if i[5]=="(暗，沉默)":
-                        self.AVG_M_R.load("./Visual/cache/Chara/"+i[0]+"_"+i[1]+"-Dark.png")
-                    elif i[1]=="0":
-                        self.AVG_M_R.load("./Visual/cache/Chara/"+i[0]+"_"+i[1]+".png")
+                    if i[6]=="(暗，沉默)":
+                        self.AVG_M_R.load("./Visual/cache/Chara/"+i[0]+"_"+i[1]+"_"+i[3]+"-Dark.png")
+                    elif i[3]!="0":
+                        self.AVG_M_R.load("./Visual/cache/Chara/"+i[0]+"_"+i[1]+"_"+i[3]+".png")
                     else:
                         self.AVG_M_R.load("./Visual/source/Chara/"+i[0]+"_"+i[1]+".png")
-                    self.AVG_M_R=self.AVG_M_R.scaled(int(self.X*0.46875),int(self.X*0.46875),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+                    self.AVG_M_R=self.AVG_M_R.scaled(int(self.X*0.53333),int(self.X*0.53333),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
                     if self.AVG_M.pixmap()!=self.AVG_M_R:
                         if i[2]=="0":self.AVG_M.setPixmap(QPixmap(self.AVG_M_R))
                         elif i[2]=="1":self.AVG_M.setPixmap(QPixmap(self.AVG_M_R.mirrored(True,False)))
@@ -1174,25 +1285,25 @@ class MainWindow(UiMainWindow):
             self.AVG_M.setPixmap(QPixmap(""))
             self.AVG_M.repaint()
             if charapic[0][0]!="":
-                if charapic[0][5]=="(暗，沉默)":
-                    self.AVG_L_R.load("./Visual/cache/Chara/"+charapic[0][0]+"_"+charapic[0][1]+"-Dark.png")
-                elif charapic[0][1]=="0":
-                    self.AVG_L_R.load("./Visual/cache/Chara/"+charapic[0][0]+"_"+charapic[0][1]+".png")
+                if charapic[0][6]=="(暗，沉默)":
+                    self.AVG_L_R.load("./Visual/cache/Chara/"+charapic[0][0]+"_"+charapic[0][1]+"_"+charapic[0][3]+"-Dark.png")
+                elif charapic[0][3]!="0":
+                    self.AVG_L_R.load("./Visual/cache/Chara/"+charapic[0][0]+"_"+charapic[0][1]+"_"+charapic[0][3]+".png")
                 else:
                     self.AVG_L_R.load("./Visual/source/Chara/"+charapic[0][0]+"_"+charapic[0][1]+".png")
-                self.AVG_L_R=self.AVG_L_R.scaled(int(self.X*0.46875),int(self.X*0.46875),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+                self.AVG_L_R=self.AVG_L_R.scaled(int(self.X*0.53333),int(self.X*0.53333),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
                 if self.AVG_L.pixmap()!=self.AVG_L_R:
                     if charapic[0][2]=="0":self.AVG_L.setPixmap(QPixmap(self.AVG_L_R))
                     elif charapic[0][2]=="1":self.AVG_L.setPixmap(QPixmap(self.AVG_L_R.mirrored(True,False)))
                     self.AVG_L.repaint()
             if charapic[1][0]!="":
-                if charapic[1][5]=="(暗，沉默)":
-                    self.AVG_R_R.load("./Visual/cache/Chara/"+charapic[1][0]+"_"+charapic[1][1]+"-Dark.png")
-                elif charapic[1][1]=="0":
-                    self.AVG_R_R.load("./Visual/cache/Chara/"+charapic[1][0]+"_"+charapic[1][1]+".png")
+                if charapic[1][6]=="(暗，沉默)":
+                    self.AVG_R_R.load("./Visual/cache/Chara/"+charapic[1][0]+"_"+charapic[1][1]+"_"+charapic[1][3]+"-Dark.png")
+                elif charapic[1][3]!="0":
+                    self.AVG_R_R.load("./Visual/cache/Chara/"+charapic[1][0]+"_"+charapic[1][1]+"_"+charapic[1][3]+".png")
                 else:
                     self.AVG_R_R.load("./Visual/source/Chara/"+charapic[1][0]+"_"+charapic[1][1]+".png")
-                self.AVG_R_R=self.AVG_R_R.scaled(int(self.X*0.46875),int(self.X*0.46875),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
+                self.AVG_R_R=self.AVG_R_R.scaled(int(self.X*0.53333),int(self.X*0.53333),Qt.IgnoreAspectRatio,Qt.SmoothTransformation)
                 if self.AVG_R.pixmap()!=self.AVG_R_R:
                     if charapic[1][2]=="0":self.AVG_R.setPixmap(QPixmap(self.AVG_R_R))
                     elif charapic[1][2]=="1":self.AVG_R.setPixmap(QPixmap(self.AVG_R_R.mirrored(True,False)))
@@ -1261,9 +1372,30 @@ class MainWindow(UiMainWindow):
 
         None
 
+        #速度设置函数
+    def SpeedChange(self):
+        self.SpeedNow+=1
+        if self.SpeedNow%4==1:
+            self.SetSpeed.UserSpeedSet.emit("0.666")
+            self.SpeedButton.setText("1.5x")
+            self.Speedfloat=0.666
+        elif self.SpeedNow%4==2:
+            self.SetSpeed.UserSpeedSet.emit("0.5")
+            self.SpeedButton.setText("2.0x")
+            self.Speedfloat=0.5
+        elif self.SpeedNow%4==3:
+            self.SetSpeed.UserSpeedSet.emit("2")
+            self.SpeedButton.setText("0.5x")
+            self.Speedfloat=2
+        elif self.SpeedNow%4==0:
+            self.SetSpeed.UserSpeedSet.emit("1")
+            self.SpeedButton.setText("1.0x")
+            self.Speedfloat=1.0
+
         #向下一个页面（自动模式）
     def ShowNext(self):
         if self.Auto==1:
+
             global STOPUNLOCK
             while True:
                 if STOPUNLOCK==False:
@@ -1284,7 +1416,44 @@ class MainWindow(UiMainWindow):
         self.OPNextButton.setOpacity(0)
         self.NextButton.setGraphicsEffect(self.OPNextButton)
 
-        #退出程序
+        #正常退出程序
     def ExitProgram(self):
+        self.close()
         qApp=QApplication.instance()
         qApp.quit()
+
+        #ESC退出程序
+    def keyPressEvent(self,QKeyEvent):
+        if QKeyEvent.key()==Qt.Key_Escape:
+            try:
+                if self.music_thread==1:
+                    self.playsound2.fade()
+                    self.playsound2.wait()
+                    del self.playsound2
+                elif self.music_thread==2:
+                    self.playsound1.fade()
+                    self.playsound1.wait()
+                    del self.playsound1
+            except:
+                None
+            else:
+                None
+            self.close()
+            qApp=QApplication.instance()
+            qApp.quit()
+
+        #被强制关闭前先把音频关上
+    def closeEvent(self,event):
+        try:
+            if self.music_thread==1:
+                    self.playsound2.fade()
+                    self.playsound2.wait()
+                    del self.playsound2
+            elif self.music_thread==2:
+                    self.playsound1.fade()
+                    self.playsound1.wait()
+                    del self.playsound1
+        except:
+            None
+        else:
+            None
