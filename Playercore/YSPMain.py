@@ -18,6 +18,7 @@ sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\comm
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\core")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\lang")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\Visual")
+sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\arknights")
 
 if __name__=="__main__":
     DirectOpen=0
