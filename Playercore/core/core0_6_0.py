@@ -15,8 +15,8 @@ def SPOL(files,Storyname):
   converjump=1
   #判断解释器是自行终止还是分支需要终止
   Needjump=0
-
-  bgdisplaymode={"0":msg("Bgp_Display_Mode_Normal"),"1":msg("Bgp_Display_Mode_Fade"),"2":msg("Bgp_Display_Mode_B&W")}
+  avgeffectmode={"0":msg("Avg_Effect_Mode_Normal"),"1":msg("Avg_Effect_Mode_Cover"),"2":msg("Avg_Effect_Mode_Fade"),"3":msg("Avg_Effect_Mode_FadeCover"),"4":msg("Avg_Effect_Mode_BAW"),"5":msg("Avg_Effect_Mode_BAWCover")}
+  bgdisplaymode={"0":msg("Bgp_Display_Mode_Normal"),"1":msg("Bgp_Display_Mode_Dark"),"2":msg("Bgp_Display_Mode_Fade"),"3":msg("Bgp_Display_Mode_FadeDark"),"4":msg("Bgp_Display_Mode_B&W"),"5":msg("Bgp_Display_Mode_B&WDark")}
   bgeffectmode={"0":msg("Bgp_Effect_Mode_Normal"),"1":msg("Bgp_Effect_Mode_Shake"),"2":msg("Bgp_Effect_Mode_W1"),"3":msg("Bgp_Effect_Mode_W2")}
   textmode={"L":msg("Freedom_Text_Mode_L"),"M":msg("Freedom_Text_Mode_M"),"R":msg("Freedom_Text_Mode_R")}
   for lineraw in files.readlines(): 
@@ -107,7 +107,7 @@ def SPOL(files,Storyname):
             if bgsetlst[1]=="":bgsetlst[1]="0"
             if bgsetlst[2]=="":bgsetlst[2]="0"
             if bgsetlst[3]=="":bgsetlst[3]="0.5"   
-            if not 0<=int(bgsetlst[1])<=2:raise Exception
+            if not 0<=int(bgsetlst[1])<=5:raise Exception
             if not 0<=int(bgsetlst[2])<=3:raise Exception
             if 0>float(bgsetlst[3]):raise Exception
             print("#################\n"+msg("Bgp_Setting_Info").format(bgsetlst[0],bgdisplaymode[bgsetlst[1]],bgeffectmode[bgsetlst[2]],bgsetlst[3]))
@@ -189,17 +189,18 @@ def SPOL(files,Storyname):
         charapic=[]           #用于存储立绘和说话状态——即立绘是否需要淡色
         BGblackcount=0   #用于控制是否需要渐变黑遮罩
         BGblack=1
-        #分离每个人的立绘信息和语句，并把立绘信息拆分成人名、表情、翻转和淡入、淡出、说话情况
+        #分离每个人的立绘信息和语句，并把立绘信息拆分成人名、表情、翻转、特效和淡入、淡出、说话情况
         charapic=[]
         try:
             for i in inforaw:
                 charapicsetcount=len(i.split(":")[0].split("/"))
-                if charapicsetcount>5:raise Exception
-                charapic+=[i.split(":")[0].split("/")+[""]*(6-charapicsetcount)]
+                if charapicsetcount>6:raise Exception
+                charapic+=[i.split(":")[0].split("/")+[""]*(7-charapicsetcount)]
                 if charapic[-1][1]=="":charapic[-1][1]=""
                 if charapic[-1][2]=="":charapic[-1][2]="0"
-                if charapic[-1][3]=="":charapic[-1][3]="0.5"
+                if charapic[-1][3]=="":charapic[-1][3]="0"
                 if charapic[-1][4]=="":charapic[-1][4]="0.5"
+                if charapic[-1][5]=="":charapic[-1][5]="0.5"
                 #把人物名称和所说的话传入字段
                 if len(i.split(":"))==2:
                     charawords+=[[i.split(":")[0].split("/")[0],i.split(":")[1]]]
@@ -207,8 +208,9 @@ def SPOL(files,Storyname):
                     charawords+=[[i.split(":")[1],i.split(":")[2]]]
                 #对于不合要求的设置抛出异常
                 if (charapic[-1][2]!="0" and charapic[-1][2]!="1"):raise Exception
-                if float(charapic[-1][3])<0:raise Exception
+                if not 0<=int(charapic[-1][3])<=5:raise Exception
                 if float(charapic[-1][4])<0:raise Exception
+                if float(charapic[-1][5])<0:raise Exception
         except Exception:
             numseterrorline+=[[linecount,Storyname,line[:-1]]]
             continue
@@ -230,31 +232,31 @@ def SPOL(files,Storyname):
         #如果场上有两人，只有在同时沉默的时候均为明亮，否则沉默者暗
         if charanum==1:
             if charawords[0][1]=="":
-                charapic[0][5]="(亮，沉默)"
+                charapic[0][6]="(亮，沉默)"
             elif charawords[0][1]!="":
-                charapic[0][5]="(亮，讲述)"
+                charapic[0][6]="(亮，讲述)"
         elif charanum==2:
             if charawords[0][1]==charawords[1][1]=="":
-                charapic[0][5]=charapic[1][5]="(亮，沉默)"
+                charapic[0][6]=charapic[1][6]="(亮，沉默)"
             elif charawords[0][1]!="" and charawords[1][1]=="":
-                charapic[0][5]="(亮，讲述)"
-                charapic[1][5]="(暗，沉默)"
+                charapic[0][6]="(亮，讲述)"
+                charapic[1][6]="(暗，沉默)"
             elif charawords[0][1]=="" and charawords[1][1]!="":
-                charapic[0][5]="(暗，沉默)"
-                charapic[1][5]="(亮，讲述)"
+                charapic[0][6]="(暗，沉默)"
+                charapic[1][6]="(亮，讲述)"
 
         #输出立绘
         for i in charapic:
             if i[0]!="" and  charanum != 1:       #人物个数不是一个且不是空立绘的时候
                 if i[2]=="0":
-                    print("\t\t"+msg("Chara_Pic_Setting_Info").format(i[0]+"_"+i[1],i[5],i[3],i[4]),end="")
+                    print("\t\t"+msg("Chara_Pic_Setting_Info").format(i[0]+"_"+i[1],i[6],i[4],i[5]),end="")
                 elif i[2]=="1":
-                    print("\t\t"+msg("Chara_Pic_Setting_Info_R").format(i[0]+"_"+i[1],i[5],i[3],i[4]),end="")
+                    print("\t\t"+msg("Chara_Pic_Setting_Info_R").format(i[0]+"_"+i[1],i[6],i[4],i[5]),end="")
             elif i[0]!="" and charanum ==1:     #人物个数只有一个且不是空立绘的时候
                 if i[2]=="0":
-                    print("\t\t\t\t\t"+msg("Chara_Pic_Setting_Info").format(i[0]+"_"+i[1],i[5],i[3],i[4]),end="")
+                    print("\t\t\t\t\t"+msg("Chara_Pic_Setting_Info").format(i[0]+"_"+i[1],i[6],i[4],i[5]),end="")
                 elif i[2]=="1":
-                    print("\t\t\t\t\t"+msg("Chara_Pic_Setting_Info_R").format(i[0]+"_"+i[1],i[5],i[3],i[4]),end="")
+                    print("\t\t\t\t\t"+msg("Chara_Pic_Setting_Info_R").format(i[0]+"_"+i[1],i[6],i[4],i[5]),end="")
             else:                                               #使用空立绘当做对齐手段或是旁白的时候
                 print("\t\t\t\t\t\t\t",end="")
 
@@ -412,21 +414,23 @@ def SPOL_s(line):
         try:
             for i in inforaw:
                 charapicsetcount=len(i.split(":")[0].split("/"))
-                if charapicsetcount>5:raise Exception
-                charapic+=[i.split(":")[0].split("/")+[""]*(6-charapicsetcount)]
+                if charapicsetcount>6:raise Exception
+                charapic+=[i.split(":")[0].split("/")+[""]*(7-charapicsetcount)]
                 if charapic[-1][1]=="":charapic[-1][1]=""
                 if charapic[-1][2]=="":charapic[-1][2]="0"
-                if charapic[-1][3]=="":charapic[-1][3]="0.5"
+                if charapic[-1][3]=="":charapic[-1][3]="0"
                 if charapic[-1][4]=="":charapic[-1][4]="0.5"
+                if charapic[-1][5]=="":charapic[-1][5]="0.5"
                 #把人物名称和所说的话传入字段
                 if len(i.split(":"))==2:
                     charawords+=[[i.split(":")[0].split("/")[0],i.split(":")[1]]]
                 elif len(i.split(":"))==3:
                     charawords+=[[i.split(":")[1],i.split(":")[2]]]
                 #对于不合要求的设置抛出异常
-            if (charapic[-1][2]!="0" and charapic[-1][2]!="1"):raise Exception
-            if float(charapic[-1][3])<0:raise Exception
-            if float(charapic[-1][4])<0:raise Exception
+                if (charapic[-1][2]!="0" and charapic[-1][2]!="1"):raise Exception
+                if not 0<=int(charapic[-1][3])<=5:raise Exception
+                if float(charapic[-1][4])<0:raise Exception
+                if float(charapic[-1][5])<0:raise Exception
         except Exception:
             print("sysinfo→"+msg("Single_Mode_Num_Error"))
             return
@@ -448,18 +452,18 @@ def SPOL_s(line):
         #如果场上有两人，只有在同时沉默的时候均为明亮，否则沉默者暗
         if charanum==1:
             if charawords[0][1]=="":
-                charapic[0][5]="(亮，沉默)"
+                charapic[0][6]="(亮，沉默)"
             elif charawords[0][1]!="":
-                charapic[0][5]="(亮，讲述)"
+                charapic[0][6]="(亮，讲述)"
         elif charanum==2:
             if charawords[0][1]==charawords[1][1]=="":
-                charapic[0][5]=charapic[1][5]="(亮，沉默)"
+                charapic[0][6]=charapic[1][6]="(亮，沉默)"
             elif charawords[0][1]!="" and charawords[1][1]=="":
-                charapic[0][5]="(亮，讲述)"
-                charapic[1][5]="(暗，沉默)"
+                charapic[0][6]="(亮，讲述)"
+                charapic[1][6]="(暗，沉默)"
             elif charawords[0][1]=="" and charawords[1][1]!="":
-                charapic[0][5]="(暗，沉默)"
-                charapic[1][5]="(亮，讲述)"
+                charapic[0][6]="(暗，沉默)"
+                charapic[1][6]="(亮，讲述)"
 
         #输出立绘
         for i in charapic:

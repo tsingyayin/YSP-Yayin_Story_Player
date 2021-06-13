@@ -148,6 +148,7 @@ class AvgDark(QThread):
           unlockwhile=1
       self.quit()
 
+#背景褪色效果
 class BGPFade(QThread):
     def __init__(self):
         super(BGPFade,self).__init__()
@@ -210,6 +211,7 @@ class BGPFade(QThread):
           unlockwhile=1
       self.quit()
 
+#背景黑白效果
 class BGPBAW(QThread):
     def __init__(self):
         super(BGPBAW,self).__init__()
@@ -257,6 +259,7 @@ class BGPBAW(QThread):
       if readlinesend==1:
           unlockwhile=1
       self.quit()
+
 #接收目标文件参数
 class LocalInfo(QObject):
     def __init__(self):
