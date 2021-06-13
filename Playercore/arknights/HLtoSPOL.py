@@ -12,6 +12,8 @@ def HLtoSPOL():
   while True:
     filename=input("Userinput→")
     try:
+        if filename=="exit":
+            return
         file=open(filename+".txt","r",encoding="UTF-8")
     except IOError:
         print("找不到文件",filename)
