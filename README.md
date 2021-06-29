@@ -70,7 +70,7 @@
 
 新增了用ESC键直接退出UI页面的功能
 
-# Ver0.5.0.0_Pre8\Ver0.5.0.0_Insider_Ayano_Aishi_Only\Ver0.5.0.1_Insider_Ayano_Aishi_Only\Ver0.5.0_Pub
+# Ver0.5.0.0_Pre8\Ver0.5.0.0_IAAO\Ver0.5.0.1_IAAO\Ver0.5.0_Pub
 
 为了添加更多立绘滤镜而更改了SPOL语法，现在SPOL版本为0.5.10
 
