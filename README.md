@@ -317,6 +317,7 @@
 优化了多分支情况下的内存占用。现在最大占用取决于读取过程中遇到的最大的那个文件。
 
 * 开玩笑，怎么可能支持0.3？这个不测也应该知道。启动0.3内核需要的参数是files和timestart，启动0.3.5内核需要的参数是files和storyname，而aaspcommand的结构是顺着0.3.5来的，根本没法在启动的时候传入timestart参数，这个启动参数在0.3.5被改作内核自己负责了，aaspcommand根本没有这个参数！（再次犯傻.jpg）
+
 ## Interpreter_Ver0.4.0_Pre2;SPOL0.3.5&！0.3
 
 修复了会一股脑把所有剧情控制器均当成参数错误的控制器的bug
@@ -349,7 +350,7 @@ spawn mode:
 
 *由于剧情分支是新增的复杂系统之一，所以会有很多可能引起崩溃的bug，会陆续修复。
 
-## Interpreter_Ver0.3.1;SPOL0.3
+# Interpreter_Ver0.3.1;SPOL0.3
 spawn mode:
 
 * 修复了文本行进驻留控制器遇到不合法数值会引起解释器崩溃的bug
@@ -392,7 +393,7 @@ line mode：
 * 新增line模式下允许指定解释器版本的功能（如果可以选择的话）
 
 
-## Interpreter_Ver0.2.0;SPOL0.2.5
+# Interpreter_Ver0.2.0;SPOL0.2.5
 改变了内在的相关逻辑，引入了一个伪命令提示符的机制。现在headana不再负责直接调用core，而是识别用户键入命令从而调用aaspcommand，由aaspcommand决定是否调用以及如何调用core
 
 现在可以在line命令下单独测试某一行的解释结果
@@ -401,7 +402,7 @@ line mode：
 
 新增了文本控制器和末尾回车的格式问题警告
 
-## Interpreter_Ver0.1.6;SPOL0.2.5&0.2
+# Interpreter_Ver0.1.6;SPOL0.2.5&0.2
 加入了未能识别文本的警告汇报功能
 
 加入了音频控制器
