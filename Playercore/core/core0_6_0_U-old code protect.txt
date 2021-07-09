@@ -1,0 +1,22 @@
+###这个文件用来收集不确定到底能不能删掉的U型核心代码
+
+###讲述状况辨别代码
+
+elif (i[0]!="" and i[1]!="") or (i[0]!="" and charanum==1) :
+                alphacount=0
+                for word in i[1]:
+                    tm.sleep(float(wordset[0])*speed)
+                    if '\u4e00' <= word <= '\u9fff':
+                        alphacount+=2
+                    else:
+                        alphacount+=1
+                    if alphacount>=58:
+                        wordsall+="\n"
+                        alphacount=0
+                    wordsall+=word
+                    
+                    self.update_chara_num.emit(i,wordsall,charanum,wordset)
+
+                break
+
+###

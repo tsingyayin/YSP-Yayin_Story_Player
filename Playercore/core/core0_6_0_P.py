@@ -1,6 +1,10 @@
 #这个文件是解释器核心
 #这个文件用来揪出所有需要预处理的图像
-#我们心意已决不用任何GPU加速，所以我们要用CPU强算
+#我们心意已决不用任何GPU加速，所以我们要用CPU强行运算
+
+#解释器采用启动协议Plugin2
+#解释器版本Py_Qt_SPOL0.6.0_P
+
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -8,7 +12,6 @@ import time as tm
 import sys
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
-
 import traceback
 
 #立绘独立上隐效果
@@ -476,7 +479,7 @@ class LocalInfo(QObject):
         Storyname=storyname
 
 #逐行循环基本滤镜识别
-def CNewEffect():
+def CNewEffect(self):
   global files,Storyname,threadeffect
   #线程计数
   threadeffect=0
@@ -496,7 +499,10 @@ def CNewEffect():
     if lineraw[-1]!="\n":
         lineraw+="\n"
     #不予判定的情况
-    if lineraw[0]=="#" or lineraw[0]=="/" or lineraw[0]==" " or lineraw[0]==":" or lineraw[0]=="{" or lineraw[0:2]=="||":continue
+    if lineraw[0]=="#" or lineraw[0]=="/" or lineraw[0]==" " or lineraw[0]==":" :continue
+
+    if lineraw[0:3]==">>>" or lineraw[0:3]==">^>" or lineraw[0:3]=="-->" or (lineraw[0:3]=="|||" and lineraw[0:-1]!="|||")   or lineraw[0:1]=="[" or lineraw[0:1]=="{" or lineraw[0:1]=="<" :
+        self.save_line_list.emit([linecount,lineraw[:-1]])
 
     #在遍历所需文件的这个核心，对于小分支控制器直接去掉首字符“|”就行
 
@@ -650,7 +656,7 @@ def CNewEffect():
   files.close()
 
 #逐行识别变暗
-def CNewDark():
+def CNewDark(self):
   global files,Storyname,threadeffect
   #线程统计
   threadeffect=0

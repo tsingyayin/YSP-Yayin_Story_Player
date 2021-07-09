@@ -1,5 +1,7 @@
 #这个文件是解释器核心
-#这个是给UI用的版本
+#解释器采用启动协议Plugin2
+#解释器版本Py_Qt_SPOL0.6.0_U
+
 import time as tm
 import sys
 from langcontrol import *
@@ -14,8 +16,15 @@ class USERSPEEDRECIVE(QObject):
         speed=float(setspeed)
         return
 
-speed=1.0
+class USERSWITCHLINE(QObject):
+    def __init__(self):
+        super(USERSWITCHLINE,self).__init__()
+    def get(self,setline):
+        global linecount
+        linecount=setline
+        return
 
+branchlabel=""
 class USERCHOOSEBRANCHRECIVE(QObject):
     def __init__(self):
         super(USERCHOOSEBRANCHRECIVE,self).__init__()
@@ -24,12 +33,23 @@ class USERCHOOSEBRANCHRECIVE(QObject):
         branchlabel=BranchLabel
         return
 
+
+class STORYPLAYING(QObject):
+    def __init__(self):
+        super(STORYPLAYING,self).__init__()
+    def get(self,StoryPlaying):
+        global isPlaying
+        isPlaying=StoryPlaying
+        return
+
 def SPOL(self,files,Storyname):
-  global warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline,branchlabel,speed
+  global warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline,branchlabel,speed,isPlaying,linecount
+  speed=1.0
+  isPlaying=1
     #跨行注释状态确认
   textend=0
     #行计数
-  linecount=0
+  linecount=-1
     #对话分支状态确认
   conver=0
   convertag=0
@@ -40,12 +60,28 @@ def SPOL(self,files,Storyname):
   bgdisplaymode={"0":msg("Bgp_Display_Mode_Normal"),"1":msg("Bgp_Display_Mode_Dark"),"2":msg("Bgp_Display_Mode_Fade"),"3":msg("Bgp_Display_Mode_FadeDark"),"4":msg("Bgp_Display_Mode_B&W"),"5":msg("Bgp_Display_Mode_B&WDark")}
   bgeffectmode={"0":msg("Bgp_Effect_Mode_Normal"),"1":msg("Bgp_Effect_Mode_Shake"),"2":msg("Bgp_Effect_Mode_W1"),"3":msg("Bgp_Effect_Mode_W2")}
   textmode={"L":msg("Freedom_Text_Mode_L"),"M":msg("Freedom_Text_Mode_M"),"R":msg("Freedom_Text_Mode_R")}
-  for lineraw in files.readlines(): 
+
+  #主解释循环
+  linerawlst = files.readlines()
+  while True:
     linecount+=1
+    try:
+        lineraw=linerawlst[linecount]
+    except:
+        break
+    else:
+        None
     #先看有没有回车，没有就给它加上，但是要提出警告
     if lineraw[-1]!="\n":
         lineraw+="\n"
         formatwarnline+=[[linecount,Storyname,lineraw[:-1]]]
+
+    self.now_which_line.emit(linecount)
+    #退出解释循环
+    if isPlaying==0:
+        break
+
+    
     #不予判定的情况
     if (lineraw[0]=="#" and lineraw[0:3]!="###") or lineraw[0]=="/" or lineraw[0]==" " or lineraw[0]==":":continue
 
@@ -136,16 +172,39 @@ def SPOL(self,files,Storyname):
             if not 0<=int(bgsetlst[2])<=3:raise Exception
             if 0>float(bgsetlst[3]):raise Exception
             self.can_update_bg.emit(bgsetlst)
+            opfloat=0
             if bgsetlst[3]!="0" :
-                for i in range(0,21):
-                    tm.sleep((float(bgsetlst[3])*speed)/20)
-                    self.update_num_bg.emit(i,bgsetlst)
+                if 0<float(bgsetlst[3])<1.5:
+                    for i in range(0,21):
+                        tm.sleep((float(bgsetlst[3])*speed)/20)
+                        opfloat=i/20
+                        self.update_num_bg.emit(opfloat,bgsetlst)
+                elif 1.5<=float(bgsetlst[3])<3:
+                    for i in range(0,41):
+                        tm.sleep((float(bgsetlst[3])*speed)/40)
+                        opfloat=i/40
+                        self.update_num_bg.emit(opfloat,bgsetlst)
+                elif 3<=float(bgsetlst[3])<5:
+                    for i in range(0,61):
+                        tm.sleep((float(bgsetlst[3])*speed)/60)
+                        opfloat=i/60
+                        self.update_num_bg.emit(opfloat,bgsetlst)
+                elif 5<=float(bgsetlst[3])<10:
+                    for i in range(0,101):
+                        tm.sleep((float(bgsetlst[3])*speed)/100)
+                        opfloat=i/100
+                        self.update_num_bg.emit(opfloat,bgsetlst)
+                elif 10<=float(bgsetlst[3]):
+                    for i in range(0,201):
+                        tm.sleep((float(bgsetlst[3])*speed)/200)
+                        opfloat=i/200
+                        self.update_num_bg.emit(opfloat,bgsetlst)
                 self.willstop.emit()
                 self.pause()
                 self.inrunning.emit()
             else :
                 self.update_num_bg.emit(0,bgsetlst)
-                self.update_num_bg.emit(20,bgsetlst)
+                self.update_num_bg.emit(1,bgsetlst)
                 self.willstop.emit()
                 self.pause()
                 self.inrunning.emit()
@@ -211,7 +270,7 @@ def SPOL(self,files,Storyname):
                 wordset=[line[line.rindex("(")+1:-2].split(",")[0],line[line.rindex("(")+1:-2].split(",")[1]]
             line=line[0:line.rindex("(")+1]       #方便下面处理，将文本控制器从字符串中删去
         #填充文本控制器空位
-        if wordset[0]=="":wordset[0]="0.1"
+        if wordset[0]=="":wordset[0]="0.066"
         if wordset[1]=="":wordset[1]="1.5"
         try:
             if float(wordset[0])<0:raise Exception
@@ -282,44 +341,45 @@ def SPOL(self,files,Storyname):
                 charapic[0][6]="(暗，沉默)"
                 charapic[1][6]="(亮，讲述)"
         self.can_update_chara.emit(charapic,charawords,wordset,charanum,BGblack)
+
         wordsall=""
         for i in charawords:
-            if i[0]=="" and charanum==1:
+            if i[1]=="" and charanum==1:
+                self.update_chara_num.emit(i,wordsall,charanum,wordset)
+                break
+            elif (i[0]=="" and charanum==1) or (i[0]!="" and i[1]!=""):
                 alphacount=0
                 if i[1]=="":
                     self.update_chara_num.emit(i,wordsall,charanum,wordset)
                 elif i[1]!="":
-                    for word in i[1]:
-                        tm.sleep(float(wordset[0])*speed)
-                        if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
-                            alphacount+=2
-                        else:
-                            alphacount+=1
-                        if alphacount>=58:
-                            wordsall+="\n"
-                            alphacount=0
-                        wordsall+=word
+                    if float(wordset[0])!=0:
+                        for word in i[1]:
+                            tm.sleep(float(wordset[0])*speed)
+                            if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
+                                alphacount+=2
+                            else:
+                                alphacount+=1
+                            if alphacount>60:
+                                wordsall+="\n"
+                                alphacount=1
+                            wordsall+=word
+                            self.update_chara_num.emit(i,wordsall,charanum,wordset)
+                    elif float(wordset[0])==0:
+                        for word in i[1]:
+                            if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
+                                alphacount+=2
+                            else:
+                                alphacount+=1
+                            if alphacount>60:
+                                wordsall+="\n"
+                                alphacount=1
+                            wordsall+=word
                         self.update_chara_num.emit(i,wordsall,charanum,wordset)
                 break
-            elif i[1]=="" and charanum==1:
-                self.update_chara_num.emit(i,wordsall,charanum,wordset)
-                break
-            elif (i[0]!="" and i[1]!="") or (i[0]!="" and charanum==1) :
-                alphacount=0
-                for word in i[1]:
-                    tm.sleep(float(wordset[0])*speed)
-                    if '\u4e00' <= word <= '\u9fff':
-                        alphacount+=2
-                    else:
-                        alphacount+=1
-                    if alphacount>=58:
-                        wordsall+="\n"
-                        alphacount=0
-                    wordsall+=word
-                    
-                    self.update_chara_num.emit(i,wordsall,charanum,wordset)
 
-                break 
+            #这个地方删掉了老的讲述状况辨别代码，因为貌似前端UI也有个类似的判断系统能起作用，所以后端 应 该 不需要预先分情况辨别
+            #删掉的代码在“core0_6_0_U-old code protect.txt”的注释为“讲述状况辨别代码”的地方
+
         self.willstop.emit()
         tm.sleep(float(wordset[1])*speed)
         self.show_next.emit()
@@ -342,7 +402,7 @@ def SPOL(self,files,Storyname):
                 wordset=[line[line.rindex("(")+1:-2].split(",")[0],line[line.rindex("(")+1:-2].split(",")[1]]
             line=line[0:line.rindex("(")+1]       #方便下面处理，将文本控制器从字符串中删去
         #填充文本控制器空位
-        if wordset[0]=="":wordset[0]="0.1"
+        if wordset[0]=="":wordset[0]="0"
         if wordset[1]=="":wordset[1]="1.5"
         try:
             if float(wordset[0])<0:raise Exception
@@ -353,7 +413,7 @@ def SPOL(self,files,Storyname):
             textsetcount=len(inforaw[0].split("/"))
             if textsetcount>3:raise Exception
             textset=inforaw[0].split("/")+[""]*(3-textsetcount)+[inforaw[1]]
-            if textset[0]=="":textset[0]="0.2"
+            if textset[0]=="":textset[0]="0.125"
             if textset[1]=="":textset[1]="0.444"
             if textset[2]=="":textset[2]="M"
             if textset[3]=="":textset[3]=" "
@@ -368,17 +428,30 @@ def SPOL(self,files,Storyname):
             self.can_update_freedom.emit(textset,wordset)
             wordsall=""
             alphacount=0
-            for word in textset[3]:
-                tm.sleep(float(wordset[0])*speed)
-                if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
-                    alphacount+=2
-                else:
-                    alphacount+=1
-                if alphacount>=58:
-                    wordsall+="\n"
-                    alphacount=0
-                wordsall+=word
+            if float(wordset[0])!=0:
+                for word in textset[3]:
+                    tm.sleep(float(wordset[0])*speed)
+                    if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
+                        alphacount+=2
+                    else:
+                        alphacount+=1
+                    if alphacount>80:
+                        wordsall+="\n"
+                        alphacount=0
+                    wordsall+=word
+                    self.update_num_freedom.emit(wordsall)
+            elif float(wordset[0])==0:
+                for word in textset[3]:
+                    if '\u4e00' <= word <= '\u9fff' or "\u3040" <= word <= "\u309f" or "\u30a0" <= word <= "\u30ff":
+                        alphacount+=2
+                    else:
+                        alphacount+=1
+                    if alphacount>80:
+                        wordsall+="\n"
+                        alphacount=0
+                    wordsall+=word
                 self.update_num_freedom.emit(wordsall)
+
         self.willstop.emit()
         tm.sleep(float(wordset[1])*speed)
         self.show_next.emit()
