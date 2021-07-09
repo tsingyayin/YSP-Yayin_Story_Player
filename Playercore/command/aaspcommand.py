@@ -8,14 +8,61 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 import sys
 from Visual.ArtificialUI import *
-
-import core.core0_6_0_U as core0_6_0_U
-import core.core0_6_0_P as core0_6_0_P
-import core.core0_6_0 as core0_6_0
-
+from arknights.HLtoSPOL import *
 import time as tm
 from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
+from command.checkupdate import *
+
+Day=20210709
+Edition="Ver0.7.0.0_Pre4(Build85.0)_SPOL0.6.0;Py_Qt"
+InsiderMainVer=Edition[Edition.index("Ver")+3:Edition.index("_P")]
+InsiderSubVer=Edition[Edition.index("_P")+1:Edition.index("(Build")]
+InsiderBuildVer=Edition[Edition.index("(Build")+6:Edition.index(")")]
+InsiderSPOLVer=Edition[Edition.index("SPOL")+4:Edition.index(";Py_Qt")]
+InsiderSPOLEnvVer="Python_PyQt"
+
+urlGithub="https://github.com/tsingyayin/YSP-Yayin_Story_Player"
+urlAFD="https://afdian.net/@ysp_Dev?tab=home"
+
+#提供TopWindow的各项功能的标准执行-返回讯息框架
+class FrameWork(QObject):
+    AnyInfo=pyqtSignal(int,str)
+    def __init__(self):
+        super(FrameWork,self).__init__()
+
+    def send(self,group,text):
+        self.AnyInfo.emit(group,text)
+
+    def ui_aasphelp(self):
+        aasphelp()
+
+    def ui_Tospol(self,fileipt):
+        func=HLtoSPOL(fileipt)
+        if func==True:
+            self.AnyInfo.emit(1,msg("Ui_To_Spol_End"))
+        else :
+            self.AnyInfo.emit(2,msg("Ui_To_Spol_End_Error"))
+
+    def ui_langset(self,filename):
+        langset(filename)
+        self.AnyInfo.emit(1,msg("Lang_Set_Success").format(filename))
+
+    def ui_DeleteEmptyMap(self):
+        DeleteEmptyMap(0)
+        self.AnyInfo.emit(1,msg("File_Searching_Wrong_End"))
+
+    def ui_DeleteAllCache(self):
+        DeleteAllCache(0)
+        self.AnyInfo.emit(1,msg("File_Cache_Deleted"))
+
+    def ui_CheckUpdate(self):
+        INFO=Checkupdate(0)
+        if INFO[0]==1:
+            self.AnyInfo.emit(1,msg("Check_Update_Info_New"))
+        elif INFO[0]==2:
+            self.AnyInfo.emit(1,msg("Check_Update_Info_Insider"))
+        return INFO[1]
 
 #帮助
 def aasphelp():
@@ -24,139 +71,13 @@ def aasphelp():
     print("clrall"+"\t"+msg("Help_In_Main_Page_clearall"))
     print("exit"+"\t"+msg("Help_In_Main_Page_exit"))
     print("help"+"\t"+msg("Help_In_Main_Page_help"))
-    print("line"+"\t"+msg("Help_In_Main_Page_line"))
     print("lang"+"\t"+msg("Help_In_Main_Page_lang"))
-    print("spawn"+"\t"+msg("Help_In_Main_Page_spawn"))
     print("tospol"+"\t"+msg("Help_In_Main_Page_tospol"))
     print("ui"+"\t"+msg("Help_In_Main_Page_ui"))
-
-#全文解释模式启动器
-def spawn():
-    Open=False
-    global warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
-
-    while Open==False:
-        try:
-            print("sysinfo→"+msg("Spawn_Mode_Name_Of_File"))
-            Storyname=input()
-            if Storyname=="exit":
-                return
-            else:
-                files=open("story\\"+Storyname,"r",encoding="UTF-8")
-        except IOError:
-            print("sysinfo→"+msg("Spawn_Mode_Not_Found").format(Storyname))
-        else:
-            Open=True
-
-    Ver=""
-    linecount=0
-
-    for line in files.readlines():
-        linecount+=1
-        #先看有没有回车，没有就给它加上，但是要提出警告
-        if line[-1]!="\n":
-            line+="\n"
-            formatwarnline+=[[linecount,Storyname,line[:-1]]]
-
-        #查找版本号
-        if line[0]=="/": 
-            Ver=line[1:-1]
-            print(msg("Spawn_Mode_Get_Version"),Ver)
-
-        #获取标题控制器
-        elif line[0]==":":
-            if line.count(":")!=4:
-                texterrorline+=[[linecount,Storyname,line[:-1]]]
-                break
-            try:
-                Titlesetlst=line[1:-1].split(":")
-                if len(Titlesetlst)!=4:raise Exception
-            except Exception:
-                numseterrorline+=[[linecount,Storyname,line[:-1]]]
-                Ver="TitleERROR"
-            else:
-                print(msg("Spawn_Mode_Get_Title"),Titlesetlst[0])
-                print(msg("Spawn_Mode_Get_Subtitle"),Titlesetlst[1])
-
-            break
-
-
-#重新打开文件，从头开始处理
-    files=open("story\\"+Storyname,"r",encoding="UTF-8")
-
-    if Ver=="SPOL0.6.0":                                                         #遵循SPOL0.6.0标准的读取
-        run=1
-        while run!=0:
-            run=core0_6_0.SPOL(files,Storyname)
-            files.close()
-            try:
-                files=open("story\\"+run+".spol","r",encoding="UTF-8")
-                Storyname=run+".spol"
-            except Exception:
-                run=0
-            else:
-                None
-
-    
-
-    else:
-        print(msg("Spawn_Mode_Version_Error").format(Ver))
-        
-      #错误警示
-    print("#####################")
-    if warnline!=[]:
-      print(msg("Warning_Warn_Count").format(len(warnline)))
-      for i in warnline:
-          print(msg("Warning_Warn_Info").format(i[0],i[1],i[2]))
-      print()
-    if texterrorline!=[]:
-      print(msg("Warning_Texterror_Count").format(len(texterrorline)))
-      for i in texterrorline:
-          print(msg("Warning_Texterror_Info").format(i[0],i[1],i[2]))
-      print()
-    if formatwarnline!=[]:
-      print(msg("Warning_Formatwarn_Count").format(len(formatwarnline)))
-      for i in formatwarnline:
-          print(msg("Warning_Formatwarn_Info").format(i[0],i[1],i[2]))
-      print()
-    if numseterrorline!=[]:
-      print(msg("Warning_Numseterror_Count").format(len(numseterrorline)))
-      for i in numseterrorline:
-          print(msg("Warning_Numseterror_Info").format(i[0],i[1],i[2]))
-      print()
-    if nameerrorline!=[]:
-      print(msg("Warning_Nameerror_Count").format(len(nameerrorline)))
-      for i in nameerrorline:
-          print(msg("Warning_Nameerror_Info").format(i[0],i[1],i[2]))
-      print()
-    print("sysinfo→"+msg("Spawn_Mode_End"))
-    input()
-    print("#####################")
-
-#单行解释模式启动器
-def singletext():
-    while True:
-        print("sysinfo→"+msg("Single_Mode_Input_Version"))
-        linestandard=input(r"Userinput\line→")
-        if linestandard=="help":
-            print(msg("Single_Mode_Version_List")+"\n"+"0.6.0")
-
-        elif linestandard=="0.6.0":
-            while True:
-                Usrtextipt=input(r"Userinput\line\SPOL0.6.0→")
-                if Usrtextipt=="exit":
-                    break
-                else:
-                    core0_6_0.SPOL_s(Usrtextipt+"\n")
-
-
-        elif linestandard=="exit":
-            break
-        else:
-            print("sysinfo→"+msg("Single_Mode_Version_Error").format(linestandard))
+    print("window"+"\t"+msg("Help_In_Main_Page_window"))
 
 #语言修改   
-def langinput():
+def langinput(num=1):
     print("sysinfo→"+msg("Lang_Input_Msg"))
     while True:
         usrinput=input("Userinput\lang→")
@@ -170,16 +91,21 @@ def langinput():
                 break
             else :
                 continue
+
     print("sysinfo→"+msg("Lang_Set_Success").format(usrinput))
 
 #显示程序信息    
 def about():
-    print(msg("About_Info_Version")+" Ver0.6.0.0_Pre2")
-    print(msg("About_Info_Developers"))
-    print(msg("About_Info_Environment"))
-    print(msg("About_Info_Support"))
-    print(msg("About_Info_Help"))
-    print("\n这个版本仅限测试组内使用，不得传播给他人。")
+    print(msg("About_Info_Main_Ver")+InsiderMainVer)
+    print(msg("About_Info_Sub_Ver")+InsiderSubVer)
+    print(msg("About_Info_Build_Ver")+InsiderBuildVer)
+    print(msg("About_Info_Spol_Ver")+InsiderSPOLVer)
+    print(msg("About_Info_Spol_Env_Ver")+InsiderSPOLEnvVer)
+    print(msg("About_Info_Developers")+"青雅音 Tsing Yayin")
+    print(msg("About_Info_Environment")+"Visual Studio 2019")
+    print(msg("About_Info_Support")+"亿绪联合协会 UYXA")
+    print(msg("About_Info_Help").format(urlGithub))
+    print(msg("About_Info_Donate").format(urlAFD))
 
 #UI启动前屏幕像素判断函数
 def ui():
@@ -203,6 +129,62 @@ def ui():
     del monitor
     print("Sysinfo→"+msg("Main_Display_Size").format(X,Y))
     return [X,Y]
+
+#启动播放页
+def LaunchUI():
+            try:
+                del app
+            except:
+                None
+            else:
+                None
+            app=QApplication(sys.argv)
+            monitor_range=ui()
+            if monitor_range[0]<1366 or monitor_range[1]<768:
+                print("sysinfo→"+msg("Screen_Too_Small").format(monitor_range[0],monitor_range[1]))
+                #break
+            else:
+                SPLASHES(splashes())
+                Mainwindow=MainWindow()
+                Mainwindow.showFullScreen()
+                try:
+                    sys.exit(app.exec_())
+                except SystemExit:
+                    None
+                else:
+                    None   
+                DirectOpen=0
+
+ #启动HL子核心
+def HLtoSPOL(fileipt):
+  if fileipt==0:
+    print("sysinfo→官方资源文件转SPOL程序")
+    print("sysinfo→请输入需要转换的资源文件的名称")
+  while True:
+    if fileipt==0:
+        filename=input(r"Userinput\tospol→")
+    else:
+        filename=fileipt
+    try:
+        if filename=="exit":
+            return
+        file=open(".\\arknights\\story\\"+filename+".txt","r",encoding="UTF-8")
+    except IOError:
+        print("sysinfo→找不到文件",filename)
+        if fileipt!=0:
+            return False
+    else:
+        print("sysinfo→已经找到文件",filename)
+        break
+
+  try:
+    os.remove(r".\\story\\"+filename+".spol")
+  except Exception:
+    None
+  else:
+    None
+  ToSPOL(filename,file)
+  return True
 
 #空文件清理函数
 def DeleteEmptyMap(num):
@@ -237,12 +219,54 @@ def DeleteAllCache(num):
 #文件系统保全函数
 def ensuredirs(num):
     print("sysinfo→Checking the files in the directory")
-    dirslst=[".\\CrashReport",".\\text",".\\story",".\\lang",".\\Visual\\cache\\BGP",".\\Visual\\cache\\Chara",".\\arknights\\cache"]
+    dirslst=[".\\CrashReport",".\\text",".\\story",".\\lang",".\\Visual\\cache\\BGP",".\\Visual\\cache\\Chara",".\\arknights\\cache",".\\arknights\\story"]
     for i in dirslst:
         if not os.path.exists(i):
             print("sysinfo→Directory '"+i+"' missed.Now rebuilding...")
             os.makedirs(i)
     print("sysinfo→Checked")
+
+#检查更新
+def Checkupdate(num):
+    VerList=VersionList(Day,Edition)
+    if type(VerList)!=list:
+        if VerList=="ERROR":
+            print("sysinfo→"+msg("Check_Update_Info_Net_Error"))
+            return [4,0]
+    elif type(VerList)==list:
+        try:
+            Prelist=[]
+            Publist=[]
+            for Verinfo in VerList:
+                if Verinfo[2]=="Pre":
+                    Prelist+=[Verinfo]
+                elif Verinfo[2]=="Pub" or Verinfo[2]=="Branch":
+                    Publist+=[Verinfo]
+            if "Pre" in InsiderSubVer:
+                print("sysinfo→"+msg("Check_Update_Info_Pre"))
+                LatestVer=Prelist[0]
+            elif "Pub" in InsiderSubVer:
+                print("sysinfo→"+msg("Check_Update_Info_Pub"))
+                LatestVer=Publist[0]
+            else:
+                print("sysinfo→"+msg("Check_Update_Info_Branch"))
+                LatestVer=Publist[0]
+            LatestBuildVer=LatestVer[1][LatestVer[1].index("(Build")+6:LatestVer[1].index(")")]
+            if float(LatestBuildVer)>float(InsiderBuildVer):
+                print("sysinfo→"+msg("Check_Update_Info_Latest").format(LatestVer[0],LatestVer[1]))
+                return [0,LatestVer[1]]
+            elif float(LatestBuildVer)==float(InsiderBuildVer):
+                print("sysinfo→"+msg("Check_Update_Info_New"))
+                return [1,0]
+            elif float(LatestBuildVer)<float(InsiderBuildVer):
+                print("sysinfo→"+msg("Check_Update_Info_Insider"))
+                return [2,0]
+        except:
+            print("sysinfo→"+msg("Check_Update_Info_Ver_Error"))
+            return [3,0]
+    else:
+        print("sysinfo→"+msg("Check_Update_Info_Net_Error"))
+        return [4,0]
 
 #Splash标语
 splashlst=[]
@@ -259,6 +283,3 @@ def splashes():
     if splashlst==[]:
         splashlst+=["您有没有注意到您的标语文件里面啥也没写？"]
     return splashlst
-    #for i in splashlst:
-        #print(i[:-1])
-        

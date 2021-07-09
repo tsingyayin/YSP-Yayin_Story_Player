@@ -1,4 +1,6 @@
-#这个文件用来启动UI版对应核心。
+#这个文件用来启动解释器线程
+#支持解释器协议为 PLugin2
+
 import core.core0_6_0_U as core0_6_0_U
 import core.core0_6_0_P as core0_6_0_P
 
@@ -20,7 +22,7 @@ class SPAWN(QThread):
  update_chara_num=pyqtSignal(list,str,int,list)
 
  can_update_bg=pyqtSignal(list)
- update_num_bg=pyqtSignal(int,list)
+ update_num_bg=pyqtSignal(float,list)
 
  can_update_bgm=pyqtSignal(str,int)
  can_update_sound=pyqtSignal(str,int)
@@ -43,6 +45,13 @@ class SPAWN(QThread):
  can_clear_freedom=pyqtSignal(int)
 
  send_file_info=pyqtSignal(str)
+
+ clr_line_list=pyqtSignal()
+ save_line_list=pyqtSignal(list)
+ set_scroll_info=pyqtSignal()
+
+ now_which_line=pyqtSignal(int)
+
  def __init__(self):
      super(SPAWN,self).__init__()
      self.mutex=QMutex()
@@ -68,7 +77,8 @@ class SPAWN(QThread):
     self.can_hide_hello.emit(1)
     Ver=""
     linecount=0
-
+    Verlst=["",""]
+    spolensure=0
     for line in files.readlines():
         linecount+=1
         #先看有没有回车，没有就给它加上，但是要提出警告
@@ -79,10 +89,11 @@ class SPAWN(QThread):
         #查找版本号
         if line[0]=="/": 
             Ver=line[1:-1]
+            Verlst=[Ver.split("-")[0],Ver.split("-")[-1]]
             print(msg("Spawn_Mode_Get_Version"),Ver)
-
+            spolensure=1
         #获取标题控制器
-        elif line[0]==":":
+        elif line[0]==":" and spolensure==1:
             if line.count(":")!=4:
                 texterrorline+=[[linecount,Storyname,line[:-1]]]
                 break
@@ -91,18 +102,20 @@ class SPAWN(QThread):
                 if len(Titlesetlst)!=4:raise Exception
             except Exception:
                 numseterrorline+=[[linecount,Storyname,line[:-1]]]
-                Ver="TitleERROR"
+                Verlst[0]="TitleERROR"
             else:
-                if Ver=="SPOL0.6.0":  
+                if Verlst[0]=="SPOL0.6.0" or Verlst[1]=="FollowNew":  
                     self.can_show_title.emit(Titlesetlst)
+                    self.clr_line_list.emit()
                     tm.sleep(2)
                     self.giveinfo=core0_6_0_P.LocalInfo()
                     self.send_file_info.connect(self.giveinfo.get)
                     self.send_file_info.emit(Storyname)
-                    finding1=core0_6_0_P.CNewEffect()
+                    finding1=core0_6_0_P.CNewEffect(self)
                     tm.sleep(1)
                     self.can_hide_title.emit()
-                    finding2=core0_6_0_P.CNewDark()
+                    finding2=core0_6_0_P.CNewDark(self)
+                    self.set_scroll_info.emit()
                     tm.sleep(1)  
                     print(msg("Effect_Info_Searched").format(Storyname.split(r"/")[-1]))
                     self.can_prepare_play.emit()
@@ -112,7 +125,7 @@ class SPAWN(QThread):
     files=open(Storyname,"r",encoding="UTF-8")
     Storyname=Storyname.split(r"/")[-1]
 
-    if Ver=="SPOL0.6.0":                                                         #遵循SPOL0.6.0标准的读取
+    if Verlst[0]=="SPOL0.6.0" or  Verlst[1]=="FollowNew":                                                         #遵循SPOL0.6.0标准的读取
         runing=1
         count=0
         while runing!=0:
@@ -121,11 +134,13 @@ class SPAWN(QThread):
                 runing=core0_6_0_U.SPOL(self,files,Storyname)
                 files.close()
             if count!=1:
+                self.clr_line_list.emit()
                 self.giveinfo=core0_6_0_P.LocalInfo()
                 self.send_file_info.connect(self.giveinfo.get)
                 self.send_file_info.emit("story\\"+runing+".spol")
-                finding1=core0_6_0_P.CNewEffect()
-                finding2=core0_6_0_P.CNewDark()
+                finding1=core0_6_0_P.CNewEffect(self)
+                finding2=core0_6_0_P.CNewDark(self)
+                self.set_scroll_info.emit()
                 print(msg("Effect_Info_Searched").format(Storyname))
                 runing=core0_6_0_U.SPOL(self,files,Storyname)
                 files.close()
