@@ -1,8 +1,14 @@
 About_Info_Version:µ±Ç°°æ±¾ÊÇ£º
-About_Info_Developers:¿ª·¢Õß£ºÇàÑÅÒô
-About_Info_Environment:¿ª·¢»·¾³£ºVisual Studio 2019
-About_Info_Support:¿ª·¢Ö§³Ö£º°®Ê«ç±ÀïÍ¬ÈË¾çÇé×é¡¢ÒÚĞ÷ÁªºÏĞ­»á
-About_Info_Help:°ïÖú£ºÇ°ÍùÍøÖ·https://github.com/tsingyayin/YSP-Yayin_Story_PlayerÑ°ÇóÖ§³Ö
+About_Info_Main_Ver:Ö÷°æ±¾±àºÅ£º
+About_Info_Sub_Ver:¸üĞÂ±àºÅ£º
+About_Info_Build_Ver:¹¹½¨±àºÅ£º
+About_Info_Spol_Ver:SPOL°æ±¾£º
+About_Info_Spol_Env_Ver:SPOL½âÊÍÆ÷»·¾³ÀàĞÍ£º
+About_Info_Developers:¿ª·¢Õß£º
+About_Info_Environment:¿ª·¢»·¾³£º
+About_Info_Support:¿ª·¢Ö§³Ö£º
+About_Info_Help:°ïÖú£ºÇ°ÍùÍøÖ·{}Ñ°ÇóÖ§³Ö
+About_Info_Donate:ÔŞÖúÁ´½Ó£º{}
 
 Avg_Effect_Mode_Normal:Õı³£
 Avg_Effect_Mode_Cover:ÉÏÒşÕÚÕÖ
@@ -32,6 +38,15 @@ Branch_Info_Input:ÇëÊäÈëÄúµÄÑ¡Ôñ
 Chara_Pic_Setting_Info:{}Á¢»æ{}(µ­Èë{}Ãëµ­³ö{}Ãë)
 Chara_Pic_Setting_Info_R:{}·­×ªÁ¢»æ{}(µ­Èë{}Ãëµ­³ö{}Ãë)
 
+Check_Update_Info_Latest:×îĞÂ°æ±¾ÊÇÓÚ{}ÈÕ·¢²¼µÄ°æ±¾{}£¬¿ÉÒÔ¿¼ÂÇÉı¼¶
+Check_Update_Info_New:ÄúµÄ°æ±¾ÊÇ×îĞÂ°æ±¾
+Check_Update_Info_Insider:ÄúÕıÔÚÊ¹ÓÃ¿ª·¢°æ±¾£¬ÇëÎğÍâ´«
+Check_Update_Info_Ver_Error:ÔİÊ±ÎŞ·¨²éÖ¤°æ±¾ºÅ£¬ÇëÉÔºóÖØÊÔ
+Check_Update_Info_Net_Error:Óöµ½ÁËÒ»Ğ©ÎÊÌâ£¬ÎŞ·¨¼ì²é¸üĞÂ
+Check_Update_Info_Pre:¼ìË÷Ô¤ÀÀ°æ±¾¸üĞÂÏß
+Check_Update_Info_Pub:¼ìË÷¹«¿ª°æ±¾¸üĞÂÏß
+Check_Update_Info_Branch:¼ìË÷·ÖÖ§°æ±¾¸üĞÂÏß
+
 Command_Error:²»ÄÜ½«ÎÄ±¾¡°{}¡±Ê¶±ğÎªÈÎºÎÏÖÓĞÖ¸Áî¡£
 Choose_File:´ò¿ª¾çÇéÎÄ¼ş
 
@@ -59,13 +74,12 @@ Freedom_Text_Setting_Info:£¨×ø±êÊÇ({},{})¡£²ÉÓÃ{}£©
 Help_In_Main_Page_about_:Õ¹Ê¾ÓĞ¹ØĞÅÏ¢
 Help_In_Main_Page_clear:ÇåÀíËğ»µÍ¼Ïñ»º´æ
 Help_In_Main_Page_help:ÓÃÀ´²éÑ¯Ö§³ÖµÄÖ¸ÁîÁĞ±í
-Help_In_Main_Page_spawn:½øÈëÎÄ¼ş½âÊÍÄ£Ê½
-Help_In_Main_Page_line:½øÈë¾çÇéÎÄ±¾µ¥ĞĞ²âÊÔÄ£Ê½
 Help_In_Main_Page_exit:ÍË³ö³ÌĞò£¨»ò³ÌĞòµÄÈÎÒâÒ»¼¶£©
 Help_In_Main_Page_lang:µ÷Õû³ÌĞòÓïÑÔ
 Help_In_Main_Page_ui:Æô¶¯UIÒ³Ãæ
 Help_In_Main_Page_tospol:½«¹Ù·½ÎÄµµ×°»»ÎªSPOL
 Help_In_Main_Page_clearall:ÇåÀíÈ«²¿»º´æ
+Help_In_Main_Page_window:Õ¹Ê¾ÓÃ»§UIÒ³Ãæ
 
 Lang_Input_Msg:Çë¼üÈëÄúĞèÒªµÄÓïÑÔµÄÎÄ¼şÃû
 Lang_Set_Success:ÉèÖÃÓïÑÔ{}³É¹¦
@@ -98,6 +112,8 @@ System_Info:ÄúµÄ²Ù×÷ÏµÍ³ÊÇ£º
 System_Not_Win10:ÒÑ¾­¶ÔÄúËùÔËĞĞµÄWindows°æ±¾{}Í£Ö¹Ö§³Ö£¬ÇëÇ¨ÒÆµ½Windows10
 System_Win10_Too_Old:ÒÑ¾­Í£Ö¹Ö§³ÖÄúÊ¹ÓÃµÄWindows10ÏµÍ³(ÄÚ²¿°æ±¾{})£¬ËüµÍÓÚWindows10µÄ2017ÄêÇï¼¾¸üĞÂ(ÄÚ²¿°æ±¾16299)¡£Çë½«ÄúµÄWindows10Éı¼¶µ½×îĞÂ°æ±¾¡£
 
+To_Spol_End:×ª»»Íê±Ï
+
 Ui_Mode_End:UIÒÑ¾­²¥·ÅÍêµ±Ç°¾çÇé
 
 Warning_Warn_Count:¶ÁÈ¡¹ı³Ì¹²³öÏÖÁË{}¸ö¾¯¸æ£º
@@ -111,3 +127,27 @@ Warning_Numseterror_Info:ĞĞ{}ÔÚÎÄ¼ş{}ÖĞµÄ¿ØÖÆÆ÷¡°{}¡±Óöµ½ÁË²ÎÊı´íÎó£º³¬³ö·¶Î§»ò³
 Warning_Nameerror_Count:¶ÁÈ¡¹ı³ÌÖĞ¹²·¢ÏÖÁË{}¸ö±êÇ©£¨Ãû³Æ£©ÉèÖÃ´íÎó£º
 Warning_Nameerror_Info:ĞĞ{}ÔÚÎÄ¼ş{}ÖĞµÄ¿ØÖÆÆ÷¡°{}¡±Óöµ½ÁË±êÇ©£¨Ãû³Æ£©ÉèÖÃ´íÎó£º¸Ã±êÇ©£¨Ãû³Æ£©ÓëÏà¹ØÉèÖÃ²»Æ¥Åä
 
+Ui_AutoButton_Auto:×Ô¶¯
+Ui_AutoButton_Auto_Off:×Ô¶¯OFF
+Ui_NextButton:ÏÂÒ»Ò³
+Ui_Thread_Core_Wake:ÒÑ¾­³¢ÊÔ»½ĞÑ½âÊÍÆ÷Ïß³Ì£¬»Ø³µ¼ü½öÓÃÓÚ½âÊÍÆ÷¿¨ËÀÊ±»½ĞÑÓÃ£¬²»ÒªÓÃ×÷·­Ò³µÄ°´¼ü¡£
+Ui_Current_Line:µ±Ç°
+Ui_To_Which_Line:Ìø×ª
+Ui_Msg_Yes:È·¶¨
+Ui_Msg_Back:·µ»Ø
+Ui_Msg_About_:¹ØÓÚ
+Ui_Msg_Choose_Lang:Ñ¡ÔñÓïÑÔ
+Ui_Msg_Settings:ÉèÖÃ
+Ui_Msg_Tools:¹¤¾ß
+Ui_Msg_LaunchUI:Æô¶¯²¥·ÅÒ³
+UI_Msg_Current_Mode:ÑÅÒô ¾çÇé²¥·ÅÆ÷
+Ui_Msg_Title:YSP ²¥·ÅÆ÷
+Ui_Msg_Exit:ÍË³ö
+Ui_Msg_Check_Update:¼ì²é¸üĞÂ
+Ui_Msg_To_Spol:×ª»»ÖÁSPOL
+Ui_Msg_Clear_Wrong:Çå³ıËğ»µÍ¼Ïñ
+Ui_Msg_Clear_All:Çå³ıËùÓĞ»º´æ
+Ui_Msg_Can_Update:¿ÉÒÔ¸üĞÂ£¡ÌáÈ¡ÂëÊÇ£º
+Ui_Msg_New_Version:×îĞÂ°æ±¾ÊÇ£º
+Ui_To_Spol_End:×ª»»Íê±Ï
+Ui_To_Spol_End_Error:Î´ÄÜÍê³É×ª»»£¡

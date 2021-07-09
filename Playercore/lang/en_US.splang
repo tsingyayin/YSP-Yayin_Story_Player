@@ -1,8 +1,14 @@
-About_Info_Version:Current version is£º
-About_Info_Developers:Developer£ºYayin Tsing
-About_Info_Environment:IDE£ºVisual Studio 2019
-About_Info_Support:Support£ºAyano Aishi Story Creation Group,Union of YiXu Association
-About_Info_Help:Help:Go to the website https://github.com/tsingyayin/YSP-Yayin_Story_Player for support
+About_Info_Version:Current version£º
+About_Info_Main_Ver:Main Version£º
+About_Info_Sub_Ver:Update Version£º
+About_Info_Build_Ver:Build Version£º
+About_Info_Spol_Ver:SPOL Version£º
+About_Info_Spol_Env_Ver:SPOL Environment£º
+About_Info_Developers:Developer£º
+About_Info_Environment:IDE£º
+About_Info_Support:Support£º
+About_Info_Help:Help:Go to the website{}for support
+About_Info_Donate:Donate£º{}
 
 Avg_Effect_Mode_Normal:Normal
 Avg_Effect_Mode_Cover:Cover
@@ -35,6 +41,15 @@ Branch_Info_Input:Please input your option
 Chara_Pic_Setting_Info:{} illustration {}(fade in {}Sec & fade out {}Sec)
 Chara_Pic_Setting_Info_R:{} Reverse illustration {}(fade in {}Sec & fade out {}Sec )
 
+Check_Update_Info_Latest:The latest version is the version {} released on {}, which can be upgraded
+Check_Update_Info_New:Your version is up to date
+Check_Update_Info_Insider:You are using the development version, please do not pass it on
+Check_Update_Info_Ver_Error:Unable to verify the version number at the moment, please try again later
+Check_Update_Info_Net_Error:We have encountered some problems and can't check the update for the time being
+Check_Update_Info_Pre:Retrieve preview version update line
+Check_Update_Info_Pubs:Retrieving public version update lines
+Check_Update_Info_Branch:Retrieve branch version update line
+
 Command_Error:Cannot identify your text¡°{}¡±as any current command.
 Choose_File:Open the story file
 
@@ -62,13 +77,12 @@ Freedom_Text_Setting_Info:£¨The location is ({},{}).Apply{}£©
 Help_In_Main_Page_about_:Show infomation about the programme
 Help_In_Main_Page_help:To consult the command list supported
 Help_In_Main_Page_clear:Delete destoryed picture cache
-Help_In_Main_Page_spawn:Enter interpreter mode
-Help_In_Main_Page_line:Enter Single-line mode
 Help_In_Main_Page_exit:Exit the programme,or any level of the programme
 Help_In_Main_Page_lang:Change the language of the programme
 Help_In_Main_Page_ui:Launch the UI page
 Help_In_Main_Page_tospol:Translate official language to SPOL
 Help_In_Main_Page_clearall:Delete all the cache files
+Help_In_Main_Page_window:Show UI window for users
 
 Lang_Input_Msg:Please enter the name of the language file you reqiure.
 Lang_Set_Success:Successfully set {} as your language
@@ -101,6 +115,8 @@ System_Info:Your System is:
 System_Not_Win10:The version of windows {}  you are running has stopped supporting. Please migrate to windows10
 System_Win10_Too_Old:The windows 10 system you are using (build {}) has stopped supporting, which is lower than the autumn 2017 update of windows 10 (build 16299). Please upgrade your Windows 10 to the latest version.
 
+
+
 Ui_Mode_End:Played
 
 Warning_Warn_Count:{} warning in the process£º
@@ -113,3 +129,28 @@ Warning_Numseterror_Count:{} parameter errors in the process£º
 Warning_Numseterror_Info:line {} in the file {} :¡°{}¡±meets wrong parameters :fall outside or exceed the maximum of the number of parameter.
 Warning_Nameerror_Count:{} Label(Name) errors in the process£º
 Warning_Nameerror_Info:line {} in the file {} :¡°{}¡±meets Label(Name) different from related controllers
+
+Ui_AutoButton_Auto:Auto
+Ui_AutoButton_Auto_Off:Auto OFF
+Ui_NextButton:Next Page
+Ui_Thread_Core_Wake:An attempt has been made to wake up the interpreter thread. The Enter key is only used to wake up when the interpreter is stuck, not to turn the page.
+Ui_Current_Line:Line
+Ui_To_Which_Line:Jump
+Ui_Msg_Yes:OK
+Ui_Msg_Back:Back
+Ui_Msg_About_:About
+Ui_Msg_Choose_Lang:Language
+Ui_Msg_Settings:Settings
+Ui_Msg_Tools:Tools
+Ui_Msg_LaunchUI:Launch UI Page
+UI_Msg_Current_Mode:Yayin Story Player
+Ui_Msg_Title:Story Player
+Ui_Msg_Exit:Exit
+Ui_Msg_Check_Update:Check Update
+Ui_Msg_To_Spol:To SPOL
+Ui_Msg_Clear_Wrong:Clear Wrong
+Ui_Msg_Clear_All:Clear All Cache
+Ui_Msg_Can_Update:New Version Available!WebPage Password:
+Ui_Msg_New_Version:New Version:
+Ui_To_Spol_End:Interpreted
+Ui_To_Spol_End_Error:Failed to complete!
