@@ -1,0 +1,6 @@
+需要PyQt5库
+
+pip install PyQt5 -i https://pypi.douban.com/simple
+pip install PyQt5-tools -i http://pypi.douban.com/simple
+
+前面一个是PyQt5本体，后面是PyQt5专用的设计程序，不确定它的有无对本体是否有影响，不过还是建议安装。
