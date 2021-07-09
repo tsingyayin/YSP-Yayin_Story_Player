@@ -1,5 +1,8 @@
 import time as tm
 import traceback
+import platform
+import psutil
+from command.aaspcommand import *
 
 def CrashReport():
     timeinfo=""
@@ -10,7 +13,20 @@ def CrashReport():
         count+=1
     timeinfo=timeinfo[:-1]
     traceback.print_exc()
+    mem= psutil.virtual_memory()
+    mem1=mem.total/1024/1024/1024
+    mem2=mem.free/1024/1024/1024
+    System_name=platform.platform()
     f=open(".\\CrashReport\\CrashReport"+timeinfo+".txt","w+")
+    f.writelines("Program:"+Edition+"\n")
+    f.writelines("System:"+System_name+"\n")
+    f.writelines("CPU Physical Core:"+str(psutil.cpu_count(logical=False))+"\n")
+    f.writelines("CPU Logical Core:"+str(psutil.cpu_count())+"\n")
+    f.writelines("Total Memory:"+str(round(mem1,2))+"GiB\n")
+    f.writelines("Free Memory:"+str(round(mem2,2))+"GiB\n")
+    f.writelines("###################\n")
+    f.writelines("Python Traceback Module\n")
+    f.writelines("###################\n")
     traceback.print_exc(file=f)
     f.close()
     

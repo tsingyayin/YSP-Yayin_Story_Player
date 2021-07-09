@@ -64,6 +64,7 @@ def msg(msginfo):
     try:
         return msglist[msginfo]
     except Exception:
-        return "UNKNOWN_MSG:"+msginfo
+        print("Cannot find the translation of internal variable:"+msginfo)
+        return "Null"
     else:
         None
