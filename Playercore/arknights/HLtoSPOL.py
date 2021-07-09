@@ -5,36 +5,31 @@ import os
 import random
 import time
 import math
+from langcontrol import *
+from PyQt5.QtCore import *
 
-def HLtoSPOL():
-  print("官方资源文件转SPOL程序")
-  print("请输入需要转换的资源文件的名称")
-  while True:
-    filename=input("Userinput→")
-    try:
-        if filename=="exit":
-            return
-        file=open(filename+".txt","r",encoding="UTF-8")
-    except IOError:
-        print("找不到文件",filename)
-    else:
-        print("已经找到文件",filename)
-        break
+class ToSpolReturn(QObject):
+    AnyInfo=pyqtSignal(int,str)
+    def __init__(self):
+        super(ToSpolReturn,self).__init__()
 
-  try:
-    os.remove(r".\\story\\"+filename+".spol")
-  except Exception:
-    None
-  else:
-    None
+    def send(self,group,text):
+        self.AnyInfo.emit(group,text)
 
+
+TOSpolReturn=ToSpolReturn()
+
+
+def ToSPOL(filename,file):
   Spolfile=open(".\\story\\"+filename+".spol","w+",encoding="UTF-8")
   Spolraw=[]
-  Spolraw+=["/SPOL0.6.0"+"\n"]
+  Spolraw+=["#HL 转 SPOL 解释器子核心，版本0.6.0-0.1.5\n"]
+  Spolraw+=["/SPOL0.6.0"+"-FollowNew\n"]
   Spolraw+=[":"+filename+":"+filename+":罗德岛走廊:罗德岛"+"\n"]
 
   Cachefile=open(".\\arknights\\cache\\"+filename+".shl","w+",encoding="UTF-8")
   Cacheraw=[]
+  Cacheraw+=["###这是游戏内文件的缓存文档，进行了部分的缩进标准化，删掉了部分用不着的控制器###"+"\n"]
   InDecision=0
   Inblock=0
 
@@ -47,8 +42,11 @@ def HLtoSPOL():
 
 #逐行转换循环
   for lineraw in file.readlines():
+    if lineraw[-1]!="\n":
+        lineraw+="\n"
+
     line=lineraw[:-1]
-    if line[:5]!="[name":
+    if line[:5]!="[name" and line[0]=="[":
         line=line.replace(" ","")
     line=line.replace("Dr.{@nickname}","Doctor")
     line=line.replace("{@Nickname}","Doctor")
@@ -64,6 +62,7 @@ def HLtoSPOL():
             decisionrawlst[i.split("=")[0]]+=i.split("=")[1][1:-1].split(";")
 
         decisionspolstr=""
+        Spolraw+=["\n"]
         for i in range(0,len(decisionrawlst["alues"])):
             try:
                 if len(decisionrawlst["options"])==1:
@@ -88,8 +87,9 @@ def HLtoSPOL():
     elif line=="[Character]":
         Spolraw+=[">>>:"+"\n"]
         avgsetlst={"name":"","name2":"","focus":"1"}
-
-    elif line=="[Background]":
+    elif line=="[Dialog]":
+        Spolraw+=[">>>:>>>:(0,0)"+"\n"]
+    elif line=="[Background]" or line=="[Image]":
         bgsetlst={"image":"","screenadapt":"","fadetime":"","block":""}
         Spolraw+=["[黑场]"+"\n"]
 
@@ -99,8 +99,22 @@ def HLtoSPOL():
         bgsetlst={"image":"","screenadapt":"","fadetime":"","block":""}
         for i in inforawlst:
             bgsetlst[i.split("=")[0]]=i.split("=")[1]
-        Spolraw+=["["+bgsetlst["image"][1:-1]+",,,"+bgsetlst["fadetime"]+"]"+"\n"]
+        if Inblock==0:
+            Spolraw+=["["+bgsetlst["image"][1:-1]+",,,"+bgsetlst["fadetime"]+"]"+"\n"]
+        elif Inblock==1:
+            None
 
+    elif line[1:6]=="Image" and line[1:11]!="ImageTween":
+        inforaw=line[line.index("(")+1:line.index(")")]
+        inforawlst=inforaw.split(",")
+        bgsetlst={"image":"","screenadapt":"","fadetime":"","block":""}
+        for i in inforawlst:
+            bgsetlst[i.split("=")[0]]=i.split("=")[1]
+        if Inblock==0:
+            Spolraw+=["["+bgsetlst["image"][1:-1]+",,,"+bgsetlst["fadetime"]+"]"+"\n"]
+        elif Inblock==1:
+            None
+        
     elif line[1:8]=="Blocker":
         inforaw=line[line.index("(")+1:line.index(")")]
         inforawlst=inforaw.split(",")
@@ -153,7 +167,7 @@ def HLtoSPOL():
             branchsetlst[i.split("=")[0]]+=i.split("=")[1][1:-1].split(";")
 
         if branchsetlst["references"]==decisionrawlst["alues"]:
-            Spolraw+=["|||"+"\n"]
+            Spolraw+=["|||"+"\n"+"\n"]
             InDecision=0
 
         else:
@@ -164,9 +178,7 @@ def HLtoSPOL():
         Spolraw+=[">>>:"+"(,"+line[line.index("=")+1:-2]+")"+"\n"]
 
     elif line[0]!="[":
-        Spolraw+=[">>>:"+line+"\n"]
-
-    
+        Spolraw+=[">>>:"+line+"\n"]  
 
     if InDecision==1:
         Spolraw[-1]="|"+Spolraw[-1]
@@ -177,5 +189,7 @@ def HLtoSPOL():
   Spolfile.writelines(Spolraw)
   Spolfile.close()
 
-  print("转换完毕")
+  print("sysinfo→"+msg("To_Spol_End"))
+
   return
+
