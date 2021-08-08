@@ -1,6 +1,6 @@
 #这个文件是解释器核心
-#解释器采用启动协议Plugin2
-#解释器版本Py_Qt_SPOL0.6.0_U
+
+#解释器版本Py_Qt_SPOL0.6.0_V2_U
 
 import time as tm
 import sys
@@ -44,7 +44,7 @@ class STORYPLAYING(QObject):
 
 def SPOL(self,files,Storyname):
   global warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline,branchlabel,speed,isPlaying,linecount
-  speed=1.0
+
   isPlaying=1
     #跨行注释状态确认
   textend=0
@@ -174,6 +174,7 @@ def SPOL(self,files,Storyname):
             self.can_update_bg.emit(bgsetlst)
             opfloat=0
             if bgsetlst[3]!="0" :
+                self.willstop.emit()
                 if 0<float(bgsetlst[3])<1.5:
                     for i in range(0,21):
                         tm.sleep((float(bgsetlst[3])*speed)/20)
@@ -199,13 +200,12 @@ def SPOL(self,files,Storyname):
                         tm.sleep((float(bgsetlst[3])*speed)/200)
                         opfloat=i/200
                         self.update_num_bg.emit(opfloat,bgsetlst)
-                self.willstop.emit()
                 self.pause()
                 self.inrunning.emit()
             else :
+                self.willstop.emit()
                 self.update_num_bg.emit(0,bgsetlst)
                 self.update_num_bg.emit(1,bgsetlst)
-                self.willstop.emit()
                 self.pause()
                 self.inrunning.emit()
 
@@ -340,7 +340,7 @@ def SPOL(self,files,Storyname):
             elif charawords[0][1]=="" and charawords[1][1]!="":
                 charapic[0][6]="(暗，沉默)"
                 charapic[1][6]="(亮，讲述)"
-        self.can_update_chara.emit(charapic,charawords,wordset,charanum,BGblack)
+        self.can_update_chara.emit(charapic,charanum,BGblack)
 
         wordsall=""
         for i in charawords:

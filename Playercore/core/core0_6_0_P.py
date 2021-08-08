@@ -2,8 +2,7 @@
 #这个文件用来揪出所有需要预处理的图像
 #我们心意已决不用任何GPU加速，所以我们要用CPU强行运算
 
-#解释器采用启动协议Plugin2
-#解释器版本Py_Qt_SPOL0.6.0_P
+#解释器版本Py_Qt_SPOL0.6.0_V1_P
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
