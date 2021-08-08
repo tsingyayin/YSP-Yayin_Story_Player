@@ -18,7 +18,7 @@ class STORYNAMERECIVE(QObject):
         return
 
 class SPAWN(QThread):
- can_update_chara=pyqtSignal(list,list,list,int,int) 
+ can_update_chara=pyqtSignal(list,int,int) 
  update_chara_num=pyqtSignal(list,str,int,list)
 
  can_update_bg=pyqtSignal(list)

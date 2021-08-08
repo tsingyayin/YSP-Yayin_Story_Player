@@ -1,9 +1,11 @@
 import urllib.request
+import socket
 import os
 import sys
 
 def VersionList(Day,Edition):
     try:
+        socket.setdefaulttimeout(5)
         url = "https://qingyayin.lofter.com/"
         html = urllib.request.urlopen(url).read()
         f=open(".\\Latest.txt", "wb")

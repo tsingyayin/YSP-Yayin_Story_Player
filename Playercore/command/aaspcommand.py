@@ -5,8 +5,9 @@
 #我们把每个版本的核心独立成单个文件
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt5.QtGui import*
 import sys
+import os
 from Visual.ArtificialUI import *
 from arknights.HLtoSPOL import *
 import time as tm
@@ -14,8 +15,8 @@ from langcontrol import *
 from global_value import warnline,texterrorline,numseterrorline,formatwarnline,nameerrorline
 from command.checkupdate import *
 
-Day=20210709
-Edition="Ver0.7.0.0_Pre4(Build85.0)_SPOL0.6.0;Py_Qt"
+Day=20210720
+Edition="Ver0.7.2_Pub(Build102.2)_SPOL0.6.0;Py_Qt"
 InsiderMainVer=Edition[Edition.index("Ver")+3:Edition.index("_P")]
 InsiderSubVer=Edition[Edition.index("_P")+1:Edition.index("(Build")]
 InsiderBuildVer=Edition[Edition.index("(Build")+6:Edition.index(")")]
@@ -62,7 +63,14 @@ class FrameWork(QObject):
             self.AnyInfo.emit(1,msg("Check_Update_Info_New"))
         elif INFO[0]==2:
             self.AnyInfo.emit(1,msg("Check_Update_Info_Insider"))
+        elif INFO[0]==3:
+            self.AnyInfo.emit(2,msg("Check_Update_Info_Ver_Error"))
+        elif INFO[0]==4:
+            self.AnyInfo.emit(2,msg("Check_Update_Info_Net_Error"))
         return INFO[1]
+
+    def ui_OpenFolder(self,num):
+        OpenFolder(num)
 
 #帮助
 def aasphelp():
@@ -219,11 +227,17 @@ def DeleteAllCache(num):
 #文件系统保全函数
 def ensuredirs(num):
     print("sysinfo→Checking the files in the directory")
-    dirslst=[".\\CrashReport",".\\text",".\\story",".\\lang",".\\Visual\\cache\\BGP",".\\Visual\\cache\\Chara",".\\arknights\\cache",".\\arknights\\story"]
+    dirslst=[".\\CrashReport",".\\Visual\\cache\\BGP",".\\Visual\\cache\\Chara",".\\arknights\\story"]
+    count=0
     for i in dirslst:
         if not os.path.exists(i):
             print("sysinfo→Directory '"+i+"' missed.Now rebuilding...")
             os.makedirs(i)
+            count+=1
+    if count==len(dirslst):
+        user_home = os.path.expanduser('~')
+        user_desktop=user_home+r"\Desktop"
+        print(user_desktop)
     print("sysinfo→Checked")
 
 #检查更新
@@ -267,6 +281,17 @@ def Checkupdate(num):
     else:
         print("sysinfo→"+msg("Check_Update_Info_Net_Error"))
         return [4,0]
+
+def OpenFolder(num):
+    if num==1:
+        path=r".\Visual\cache"
+    elif num==2:
+        path=r".\Visual\source"
+    elif num==3:
+        path=r".\arknights\story"
+    elif num==4:
+        path=r".\story"
+    os.system("explorer.exe "+path)
 
 #Splash标语
 splashlst=[]
