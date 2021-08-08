@@ -27,9 +27,6 @@ def ToSPOL(filename,file):
   Spolraw+=["/SPOL0.6.0"+"-FollowNew\n"]
   Spolraw+=[":"+filename+":"+filename+":罗德岛走廊:罗德岛"+"\n"]
 
-  Cachefile=open(".\\arknights\\cache\\"+filename+".shl","w+",encoding="UTF-8")
-  Cacheraw=[]
-  Cacheraw+=["###这是游戏内文件的缓存文档，进行了部分的缩进标准化，删掉了部分用不着的控制器###"+"\n"]
   InDecision=0
   Inblock=0
 
@@ -50,7 +47,7 @@ def ToSPOL(filename,file):
         line=line.replace(" ","")
     line=line.replace("Dr.{@nickname}","Doctor")
     line=line.replace("{@Nickname}","Doctor")
-    Cacheraw+=[line+"\n"]
+
 
     if line[1:9]=="Decision":
         InDecision=1
@@ -182,9 +179,6 @@ def ToSPOL(filename,file):
 
     if InDecision==1:
         Spolraw[-1]="|"+Spolraw[-1]
-
-  Cachefile.writelines(Cacheraw)
-  Cachefile.close()
 
   Spolfile.writelines(Spolraw)
   Spolfile.close()
