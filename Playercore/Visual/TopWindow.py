@@ -11,6 +11,8 @@ from langcontrol import *
 from command.aaspcommand import *
 from crashreport import *
 from arknights.HLtoSPOL import *
+from win32 import win32api, win32gui
+from win32.lib import win32con
 global TopwinControl
 TopwinControl=""
 
@@ -21,22 +23,24 @@ class TopDef(QWidget):
         self.Display=self.desktop.screenGeometry(self.current_monitor)
         self.X=self.Display.width()
         self.Y=self.Display.height()
-
+        
         #基本圆角框架和半透明效果实现
         self.setGeometry(QRect(600,400,700,300))
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
+
         self.frame=QFrame()
         self.hl=QHBoxLayout()
         self.hl.setContentsMargins(10,10,10,10)
         self.setLayout(self.hl)
         self.hl.addWidget(self.frame)
-        self.setStyleSheet("QWidget{background-color:rgba(255,255,255,200);border:none;border-radius:15px;}")
-
         
-        #self.OPSelfFrame=QGraphicsBlurEffect()
-        #self.OPSelfFrame.setBlurRadius(3)
-        #self.frame.setGraphicsEffect(self.OPSelfWindow)
+        self.setStyleSheet("""
+            QWidget{
+                background-color:rgba(230,230,230,230);
+                border:none;
+                border-radius:10px;
+                }""")
 
         self.SelfEffect=QGraphicsDropShadowEffect()
         self.SelfEffect.setOffset(4,4)
@@ -118,6 +122,178 @@ class TopDef(QWidget):
             font-family:'Microsoft YaHei';
             }""")
 
+        self.ToolsButton=QPushButton(self)
+        self.ToolsButton.setGeometry(QRect(390,420,260,50))
+        self.ToolsButton.setText(msg("Ui_Msg_Tools"))
+        self.ToolsButton.setStyleSheet(
+            """QPushButton{
+            color:#333333;
+            background-color:rgba(255,255,255,210);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:hover{
+            color:#888888;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:36px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:Pressed{
+            color:#66ccff;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+            }""")
+
+        self.CreateButton=QPushButton(self)
+        self.CreateButton.setGeometry(QRect(50,420,260,50))
+        self.CreateButton.setText(msg("Ui_Msg_Create"))
+        self.CreateButton.setStyleSheet(
+            """QPushButton{
+            color:#333333;
+            background-color:rgba(255,255,255,210);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:hover{
+            color:#888888;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:36px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:Pressed{
+            color:#66ccff;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+            }""")
+
+        self.OpenButton_Cache=QPushButton(self)
+        self.OpenButton_Cache.setGeometry(QRect(50,280,260,50))
+        self.OpenButton_Cache.setText(msg("Ui_Msg_Open_Cache"))
+        self.OpenButton_Cache.setObjectName("OpenButton_Cache")
+        self.OpenButton_Cache.setStyleSheet(
+            """QPushButton{
+            color:#333333;
+            background-color:rgba(255,255,255,210);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:hover{
+            color:#888888;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:36px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:Pressed{
+            color:#66ccff;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+            }""")
+        self.OPOpenButton_Cache=QGraphicsOpacityEffect()
+        self.OPOpenButton_Cache.setOpacity(0)
+        self.OpenButton_Cache.setGraphicsEffect(self.OPOpenButton_Cache)
+
+        self.OpenButton_Source=QPushButton(self)
+        self.OpenButton_Source.setGeometry(QRect(50,350,260,50))
+        self.OpenButton_Source.setText(msg("Ui_Msg_Open_Source"))
+        self.OpenButton_Source.setObjectName("OpenButton_Source")
+        self.OpenButton_Source.setStyleSheet(
+            """QPushButton{
+            color:#333333;
+            background-color:rgba(255,255,255,210);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:hover{
+            color:#888888;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:36px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:Pressed{
+            color:#66ccff;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+            }""")
+        self.OPOpenButton_Source=QGraphicsOpacityEffect()
+        self.OPOpenButton_Source.setOpacity(0)
+        self.OpenButton_Source.setGraphicsEffect(self.OPOpenButton_Source)
+
+        self.OpenButton_Story=QPushButton(self)
+        self.OpenButton_Story.setGeometry(QRect(50,420,260,50))
+        self.OpenButton_Story.setText(msg("Ui_Msg_Open_Story"))
+        self.OpenButton_Story.setObjectName("OpenButton_Story")
+        self.OpenButton_Story.setStyleSheet(
+            """QPushButton{
+            color:#333333;
+            background-color:rgba(255,255,255,210);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:hover{
+            color:#888888;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:36px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:Pressed{
+            color:#66ccff;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+            }""")
+        self.OPOpenButton_Story=QGraphicsOpacityEffect()
+        self.OPOpenButton_Story.setOpacity(0)
+        self.OpenButton_Story.setGraphicsEffect(self.OPOpenButton_Story)
+
+        self.OpenButton_Official=QPushButton(self)
+        self.OpenButton_Official.setGeometry(QRect(50,490,260,50))
+        self.OpenButton_Official.setText(msg("Ui_Msg_Open_Official"))
+        self.OpenButton_Official.setObjectName("OpenButton_Official")
+        self.OpenButton_Official.setStyleSheet(
+            """QPushButton{
+            color:#333333;
+            background-color:rgba(255,255,255,210);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:hover{
+            color:#888888;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:36px;
+            font-family:'Microsoft YaHei';
+                }
+            QPushButton:Pressed{
+            color:#66ccff;
+            background-color:rgba(255,255,255,255);
+            text-align:center;
+            font-size:32px;
+            font-family:'Microsoft YaHei';
+            }""")
+        self.OPOpenButton_Official=QGraphicsOpacityEffect()
+        self.OPOpenButton_Official.setOpacity(0)
+        self.OpenButton_Official.setGraphicsEffect(self.OPOpenButton_Official)
+
         self.SettingsButton=QPushButton(self)
         self.SettingsButton.setGeometry(QRect(50,490,600,50))
         self.SettingsButton.setText(msg("Ui_Msg_Settings"))
@@ -144,31 +320,6 @@ class TopDef(QWidget):
             font-family:'Microsoft YaHei';
             }""")
 
-        self.ToolsButton=QPushButton(self)
-        self.ToolsButton.setGeometry(QRect(50,420,600,50))
-        self.ToolsButton.setText(msg("Ui_Msg_Tools"))
-        self.ToolsButton.setStyleSheet(
-            """QPushButton{
-            color:#333333;
-            background-color:rgba(255,255,255,210);
-            text-align:center;
-            font-size:32px;
-            font-family:'Microsoft YaHei';
-                }
-            QPushButton:hover{
-            color:#888888;
-            background-color:rgba(255,255,255,255);
-            text-align:center;
-            font-size:36px;
-            font-family:'Microsoft YaHei';
-                }
-            QPushButton:Pressed{
-            color:#66ccff;
-            background-color:rgba(255,255,255,255);
-            text-align:center;
-            font-size:32px;
-            font-family:'Microsoft YaHei';
-            }""")
 
         self.AboutButton=QPushButton(self)
         self.AboutButton.setGeometry(QRect(50,420,260,50))
@@ -373,7 +524,7 @@ class TopDef(QWidget):
             }""")
 
         self.AboutLabel_FullVer=QLabel(self)
-        self.AboutLabel_FullVer.setText(msg("About_Info_Version")+Edition)
+        self.AboutLabel_FullVer.setText(Edition)
         self.AboutLabel_FullVer.setGeometry(QRect(25,280,650,30))
         self.AboutLabel_FullVer.setAlignment(Qt.AlignCenter)
         self.AboutLabel_FullVer.setStyleSheet(
@@ -564,6 +715,7 @@ class UpdateWindow(QWidget):
         self.X=self.Display.width()
         self.Y=self.Display.height()
 
+        
         #基本圆角框架和半透明效果实现
         self.setGeometry(QRect(500,400,900,300))
         self.setWindowFlags(Qt.FramelessWindowHint)
@@ -573,8 +725,7 @@ class UpdateWindow(QWidget):
         self.hl.setContentsMargins(10,10,10,10)
         self.setLayout(self.hl)
         self.hl.addWidget(self.frame)
-        self.setStyleSheet("QWidget{background-color:rgba(255,255,255,200);border:none;border-radius:15px;}")
-
+        self.setStyleSheet("QWidget{background-color:rgba(230,230,230,230);border:none;border-radius:10px;}")
         self.SelfEffect=QGraphicsDropShadowEffect()
         self.SelfEffect.setOffset(4,4)
         self.SelfEffect.setColor(QColor(0,0,0,127))
@@ -600,9 +751,9 @@ class UpdateWindow(QWidget):
         self.Preurl="https://pan.baidu.com/s/1P2HXW0Y5G4piA7XUKXWWzg"
         self.Puburl="https://pan.baidu.com/s/1Zo_lZzEjpIaEsM4LdCohYQ"
         if "Pre" in self.Version:
-            self.NewVersionLabel.setText(msg("Ui_Msg_New_Version")+"<A href='"+self.Preurl+"'>"+self.Version+"</a>")
+            self.NewVersionLabel.setText("<A href='"+self.Preurl+"'>"+self.Version+"</a>")
         else:
-            self.NewVersionLabel.setText(msg("Ui_Msg_New_Version")+"<A href='"+self.Puburl+"'>"+self.Version+"</a>")
+            self.NewVersionLabel.setText("<A href='"+self.Puburl+"'>"+self.Version+"</a>")
         self.NewVersionLabel.setOpenExternalLinks(True)
         self.NewVersionLabel.setGeometry(QRect(50,120,800,40))
         self.NewVersionLabel.setAlignment(Qt.AlignCenter)
@@ -655,9 +806,9 @@ class UpdateWindow(QWidget):
     def UpdateLang(self):
         self.OopsLabel.setText(msg("Ui_Msg_Can_Update")+"UYXA")
         if "Pre" in self.Version:
-            self.NewVersionLabel.setText(msg("Ui_Msg_New_Version")+"<A href='"+self.Preurl+"'>"+self.Version+"</a>")
+            self.NewVersionLabel.setText("<A href='"+self.Preurl+"'>"+self.Version+"</a>")
         else:
-            self.NewVersionLabel.setText(msg("Ui_Msg_New_Version")+"<A href='"+self.Puburl+"'>"+self.Version+"</a>")
+            self.NewVersionLabel.setText("<A href='"+self.Puburl+"'>"+self.Version+"</a>")
         self.BackButton.setText(msg("Ui_Msg_Back"))
 
 class TopWindow(TopDef):
@@ -674,6 +825,11 @@ class TopWindow(TopDef):
         self.Service.AnyInfo.connect(self.ShowAnyInfo)
         self.FirstEnter=0
 
+    def mousePressEvent(self,QMouseEvent):
+        if self.Iconlabel.underMouse():
+            win32gui.ReleaseCapture()
+            win32api.SendMessage(self.winId(), win32con.WM_SYSCOMMAND,win32con.SC_MOVE+win32con.HTCAPTION, 0)
+
         #展示首页
     def ShowFirstPage(self):
         self.PageName="First_Page"
@@ -688,6 +844,12 @@ class TopWindow(TopDef):
         self.SASettingsButton.setColor(QColor(0,0,0,100))
         self.SASettingsButton.setBlurRadius(20)
         self.SettingsButton.setGraphicsEffect(self.SASettingsButton)
+
+        self.SACreateButton=QGraphicsDropShadowEffect()
+        self.SACreateButton.setOffset(0,0)
+        self.SACreateButton.setColor(QColor(0,0,0,100))
+        self.SACreateButton.setBlurRadius(20)
+        self.CreateButton.setGraphicsEffect(self.SACreateButton)
 
         self.SAToolsButton=QGraphicsDropShadowEffect()
         self.SAToolsButton.setOffset(0,0)
@@ -705,6 +867,7 @@ class TopWindow(TopDef):
         self.Iconlabel.raise_()
         self.UIModeButton.raise_()
         self.SettingsButton.raise_()
+        self.CreateButton.raise_()
         self.ToolsButton.raise_()
         self.ExitButton.raise_()
         self.BackButton.raise_()
@@ -715,6 +878,8 @@ class TopWindow(TopDef):
         self.UIModeButton.clicked.connect(self.LaunchUI)
         self.SettingsButton.clicked.connect(self.ShowSettingsPage)
         self.SettingsButton.clicked.connect(self.HideFirstPage)
+        self.CreateButton.clicked.connect(self.ShowCreatePage)
+        self.CreateButton.clicked.connect(self.HideFirstPage)
         self.ToolsButton.clicked.connect(self.ShowToolsPage)
         self.ToolsButton.clicked.connect(self.HideFirstPage)
         
@@ -727,6 +892,10 @@ class TopWindow(TopDef):
         self.OPSettingsButton=QGraphicsOpacityEffect()
         self.OPSettingsButton.setOpacity(0)
         self.SettingsButton.setGraphicsEffect(self.OPSettingsButton)
+
+        self.OPCreateButton=QGraphicsOpacityEffect()
+        self.OPCreateButton.setOpacity(0)
+        self.CreateButton.setGraphicsEffect(self.OPCreateButton)
 
         self.OPToolsButton=QGraphicsOpacityEffect()
         self.OPToolsButton.setOpacity(0)
@@ -742,6 +911,8 @@ class TopWindow(TopDef):
         self.UIModeButton.clicked.disconnect(self.LaunchUI)
         self.SettingsButton.clicked.disconnect(self.HideFirstPage)
         self.SettingsButton.clicked.disconnect(self.ShowSettingsPage)
+        self.CreateButton.clicked.disconnect(self.ShowCreatePage)
+        self.CreateButton.clicked.disconnect(self.HideFirstPage)
         self.ToolsButton.clicked.disconnect(self.HideFirstPage)
         self.ToolsButton.clicked.disconnect(self.ShowToolsPage)
 
@@ -787,6 +958,7 @@ class TopWindow(TopDef):
 
         #展示关于页面
     def ShowAboutPage(self):
+        self.PageName="About_Page"
         self.OPAboutLabel_MainVer=QGraphicsOpacityEffect()
         self.OPAboutLabel_MainVer.setOpacity(1)
         self.AboutLabel_MainVer.setGraphicsEffect(self.OPAboutLabel_MainVer)
@@ -892,6 +1064,74 @@ class TopWindow(TopDef):
         self.CheckUpdateButton.clicked.disconnect(self.CheckingUpdate)
         self.AboutLabel_Donate.setOpenExternalLinks(False)
 
+        #展示创作页面
+    def ShowCreatePage(self):
+        self.PageName="Create_Page"
+
+        self.SAOpenButton_Cache=QGraphicsDropShadowEffect()
+        self.SAOpenButton_Cache.setOffset(0,0)
+        self.SAOpenButton_Cache.setColor(QColor(0,0,0,100))
+        self.SAOpenButton_Cache.setBlurRadius(20)
+        self.OpenButton_Cache.setGraphicsEffect(self.SAOpenButton_Cache)
+
+        self.SAOpenButton_Source=QGraphicsDropShadowEffect()
+        self.SAOpenButton_Source.setOffset(0,0)
+        self.SAOpenButton_Source.setColor(QColor(0,0,0,100))
+        self.SAOpenButton_Source.setBlurRadius(20)
+        self.OpenButton_Source.setGraphicsEffect(self.SAOpenButton_Source)
+
+        self.SAOpenButton_Story=QGraphicsDropShadowEffect()
+        self.SAOpenButton_Story.setOffset(0,0)
+        self.SAOpenButton_Story.setColor(QColor(0,0,0,100))
+        self.SAOpenButton_Story.setBlurRadius(20)
+        self.OpenButton_Story.setGraphicsEffect(self.SAOpenButton_Story)
+
+        self.SAOpenButton_Official=QGraphicsDropShadowEffect()
+        self.SAOpenButton_Official.setOffset(0,0)
+        self.SAOpenButton_Official.setColor(QColor(0,0,0,100))
+        self.SAOpenButton_Official.setBlurRadius(20)
+        self.OpenButton_Official.setGraphicsEffect(self.SAOpenButton_Official)
+
+        self.OpenButton_Cache.raise_()
+        self.OpenButton_Official.raise_()
+        self.OpenButton_Source.raise_()
+        self.OpenButton_Story.raise_()
+
+        self.OpenButton_Cache.clicked.connect(self.OpenAnyFolder)
+        self.OpenButton_Official.clicked.connect(self.OpenAnyFolder)
+        self.OpenButton_Story.clicked.connect(self.OpenAnyFolder)
+        self.OpenButton_Source.clicked.connect(self.OpenAnyFolder)
+
+        self.BackButton.clicked.connect(self.ShowFirstPage)
+        self.BackButton.clicked.connect(self.HideCreatePage)
+
+        #隐藏关于页面
+    def HideCreatePage(self):
+        self.OPOpenButton_Cache=QGraphicsOpacityEffect()
+        self.OPOpenButton_Cache.setOpacity(0)
+        self.OpenButton_Cache.setGraphicsEffect(self.OPOpenButton_Cache)
+
+        self.OPOpenButton_Story=QGraphicsOpacityEffect()
+        self.OPOpenButton_Story.setOpacity(0)
+        self.OpenButton_Story.setGraphicsEffect(self.OPOpenButton_Story)
+
+        self.OPOpenButton_Source=QGraphicsOpacityEffect()
+        self.OPOpenButton_Source.setOpacity(0)
+        self.OpenButton_Source.setGraphicsEffect(self.OPOpenButton_Source)
+
+        self.OPOpenButton_Official=QGraphicsOpacityEffect()
+        self.OPOpenButton_Official.setOpacity(0)
+        self.OpenButton_Official.setGraphicsEffect(self.OPOpenButton_Official)
+
+
+        self.OpenButton_Cache.clicked.disconnect(self.OpenAnyFolder)
+        self.OpenButton_Official.clicked.disconnect(self.OpenAnyFolder)
+        self.OpenButton_Story.clicked.disconnect(self.OpenAnyFolder)
+        self.OpenButton_Source.clicked.disconnect(self.OpenAnyFolder)
+
+        self.BackButton.clicked.disconnect(self.ShowFirstPage)
+        self.BackButton.clicked.disconnect(self.HideCreatePage)
+
         #展示小工具页
     def ShowToolsPage(self):
         self.PageName="Tools_Page"
@@ -956,7 +1196,7 @@ class TopWindow(TopDef):
         #我去**的在另外线程实现for耗时操作，程序动画的时候别tm乱动！
     def Expand(self):
         self.OPTitlelabel=QGraphicsOpacityEffect()
-        for i in range(0,101,2): 
+        for i in range(0,101,4): 
             a=0.5*(1-ma.cos(i*0.0314159))
             self.setGeometry(QRect(600,int(400-a*200),700,int(300+a*350)))
             self.OPTitlelabel.setOpacity(1-i/100)
@@ -970,9 +1210,10 @@ class TopWindow(TopDef):
         #窗口收起实现函数
     def Shrink(self):
         self.OPTitlelabel=QGraphicsOpacityEffect()
-        for i in range(100,-1,-2): 
+        self.Rect=self.geometry()
+        for i in range(100,-1,-4): 
             a=0.5*(1-ma.cos(i*0.0314159))
-            self.setGeometry(QRect(600,int(400-a*200),700,int(300+a*350)))
+            self.setGeometry(QRect(self.Rect.left(),int(self.Rect.top()+200-a*200),700,int(300+a*350)))
             self.OPTitlelabel.setOpacity(1-i/100)
             self.Titlelabel.setGraphicsEffect(self.OPTitlelabel)
             self.Iconlabel.setGeometry(QRect(int(50+170*a),15,270,270))
@@ -986,6 +1227,7 @@ class TopWindow(TopDef):
         self.LangFileDialog=QFileDialog.getOpenFileName(self,msg("Ui_Msg_Choose_Lang"), "./lang","Story Player Language(*.splang)")
         self.LangFileName=self.LangFileDialog[0].split("/")[-1].split(".")[0]
         self.Service.ui_langset(self.LangFileName)
+
         self.Titlelabel.setText(msg("Ui_Msg_Title"))
         self.BackButton.setText(msg("Ui_Msg_Back"))
         self.ExitButton.setText(msg("Ui_Msg_Exit"))
@@ -998,7 +1240,13 @@ class TopWindow(TopDef):
         self.ClrCacheButton.setText(msg("Ui_Msg_Clear_All"))
         self.ClrWrongButton.setText(msg("Ui_Msg_Clear_Wrong"))
 
-        self.AboutLabel_FullVer.setText(msg("About_Info_Version")+Edition)
+        self.CreateButton.setText(msg("Ui_Msg_Create"))
+        self.OpenButton_Cache.setText(msg("Ui_Msg_Open_Cache"))
+        self.OpenButton_Source.setText(msg("Ui_Msg_Open_Source"))
+        self.OpenButton_Story.setText(msg("Ui_Msg_Open_Story"))
+        self.OpenButton_Official.setText(msg("Ui_Msg_Open_Official"))
+
+        self.AboutLabel_FullVer.setText(Edition)
         self.AboutLabel_MainVer.setText(msg("About_Info_Main_Ver")+InsiderMainVer)
         self.AboutLabel_SubVer.setText(msg("About_Info_Sub_Ver")+InsiderSubVer)
         self.AboutLabel_BuildVer.setText(msg("About_Info_Build_Ver")+InsiderBuildVer)
@@ -1015,6 +1263,7 @@ class TopWindow(TopDef):
             None
         else:
             None
+
         #调用HL解释器把官方文件转换成SPOL
     def ChooseToSpolFile(self):
         self.LangFileDialog=QFileDialog.getOpenFileName(self,msg("Ui_Msg_To_Spol"), "./arknights/story","Arknights Official Story(*.txt)")
@@ -1029,6 +1278,19 @@ class TopWindow(TopDef):
     def ClearAllCacheImage(self):
         self.Service.ui_DeleteAllCache()
 
+        #打开文件夹
+    def OpenAnyFolder(self):
+        self.OAFsourceButton=self.sender()
+        if self.OAFsourceButton.objectName()=="OpenButton_Cache":
+            self.Service.ui_OpenFolder(1)
+        elif self.OAFsourceButton.objectName()=="OpenButton_Source":
+            self.Service.ui_OpenFolder(2)
+        elif self.OAFsourceButton.objectName()=="OpenButton_Official":
+            self.Service.ui_OpenFolder(3)
+        elif self.OAFsourceButton.objectName()=="OpenButton_Story":
+            self.Service.ui_OpenFolder(4)
+
+        #检查更新
     def CheckingUpdate(self):
         Update=self.Service.ui_CheckUpdate()
         if Update!=0:
@@ -1037,17 +1299,15 @@ class TopWindow(TopDef):
 
         #键盘按下事件
     def keyPressEvent(self,QKeyEvent):
-        #当首次展开执行完毕后允许使用快捷键
-        if self.FirstEnter==1:
-            if QKeyEvent.key()==Qt.Key_Escape:
-                self.FullExit()
+        None
 
-      #首次移入时展开页面
+      #首次移入时展开页面、检查更新
     def enterEvent(self, QEvent):
         if self.FirstEnter==0:
             self.Expand()
             self.FirstEnter=1
-            
+            self.CheckingUpdate()
+
       #退出交互页面
     def ExitPro(self):
         self.Shrink()
@@ -1068,9 +1328,10 @@ class TopWindow(TopDef):
 
         #显示任意提示信息
     def ShowAnyInfo(self,infogroup=0,needtoshow="UNKNOWN INFO"):
-        for i in range(0,101,8):
+        self.Rect=self.geometry()
+        for i in range(0,101,16):
             a=0.5*(1-ma.cos(i*0.0314159))
-            self.setGeometry(QRect(600,200,700,int(650+a*50)))
+            self.setGeometry(QRect(self.Rect.left(),self.Rect.top(),700,int(650+a*50)))
             self.repaint()
             tm.sleep(0.01)
         if infogroup==0:
@@ -1118,9 +1379,9 @@ class TopWindow(TopDef):
         self.AnyInfolabel.setText("")
         self.AnyInfolabel.repaint()
 
-        for i in range(101,2,-8):
+        for i in range(101,2,-16):
             a=0.5*(1-ma.cos(i*0.0314159))
-            self.setGeometry(QRect(600,200,700,int(650+a*50)))
+            self.setGeometry(QRect(self.Rect.left(),self.Rect.top(),700,int(650+a*50)))
             self.repaint()
             tm.sleep(0.01)
 
@@ -1143,5 +1404,3 @@ def TopWin():
     del app
     global TopwinControl
     return TopwinControl
-
-
