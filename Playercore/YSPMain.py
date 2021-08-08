@@ -11,6 +11,7 @@ from Visual.TopWindow import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
 import platform
 import traceback
 import threading
@@ -25,6 +26,7 @@ sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\core
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\lang")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\Visual")
 sys.path.append(r"C:\Users\Administrator\source\repos\PlayerCore\PlayerCore\arknights")
+
 
 DirectOpen=0
 if sys.argv.__len__() >=2:
@@ -43,10 +45,6 @@ try:
 
   #启动时尝试清理损坏图像
   DeleteEmptyMap(0)
-
-  print("################")
-  Checkupdate(0)
-  print("################")
 
   print("sysinfo→"+msg("System_Info"),platform.platform())
   print("sysinfo→"+msg("About_Info_Version")+Edition)

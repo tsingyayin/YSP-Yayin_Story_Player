@@ -54,7 +54,7 @@ def langset(langname):
             msglist["UNKNOWNLIST"]="UNKNOWNMSG_IN_FILE"
         else:
             None
-    print("sysinfo→"+msg("First_Print_Load_Lang_End").format(round(1000*(time.time()-loadlangtime),2)))
+    print("sysinfo→"+msg("First_Print_Load_Lang_End").format(round((time.time()-loadlangtime)*1000)))
     #成功返回
     return 1
         
