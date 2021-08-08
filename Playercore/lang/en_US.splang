@@ -1,8 +1,8 @@
-About_Info_Version:Current version£º
-About_Info_Main_Ver:Main Version£º
-About_Info_Sub_Ver:Update Version£º
-About_Info_Build_Ver:Build Version£º
-About_Info_Spol_Ver:SPOL Version£º
+About_Info_Version:Current£º
+About_Info_Main_Ver:Main£º
+About_Info_Sub_Ver:Update£º
+About_Info_Build_Ver:Build£º
+About_Info_Spol_Ver:SPOL£º
 About_Info_Spol_Env_Ver:SPOL Environment£º
 About_Info_Developers:Developer£º
 About_Info_Environment:IDE£º
@@ -140,9 +140,14 @@ Ui_Msg_Yes:OK
 Ui_Msg_Back:Back
 Ui_Msg_About_:About
 Ui_Msg_Choose_Lang:Language
+Ui_Msg_Create:Create
 Ui_Msg_Settings:Settings
 Ui_Msg_Tools:Tools
 Ui_Msg_LaunchUI:Launch UI Page
+Ui_Msg_Open_Cache:Cache Folder
+Ui_Msg_Open_Source:Source Folder
+Ui_Msg_Open_Story:Story Folder
+Ui_Msg_Open_Official:Official Story
 UI_Msg_Current_Mode:Yayin Story Player
 Ui_Msg_Title:Story Player
 Ui_Msg_Exit:Exit
@@ -151,6 +156,5 @@ Ui_Msg_To_Spol:To SPOL
 Ui_Msg_Clear_Wrong:Clear Wrong
 Ui_Msg_Clear_All:Clear All Cache
 Ui_Msg_Can_Update:New Version Available!WebPage Password:
-Ui_Msg_New_Version:New Version:
 Ui_To_Spol_End:Interpreted
 Ui_To_Spol_End_Error:Failed to complete!

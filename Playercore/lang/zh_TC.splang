@@ -140,10 +140,15 @@ Ui_Msg_Yes:確定
 Ui_Msg_Back:返回
 Ui_Msg_About_:關於
 Ui_Msg_Choose_Lang:選定語言
+Ui_Msg_Create:創作
 Ui_Msg_Settings:設定
 Ui_Msg_Tools:工具
 Ui_Msg_LaunchUI:啓動播放頁
-UI_Msg_Current_Mode:雅音 劇情播放器
+Ui_Msg_Open_Cache:緩存文件夾
+Ui_Msg_Open_Source:資源文件夹
+Ui_Msg_Open_Story:故事文件夹
+Ui_Msg_Open_Official:官方劇情
+UI_Msg_Current_Mode:Yayin Story Player
 Ui_Msg_Title:YSP 播放器
 Ui_Msg_Exit:退出
 Ui_Msg_Check_Update:檢索更新
@@ -151,6 +156,5 @@ Ui_Msg_To_Spol:轉換至SPOL
 Ui_Msg_Clear_Wrong:清除損壞圖像
 Ui_Msg_Clear_All:清除所有緩存
 Ui_Msg_Can_Update:可以更新！提取码是
-Ui_Msg_New_Version:最新版本是：
 Ui_To_Spol_End:轉換完畢
 Ui_To_Spol_End_Error:未能完成轉換！
