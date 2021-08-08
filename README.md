@@ -30,13 +30,11 @@
 # 当前版本已知问题：
 
 【0.7.1Pub】自由文本控制器右对齐会引起程序崩溃
-# Ver0.7.2.0_PrePub(Build102.2)_SPOL0.6.0
-（#Ver0.7.2_Pub(Build102.2)_SPOL0.6.0）
+# Ver0.7.2.0_PrePub(Build102.2)_SPOL0.6.0\#Ver0.7.2_Pub(Build102.2)_SPOL0.6.0
 
 修复了自由文本控制器在设置为右对齐时会崩溃的问题
 
-## Ver0.7.1.0_PrePub(Build102.1005)_SPOL0.6.0
-（#Ver0.7.1_Pub(Build102.1005)_SPOL0.6.0）
+## Ver0.7.1.0_PrePub(Build102.1005)_SPOL0.6.0\#Ver0.7.1_Pub(Build102.1005)_SPOL0.6.0
 
 将交互窗口拖动限定于鼠标拖拽录像带图标的时候，避免全窗口响应拖动导致程序容易被拖拽移位
 
