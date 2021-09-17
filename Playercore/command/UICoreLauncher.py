@@ -65,6 +65,7 @@ class SPAWN(QThread):
  def run(self):
     global warnline,texterrorline,numseterrorline,formatwarnline,Storyname,nameerrorline
     
+    
     Open=False
     while Open==False:
         try:       

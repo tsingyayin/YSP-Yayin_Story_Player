@@ -16,7 +16,7 @@ from global_value import warnline,texterrorline,numseterrorline,formatwarnline,n
 from command.checkupdate import *
 
 Day=20210720
-Edition="Ver0.7.2_Pub(Build102.2)_SPOL0.6.0;Py_Qt"
+Edition="Ver0.7.3_PrePub(Build102.3)_SPOL0.6.0;Py_Qt"
 InsiderMainVer=Edition[Edition.index("Ver")+3:Edition.index("_P")]
 InsiderSubVer=Edition[Edition.index("_P")+1:Edition.index("(Build")]
 InsiderBuildVer=Edition[Edition.index("(Build")+6:Edition.index(")")]
