@@ -377,7 +377,7 @@ class uPlayerPage(QWidget):
         
         self.Free_Label.setStyleSheet("QLabel{color:#FFFFFF;font-size:"+self.Fontsize35+";font-family:'SimHei';font-weight:bold}")
         self.Free_Label.setAlignment(Qt.AlignCenter)
-        self.Free_Label.setGeometry(QRect(-int(self.X*0.76),-int(self.Y*0.033),int(self.X*0.75),int(self.Y*0.0324074)))
+        self.Free_Label.setGeometry(QRect(int(self.X*2),-int(self.Y*0.033),int(self.X*0.75),int(self.Y*0.0324074)))
         self.OPFree_Label=QGraphicsOpacityEffect()
         self.OPFree_Label.setOpacity(0)
         self.Free_Label.setGraphicsEffect(self.OPFree_Label)
